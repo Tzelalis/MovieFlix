@@ -1,4 +1,4 @@
-package com.tzel.movieflix
+package com.tzel.movieflix.ui.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
