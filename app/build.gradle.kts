@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -37,18 +39,23 @@ android {
         }
     }
 
+    val localProperties = Properties()
+    localProperties.load(project.rootProject.file("local.properties").inputStream())
+
     flavorDimensions += listOf("env")
     productFlavors {
         create("dev") {
             dimension = "env"
             applicationIdSuffix = ".dev"
             resValue("string", "app_name", "MovieFlix DEV")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("API_KEY_NAME")}\"")
             buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org/\"")
         }
         create("prod") {
             dimension = "env"
             resValue("string", "app_name", "MovieFlix")
             buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org/\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("API_KEY_NAME")}\"")
         }
     }
 

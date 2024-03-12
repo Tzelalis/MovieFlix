@@ -58,6 +58,16 @@ object NetworkModule {
                     addNetworkInterceptor(httpLoggingInterceptor)
                 }
             }
+            .addInterceptor {
+                val request = it.request().apply {
+                    newBuilder()
+                        .addHeader("accept", "application/json")
+                        .addHeader("Authorization", "Bearer ${BuildConfig.API_KEY}")
+                        .method(method, body)
+                        .build()
+                }
+                it.proceed(request)
+            }
             .build()
     }
 }
