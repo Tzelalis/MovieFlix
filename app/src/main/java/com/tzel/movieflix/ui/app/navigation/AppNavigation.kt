@@ -6,6 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.tzel.movieflix.ui.home.navigation.homeScreen
+import com.tzel.movieflix.ui.home.navigation.navigateToHome
 import com.tzel.movieflix.ui.splash.navigation.SplashRoute
 import com.tzel.movieflix.ui.splash.navigation.splashScreen
 
@@ -19,6 +21,8 @@ internal fun AppNavHost(
         navController = navController,
         startDestination = SplashRoute,
     ) {
-        splashScreen(navigateToDashboard = {})
+        splashScreen(navigateToDashboard = { navController.navigateToHome() })
+
+        homeScreen(navigateToMovieDetails = { id -> })
     }
 }
