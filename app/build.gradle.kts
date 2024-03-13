@@ -131,6 +131,9 @@ dependencies {
     ksp(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
 
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
     // Testing and debug
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
