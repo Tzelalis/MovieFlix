@@ -2,5 +2,10 @@
     <string name="empty" translatable="false" />
     <string name="flix_movie">FlixMovie</string>
 
+    <!-- Splash -->
     <string name="splash_powered_by">Powered by Tzel</string>
+
+    <!-- Home -->
+    <string name="home_popular_title">Popular</string>
+    <string name="home_favorite_content_description">favorite movie</string>
 </resources>

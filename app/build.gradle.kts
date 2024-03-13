@@ -1,3 +1,4 @@
+import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -30,6 +31,7 @@ android {
         debug {
             isDebuggable = true
             isMinifyEnabled = false
+            isShrinkResources = false
         }
         release {
             isDebuggable = false
@@ -39,8 +41,10 @@ android {
         }
     }
 
-    val localProperties = Properties()
-    localProperties.load(project.rootProject.file("local.properties").inputStream())
+    val utilProperties = Properties().apply {
+        val inputStream = FileInputStream("local.properties")
+        load(inputStream)
+    }
 
     flavorDimensions += listOf("env")
     productFlavors {
@@ -48,14 +52,14 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             resValue("string", "app_name", "MovieFlix DEV")
-            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("API_KEY_NAME")}\"")
+            buildConfigField("String", "API_KEY", "\"${utilProperties.getProperty("api.key")}\"")
             buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org/\"")
         }
         create("prod") {
             dimension = "env"
             resValue("string", "app_name", "MovieFlix")
             buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org/\"")
-            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("API_KEY_NAME")}\"")
+            buildConfigField("String", "API_KEY", "\"${utilProperties.getProperty("api.key")}\"")
         }
     }
 

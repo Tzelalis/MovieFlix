@@ -3,6 +3,7 @@ package com.tzel.movieflix.di.module.core
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tzel.movieflix.BuildConfig
+import com.tzel.movieflix.di.module.interceptor.AuthInterceptor
 import com.tzel.movieflix.di.qualifier.BaseApiOkHttpClient
 import dagger.Module
 import dagger.Provides
@@ -44,10 +45,15 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    fun provideAuthInterceptor(): AuthInterceptor = AuthInterceptor()
+
+    @Singleton
+    @Provides
     @BaseApiOkHttpClient
     fun provideBaseApiOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
         connectionSpec: ConnectionSpec,
+        authInterceptor: AuthInterceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -58,16 +64,7 @@ object NetworkModule {
                     addNetworkInterceptor(httpLoggingInterceptor)
                 }
             }
-            .addInterceptor {
-                val request = it.request().apply {
-                    newBuilder()
-                        .addHeader("accept", "application/json")
-                        .addHeader("Authorization", "Bearer ${BuildConfig.API_KEY}")
-                        .method(method, body)
-                        .build()
-                }
-                it.proceed(request)
-            }
+            .addInterceptor(authInterceptor)
             .build()
     }
 }
