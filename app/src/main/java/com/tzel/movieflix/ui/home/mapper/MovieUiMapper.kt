@@ -5,13 +5,14 @@ import com.tzel.movieflix.ui.home.model.MovieUiItem
 import javax.inject.Inject
 
 class MovieUiMapper @Inject constructor() {
-    operator fun invoke(movies: List<Movie>): List<MovieUiItem> {
-        return movies.map { movie -> mapMovie(movie) }
+    operator fun invoke(movies: List<Movie>, page: Int): List<MovieUiItem> {
+        return movies.map { movie -> mapMovie(movie, page) }.distinctBy { it.id }
     }
 
-    private fun mapMovie(movie: Movie): MovieUiItem {
+    private fun mapMovie(movie: Movie, page: Int): MovieUiItem {
         return MovieUiItem(
             id = movie.id,
+            tag = "${movie.id}$page",
             title = movie.title,
             releaseDate = movie.releaseDate,
             backdropPath = IMAGE_BASE_URL + movie.backdropPath,

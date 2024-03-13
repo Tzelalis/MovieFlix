@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +35,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -47,6 +54,7 @@ import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun HomeScreen(
@@ -88,26 +96,32 @@ private fun HomeContent(
 
 @Composable
 private fun PopularMovies(
-    movies: List<MovieUiItem>,
+    movies: Flow<PagingData<MovieUiItem>>,
     navigateToMovieDetails: (id: String) -> Unit
 ) {
     val imageRequester = rememberImageRequester()
+    val moviesLazyItems = movies.collectAsLazyPagingItems()
+
 
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
         contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_4dp),
     ) {
+
         items(
-            items = movies,
-            key = { movie -> movie.id }
-        ) { movie ->
-            MovieItem(
-                modifier = Modifier.fillParentMaxWidth(0.85f),
-                movie = movie,
-                imageRequester = imageRequester,
-                onMovieClick = { navigateToMovieDetails(movie.id) }
-            )
+            count = moviesLazyItems.itemCount,
+            key = moviesLazyItems.itemKey { it.tag },   //use it.tag to avoid duplicate keys on different pages
+            contentType = moviesLazyItems.itemContentType { "movie" }
+        ) { index ->
+            moviesLazyItems[index]?.let { movie ->
+                MovieItem(
+                    modifier = Modifier.fillParentMaxWidth(0.8f),
+                    movie = movie,
+                    imageRequester = imageRequester,
+                    onMovieClick = { navigateToMovieDetails(movie.id) }
+                )
+            }
         }
     }
 }
@@ -197,7 +211,23 @@ private fun FavoriteIcon(color: Color) {
 @Composable
 private fun HomePreview() {
     val uiState = remember {
-        mutableStateOf(HomeUiState())
+        val pager = Pager(PagingConfig(pageSize = 20)) {
+            object : PagingSource<Int, MovieUiItem>() {
+                override fun getRefreshKey(state: PagingState<Int, MovieUiItem>): Int? {
+                    return state.anchorPosition
+                }
+
+                override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieUiItem> {
+                    return LoadResult.Page(
+                        data = emptyList(),
+                        prevKey = null,
+                        nextKey = null
+                    )
+                }
+
+            }
+        }.flow
+        mutableStateOf(HomeUiState(pager))
     }
 
     MovieFlixTheme {

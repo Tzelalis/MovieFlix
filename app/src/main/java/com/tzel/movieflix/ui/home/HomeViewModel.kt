@@ -1,35 +1,28 @@
 package com.tzel.movieflix.ui.home
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.tzel.movieflix.ui.core.BaseViewModel
-import com.tzel.movieflix.ui.home.mapper.MovieUiMapper
 import com.tzel.movieflix.ui.home.model.HomeUiState
-import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
+import com.tzel.movieflix.ui.home.model.MoviesPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
-    private val movieUiMapper: MovieUiMapper,
+    private val moviesPagingSource: MoviesPagingSource
 ) : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState())
+    private val _uiState = MutableStateFlow(
+        HomeUiState(
+            popularMovies = Pager(PagingConfig(pageSize = PAGE_SIZE)) { moviesPagingSource }.flow
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
-    init {
-        getPopularMovies()
-    }
-
-    private fun getPopularMovies() {
-        launch {
-            val movies = getPopularMoviesUseCase(1)?.movies ?: return@launch
-
-            _uiState.update {
-                it.copy(popularMovies = movieUiMapper(movies))
-            }
-        }
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }

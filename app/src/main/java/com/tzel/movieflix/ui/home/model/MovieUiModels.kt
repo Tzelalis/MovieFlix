@@ -13,7 +13,8 @@ data class MovieUiItem(
     val backdropPath: String?,
     val releaseDate: String?,
     val adult: Boolean,
-    val isFavorite: Boolean
+    val isFavorite: Boolean,
+    val tag: String,
 ) {
     val releaseDateFormatted: String?
         get() {
