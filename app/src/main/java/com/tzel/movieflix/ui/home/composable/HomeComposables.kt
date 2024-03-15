@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -49,12 +50,14 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.tzel.movieflix.R
+import com.tzel.movieflix.ui.core.StatusBarBackground
 import com.tzel.movieflix.ui.core.StringResource
 import com.tzel.movieflix.ui.home.model.HomeUiState
 import com.tzel.movieflix.ui.home.model.MovieUiItem
 import com.tzel.movieflix.ui.home.model.MoviesUiCategory
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Spacing_16dp
+import com.tzel.movieflix.ui.theme.Spacing_32dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
@@ -78,14 +81,15 @@ private fun HomeContent(
     navigateToMovieDetails: (id: String) -> Unit
 ) {
     val imageRequester = rememberImageRequester()
-
+    val state = rememberLazyListState()
     val states = mutableListOf<LazyListState>()
     uiState.value.genreMovies.forEach { _ ->
         states.add(rememberLazyListState())
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        state = state,
     ) {
         item(key = "status_bar_padding") {
             Spacer(modifier = Modifier.statusBarsPadding())
@@ -120,7 +124,16 @@ private fun HomeContent(
                 imageRequester = imageRequester
             )
         }
+        
+        item(key = "bottom_padding") {
+            Spacer(modifier = Modifier
+                .navigationBarsPadding()
+                .padding(bottom = Spacing_32dp)
+            )
+        }
     }
+
+    StatusBarBackground(state = state)
 }
 
 @Composable

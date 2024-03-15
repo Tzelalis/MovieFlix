@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
+import com.tzel.movieflix.R
 import com.tzel.movieflix.ui.app.composable.AppScreen
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
 
         remoteStatusBarPadding()
         window.decorView.setBackgroundColor(resources.getColor(android.R.color.black, null))
+        window.navigationBarColor = getColor(R.color.navigation_bar_color)
 
         setContent {
             MovieFlixTheme {
