@@ -11,6 +11,7 @@ data class RemoteReviewsResponse(
     @Json(name = "total_results") val totalResults: Int?
 )
 
+@JsonClass(generateAdapter = true)
 data class RemoteReview(
     val id: String?,
     val author: String?,

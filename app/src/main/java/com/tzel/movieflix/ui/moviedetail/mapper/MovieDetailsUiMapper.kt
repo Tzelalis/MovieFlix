@@ -16,7 +16,7 @@ class MovieDetailsUiMapper @Inject constructor(
             id = details.id,
             title = details.title,
             adult = details.adult,
-            genres = details.genres.joinToString(", "),
+            genres = details.genres.joinToString(separator = ", ", transform = { it.name }),
             popularity = details.popularity,
             overview = details.overview,
             imageUrl = mapImageUrl(
@@ -46,7 +46,7 @@ class MovieDetailsUiMapper @Inject constructor(
     }
 
     private fun mapTagline(tagline: String?): String? {
-        if(tagline.isNullOrBlank()) return null
+        if (tagline.isNullOrBlank()) return null
 
         return tagline
     }

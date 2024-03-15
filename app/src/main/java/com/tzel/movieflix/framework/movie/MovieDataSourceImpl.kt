@@ -1,6 +1,7 @@
 package com.tzel.movieflix.framework.movie
 
 import com.tzel.movieflix.data.movie.MovieDataSource
+import com.tzel.movieflix.data.movie.model.RemoteGenresResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieDetailsResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
 import com.tzel.movieflix.data.movie.model.RemoteReviewsResponse
@@ -33,6 +34,18 @@ class MovieDataSourceImpl @Inject constructor(
     override suspend fun getMovieReviews(movieId: String, page: Int): RemoteReviewsResponse {
         return executeOn.background {
             api.fetchMovieReviews(movieId, page).requireNotNull()
+        }
+    }
+
+    override suspend fun getGenres(): RemoteGenresResponse {
+        return executeOn.background {
+            api.fetchGenres().requireNotNull()
+        }
+    }
+
+    override suspend fun getMoviesByGenre(genreId: String, page: Int): RemoteMovieResponse {
+        return executeOn.background {
+            api.fetchMoviesByGenre(genreId, page).requireNotNull()
         }
     }
 }

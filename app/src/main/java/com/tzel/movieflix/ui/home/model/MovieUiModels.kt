@@ -14,7 +14,7 @@ data class MovieUiItem(
     val releaseDate: String?,
     val adult: Boolean,
     val isFavorite: Boolean,
-    val tag: String,
+    val key: String,
 ) {
     val releaseDateFormatted: String?
         get() {

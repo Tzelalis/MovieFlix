@@ -2,13 +2,12 @@ package com.tzel.movieflix.ui.home.model
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.tzel.movieflix.domain.movie.entity.MovieResult
 import com.tzel.movieflix.ui.home.mapper.MovieUiMapper
-import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
 import timber.log.Timber
-import javax.inject.Inject
 
-class MoviesPagingSource @Inject constructor(
-    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
+class MoviesPagingSource(
+    private val getMovies: suspend (Int) -> MovieResult?,
     private val movieUiMapper: MovieUiMapper
 ) : PagingSource<Int, MovieUiItem>() {
     override fun getRefreshKey(state: PagingState<Int, MovieUiItem>): Int? {
@@ -18,7 +17,7 @@ class MoviesPagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieUiItem> {
         return try {
             val currentPage = params.key ?: 1
-            val result = getPopularMoviesUseCase(currentPage) ?: return LoadResult.Error(Exception("No movies found"))
+            val result = getMovies(currentPage) ?: return LoadResult.Error(Exception("No movies found"))
             val movies = movieUiMapper(result.movies, result.page)
             LoadResult.Page(
                 data = movies,

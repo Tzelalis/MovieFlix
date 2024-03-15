@@ -14,7 +14,7 @@ class MovieUiMapper @Inject constructor(private val imagePathMapper: ImagePathMa
     private fun mapMovie(movie: Movie, page: Int): MovieUiItem {
         return MovieUiItem(
             id = movie.id,
-            tag = "${movie.id}$page",
+            key = "${movie.id}$page",
             title = movie.title,
             releaseDate = movie.releaseDate,
             backdropPath = imagePathMapper(movie.backdropPath, ImageSize.BackdropSize.W1280),

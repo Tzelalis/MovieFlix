@@ -1,7 +1,9 @@
 package com.tzel.movieflix.data.movie.model
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class RemoteMovieDetailsResponse(
     val id: String?,
     val title: String?,
@@ -21,9 +23,4 @@ data class RemoteMovieDetailsResponse(
     @Json(name = "vote_count") val voteCount: Int?,
     val credits: RemoteCastResponse?,
     val homepage: String?
-)
-
-data class RemoteGenre(
-    val id: String?,
-    val name: String?
 )

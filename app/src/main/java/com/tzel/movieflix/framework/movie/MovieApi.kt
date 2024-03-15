@@ -1,5 +1,6 @@
 package com.tzel.movieflix.framework.movie
 
+import com.tzel.movieflix.data.movie.model.RemoteGenresResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieDetailsResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
 import com.tzel.movieflix.data.movie.model.RemoteReviewsResponse
@@ -20,4 +21,10 @@ interface MovieApi {
 
     @GET("/3/movie/{movie_id}/reviews")
     suspend fun fetchMovieReviews(@Path("movie_id") movieId: String, @Query("page") page: Int): Response<RemoteReviewsResponse>
+
+    @GET("/3/genre/movie/list")
+    suspend fun fetchGenres(): Response<RemoteGenresResponse>
+
+    @GET("/3/discover/movie?sort_by=popularity.desc&include_adult=false")
+    suspend fun fetchMoviesByGenre(@Query("with_genres") genreId: String, @Query("page") page: Int): Response<RemoteMovieResponse>
 }

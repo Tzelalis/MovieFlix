@@ -4,7 +4,7 @@ data class MovieDetails(
     val id: String,
     val title: String?,
     val adult: Boolean,
-    val genres: List<String>,
+    val genres: List<Genre>,
     val popularity: Double?,
     val overview: String?,
     val backdropPath: String?,

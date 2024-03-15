@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,8 +49,10 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.tzel.movieflix.R
+import com.tzel.movieflix.ui.core.StringResource
 import com.tzel.movieflix.ui.home.model.HomeUiState
 import com.tzel.movieflix.ui.home.model.MovieUiItem
+import com.tzel.movieflix.ui.home.model.MoviesUiCategory
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
@@ -64,7 +68,7 @@ fun HomeScreen(
 
     HomeContent(
         uiState = uiState,
-        navigateToMovieDetails = navigateToMovieDetails
+        navigateToMovieDetails = { navigateToMovieDetails(it) }
     )
 }
 
@@ -73,50 +77,110 @@ private fun HomeContent(
     uiState: State<HomeUiState>,
     navigateToMovieDetails: (id: String) -> Unit
 ) {
+    val imageRequester = rememberImageRequester()
+
+    val states = mutableListOf<LazyListState>()
+    uiState.value.genreMovies.forEach { _ ->
+        states.add(rememberLazyListState())
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        item {
+        item(key = "status_bar_padding") {
             Spacer(modifier = Modifier.statusBarsPadding())
         }
 
-        item {
-            HomeSectionTitle(titleRes = R.string.home_popular_title)
+        item(key = "popular_title") {
+            HomeSectionTitle(title = uiState.value.popularCategory.name)
         }
 
-        item {
+        item(
+            key = "popular_movies",
+            contentType = "movies_content_type"
+        ) {
             PopularMovies(
-                movies = uiState.value.popularMovies,
-                navigateToMovieDetails = navigateToMovieDetails
+                movies = uiState.value.popularCategory.movies,
+                navigateToMovieDetails = { navigateToMovieDetails(it) },
+                imageRequester = imageRequester
+            )
+        }
+
+        items(
+            count = uiState.value.genreMovies.size,
+            key = { index -> "genre_movies_$index" },
+            contentType = { _ -> "genre_movies_content_type" }
+        ) { index ->
+            val category = uiState.value.genreMovies[index]
+            HomeSectionTitle(title = category.name)
+            CategoryMovies(
+                movies = category.movies,
+                state = states[index],
+                navigateToMovieDetails = { navigateToMovieDetails(it) },
+                imageRequester = imageRequester
             )
         }
     }
-
 }
 
 @Composable
 private fun PopularMovies(
     movies: Flow<PagingData<MovieUiItem>>,
+    state: LazyListState = rememberLazyListState(),
+    imageRequester: ImageRequest.Builder = rememberImageRequester(),
     navigateToMovieDetails: (id: String) -> Unit
 ) {
-    val imageRequester = rememberImageRequester()
     val moviesLazyItems = movies.collectAsLazyPagingItems()
 
-
     LazyRow(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(2f),
+        state = state,
         horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
         contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_4dp),
     ) {
-
         items(
             count = moviesLazyItems.itemCount,
-            key = moviesLazyItems.itemKey { it.tag },   //use it.tag to avoid duplicate keys on different pages
+            key = moviesLazyItems.itemKey { it.key },
             contentType = moviesLazyItems.itemContentType { "movie" }
         ) { index ->
             moviesLazyItems[index]?.let { movie ->
                 MovieItem(
-                    modifier = Modifier.fillParentMaxWidth(0.8f),
+                    modifier = Modifier.fillParentMaxWidth(0.7f),
+                    movie = movie,
+                    imageRequester = imageRequester,
+                    onMovieClick = { navigateToMovieDetails(movie.id) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoryMovies(
+    movies: Flow<PagingData<MovieUiItem>>,
+    state: LazyListState = rememberLazyListState(),
+    imageRequester: ImageRequest.Builder = rememberImageRequester(),
+    navigateToMovieDetails: (id: String) -> Unit
+) {
+    val moviesLazyItems = movies.collectAsLazyPagingItems()
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(2f),
+        state = state,
+        horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
+        contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_4dp),
+    ) {
+        items(
+            count = moviesLazyItems.itemCount,
+            key = moviesLazyItems.itemKey { it.key },
+            contentType = moviesLazyItems.itemContentType { "movie" }
+        ) { index ->
+            moviesLazyItems[index]?.let { movie ->
+                MoviePortraitItem(
+                    modifier = Modifier.fillParentMaxWidth(0.3f),
                     movie = movie,
                     imageRequester = imageRequester,
                     onMovieClick = { navigateToMovieDetails(movie.id) }
@@ -134,7 +198,7 @@ private fun MovieItem(
     onMovieClick: () -> Unit
 ) {
     Column(modifier = modifier
-        .aspectRatio(1.7f)
+        .fillMaxHeight()
         .clip(MaterialTheme.shapes.large)
         .clickable { onMovieClick() }
     ) {
@@ -196,11 +260,41 @@ private fun MovieItem(
 }
 
 @Composable
-private fun FavoriteIcon(color: Color) {
+private fun MoviePortraitItem(
+    modifier: Modifier = Modifier,
+    movie: MovieUiItem,
+    imageRequester: ImageRequest.Builder,
+    onMovieClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .fillMaxHeight()
+            .clip(MaterialTheme.shapes.large)
+            .clickable { onMovieClick() },
+        contentAlignment = Alignment.TopEnd
+    ) {
+        AsyncImage(
+            modifier = Modifier.fillMaxSize(),
+            model = imageRequester.data(movie.backdropPath).build(),
+            contentDescription = movie.title,
+            contentScale = ContentScale.Crop
+        )
+        FavoriteIcon(
+            modifier = Modifier.padding(Spacing_8dp),
+            color = movie.favoriteIconColor,
+        )
+    }
+}
+
+@Composable
+private fun FavoriteIcon(
+    color: Color,
+    modifier: Modifier = Modifier
+) {
     val animatedColor by animateColorAsState(targetValue = color, label = "favorite_animation")
 
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = modifier.size(18.dp),
         painter = rememberAsyncImagePainter(model = R.drawable.ic_heart),
         contentDescription = stringResource(id = R.string.home_favorite_content_description),
         tint = animatedColor
@@ -227,7 +321,8 @@ private fun HomePreview() {
 
             }
         }.flow
-        mutableStateOf(HomeUiState(pager))
+        val category = MoviesUiCategory(name = StringResource.Text("Popular"), movies = pager)
+        mutableStateOf(HomeUiState(category))
     }
 
     MovieFlixTheme {
