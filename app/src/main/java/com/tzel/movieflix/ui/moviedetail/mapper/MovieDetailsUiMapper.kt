@@ -8,7 +8,8 @@ import javax.inject.Inject
 
 class MovieDetailsUiMapper @Inject constructor(
     private val imagePathMapper: ImagePathMapper,
-    private val movieStatsUiMapper: MovieStatsUiMapper
+    private val movieStatsUiMapper: MovieStatsUiMapper,
+    private val reviewUiMapper: ReviewUiMapper,
 ) {
     operator fun invoke(details: MovieDetails): MovieDetailsUi {
         return MovieDetailsUi(
@@ -29,7 +30,8 @@ class MovieDetailsUiMapper @Inject constructor(
             voteCount = details.voteCount,
             cast = details.cast.distinctBy { it.id },
             stats = movieStatsUiMapper(details.releaseDate, details.runtime),
-            homepage = details.homepage
+            homepage = details.homepage,
+            reviews = reviewUiMapper(details.reviews)
         )
     }
 

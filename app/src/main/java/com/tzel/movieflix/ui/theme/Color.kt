@@ -8,3 +8,4 @@ val Pink80 = Color(0xFFEFB8C8)
 
 val RedMedium = Color(0xFFDB0101)
 val GrayLight = Color(0xFF8B8B8B)
+val BlueMedium = Color(0xFF0C5FDD)

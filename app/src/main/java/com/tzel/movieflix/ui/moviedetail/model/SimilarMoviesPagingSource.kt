@@ -5,18 +5,12 @@ import androidx.paging.PagingState
 import com.tzel.movieflix.ui.moviedetail.mapper.SimilarMoviesUiMapper
 import com.tzel.movieflix.usecase.movie.GetSimilarMoviesUseCase
 import timber.log.Timber
-import javax.inject.Inject
 
-class SimilarMoviesPagingSource @Inject constructor(
+class SimilarMoviesPagingSource(
+    private val movieId: String,
     private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val similarMoviesUiMapper: SimilarMoviesUiMapper
 ) : PagingSource<Int, SimilarMovieUiItem>() {
-
-    var movieId: String = ""
-
-    fun updateMovie(movieId: String) {
-        this.movieId = movieId
-    }
     override fun getRefreshKey(state: PagingState<Int, SimilarMovieUiItem>): Int? {
         return state.anchorPosition
     }

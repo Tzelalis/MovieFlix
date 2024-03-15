@@ -8,7 +8,7 @@ sealed class MovieDetailsUiState {
     data object Loading : MovieDetailsUiState()
     data class Success(
         val movieDetails: MovieDetailsUi,
-        val similarMovies: Flow<PagingData<SimilarMovieUiItem>>
+        val similarMovies: Flow<PagingData<SimilarMovieUiItem>>,
     ) : MovieDetailsUiState()
 
     data object Error : MovieDetailsUiState()

@@ -3,6 +3,7 @@ package com.tzel.movieflix.ui.moviedetail.composable
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,6 +26,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,10 +69,14 @@ import com.tzel.movieflix.ui.core.StatusBarBackground
 import com.tzel.movieflix.ui.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.ui.moviedetail.model.MovieDetailsUiState
 import com.tzel.movieflix.ui.moviedetail.model.MovieUiStats
+import com.tzel.movieflix.ui.moviedetail.model.ReviewUi
 import com.tzel.movieflix.ui.moviedetail.model.SimilarMovieUiItem
+import com.tzel.movieflix.ui.theme.BlueMedium
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
+import com.tzel.movieflix.ui.theme.SpacingCustom_12dp
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp
+import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import com.tzel.movieflix.utils.composable.modifier.noRippleClickable
@@ -160,6 +168,32 @@ private fun MovieDetailsDefault(
             item {
                 CastRow(cast = uiState.movieDetails.cast)
             }
+        }
+
+        item {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                MovieDetailsHeader(
+                    modifier = Modifier.weight(1f),
+                    header = stringResource(id = R.string.home_details_reviews_title)
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = SpacingCustom_12dp, end = SpacingCustom_12dp, top = Spacing_32dp, bottom = Spacing_8dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .clickable { }
+                        .padding(horizontal = Spacing_4dp, vertical = Spacing_8dp),
+                    text = stringResource(id = R.string.home_details_reviews_see_more),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = BlueMedium,
+                )
+            }
+        }
+
+        item {
+            ReviewsRow(reviews = uiState.movieDetails.reviews)
         }
 
         item {
@@ -406,6 +440,51 @@ private fun CastItem(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ReviewsRow(reviews: List<ReviewUi>) {
+    val state = rememberPagerState(pageCount = { reviews.size })
+    HorizontalPager(
+        state = state,
+        contentPadding = PaddingValues(horizontal = Spacing_16dp),
+        pageSpacing = Spacing_16dp
+    ) { index ->
+        ReviewItem(
+            modifier = Modifier.fillMaxWidth(),
+            review = reviews[index]
+        )
+    }
+}
+
+@Composable
+private fun ReviewItem(
+    review: ReviewUi,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    Column(
+        modifier = modifier
+            .aspectRatio(2f)
+            .clip(MaterialTheme.shapes.medium)
+            .border(1.dp, MaterialTheme.colorScheme.onSurface, MaterialTheme.shapes.medium)
+            .clickable(review.isClickable) { review.url?.let { context.openUrlInBrowser(url = review.url, review.author) } }
+            .padding(Spacing_8dp),
+        verticalArrangement = Arrangement.spacedBy(Spacing_4dp),
+    ) {
+        Text(
+            text = review.author,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = review.content,
+            style = MaterialTheme.typography.bodySmall.copy(fontStyle = FontStyle.Italic),
+            color = MaterialTheme.colorScheme.onTertiary,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
 @Composable
 fun SimilarMoviesRow(
     movies: Flow<PagingData<SimilarMovieUiItem>>,
@@ -503,7 +582,8 @@ private fun MovieDetailsPreview() {
                     ),
                     popularity = 0.0,
                     stats = emptyList(),
-                    homepage = "Movie Homepage"
+                    homepage = "Movie Homepage",
+                    reviews = emptyList()
                 ),
                 similarMovies = pager
             )

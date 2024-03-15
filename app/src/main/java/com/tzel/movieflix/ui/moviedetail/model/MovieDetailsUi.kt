@@ -18,7 +18,8 @@ data class MovieDetailsUi(
     val voteAverage: Double?,
     val voteCount: Int?,
     val cast: List<Cast>,
-    val homepage: String?
+    val homepage: String?,
+    val reviews: List<ReviewUi>
 )
 
 data class MovieUiStats(

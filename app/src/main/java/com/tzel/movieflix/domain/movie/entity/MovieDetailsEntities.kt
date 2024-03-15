@@ -18,6 +18,7 @@ data class MovieDetails(
     val voteCount: Int?,
     val cast: List<Cast>,
     val homepage: String?,
+    val reviews: List<Review>? = null,
 )
 
 
