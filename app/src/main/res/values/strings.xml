@@ -8,4 +8,7 @@
     <!-- Home -->
     <string name="home_popular_title">Popular</string>
     <string name="home_favorite_content_description">favorite movie</string>
+
+    <!-- Home Details -->
+    <string name="home_details_similar_movies_title">Similar Movies</string>
 </resources>

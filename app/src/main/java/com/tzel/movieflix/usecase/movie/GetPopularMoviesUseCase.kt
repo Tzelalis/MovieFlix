@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetPopularMoviesUseCase @Inject constructor(private val repo: MovieRepository) {
     suspend operator fun invoke(page: Int): MovieResult? {
         return try {
-            return repo.getPopularMovies(page)
+            repo.getPopularMovies(page)
         } catch (e: Exception) {
             Timber.tag(GetPopularMoviesUseCase::class.java.simpleName).e(e)
             null
