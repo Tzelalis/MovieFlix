@@ -1,13 +1,15 @@
 package com.tzel.movieflix.ui.moviedetail
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.tzel.movieflix.ui.core.BaseViewModel
 import com.tzel.movieflix.ui.moviedetail.mapper.MovieDetailsUiMapper
 import com.tzel.movieflix.ui.moviedetail.model.MovieDetailsUiState
+import com.tzel.movieflix.ui.moviedetail.model.SimilarMoviesPagingSource
 import com.tzel.movieflix.ui.moviedetail.navigation.MovieDetailsIdArgument
 import com.tzel.movieflix.usecase.movie.GetMovieDetailsUseCase
 import com.tzel.movieflix.usecase.movie.GetReviewsUseCase
-import com.tzel.movieflix.usecase.movie.GetSimilarMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,12 +20,13 @@ import javax.inject.Inject
 class MovieDetailsViewModel @Inject constructor(
     private val getMovieFullDetailsUseCase: GetMovieDetailsUseCase,
     private val getReviewsUseCase: GetReviewsUseCase,
-    private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val movieDetailsUiMapper: MovieDetailsUiMapper,
+    private val similarMoviesPagingSource: SimilarMoviesPagingSource,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     private val movieId = savedStateHandle.get<String>(MovieDetailsIdArgument) ?: ""
+    private val similarMovies = Pager(PagingConfig(pageSize = PAGE_SIZE)) { similarMoviesPagingSource }.flow
 
     private val _uiState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
     val uiState = _uiState.asStateFlow()
@@ -31,7 +34,7 @@ class MovieDetailsViewModel @Inject constructor(
     init {
         loadMovieDetails(movieId)
         loadReviews(movieId)
-        loadSimilarMovies(movieId)
+        similarMoviesPagingSource.updateMovie(movieId)
     }
 
     private fun loadMovieDetails(movieId: String) {
@@ -41,7 +44,10 @@ class MovieDetailsViewModel @Inject constructor(
             _uiState.update {
                 when (movieDetails) {
                     null -> MovieDetailsUiState.Error
-                    else -> MovieDetailsUiState.Success(movieDetailsUiMapper(movieDetails))
+                    else -> MovieDetailsUiState.Success(
+                        movieDetails = movieDetailsUiMapper(movieDetails),
+                        similarMovies = similarMovies
+                    )
                 }
             }
         }
@@ -57,13 +63,7 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-    fun loadSimilarMovies(movieId: String) {
-        launch {
-            val similarMovies = getSimilarMoviesUseCase(movieId)
-
-            _uiState.update {
-                it
-            }
-        }
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }

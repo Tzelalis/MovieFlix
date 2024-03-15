@@ -27,6 +27,9 @@ internal fun AppNavHost(
 
         homeScreen(navigateToMovieDetails = { id -> navController.navigateToMovieDetails(id) })
 
-        movieDetailsScreen()
+        movieDetailsScreen(
+            navigateToMovieDetails = { id -> navController.navigateToMovieDetails(id) },
+            onBackClick = { navController.navigateUp() }
+        )
     }
 }

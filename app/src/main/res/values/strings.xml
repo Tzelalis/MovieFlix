@@ -11,4 +11,6 @@
 
     <!-- Home Details -->
     <string name="home_details_similar_movies_title">Similar Movies</string>
+    <string name="home_details_similar_cast_title">Cast</string>
+    <string name="home_details_description_title">Description</string>
 </resources>

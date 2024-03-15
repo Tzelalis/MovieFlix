@@ -126,6 +126,8 @@ dependencies {
 
     implementation(libs.androidx.datastore)
 
+    implementation(libs.androidx.browser)
+
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.runtime)

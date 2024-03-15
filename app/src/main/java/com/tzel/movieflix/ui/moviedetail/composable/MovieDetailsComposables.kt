@@ -5,21 +5,26 @@ import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,37 +48,60 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.tzel.movieflix.R
 import com.tzel.movieflix.domain.movie.entity.Cast
+import com.tzel.movieflix.ui.core.StatusBarBackground
 import com.tzel.movieflix.ui.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.ui.moviedetail.model.MovieDetailsUiState
 import com.tzel.movieflix.ui.moviedetail.model.MovieUiStats
+import com.tzel.movieflix.ui.moviedetail.model.SimilarMovieUiItem
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp
-import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import com.tzel.movieflix.utils.composable.modifier.noRippleClickable
+import com.tzel.movieflix.utils.ext.openUrlInBrowser
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun MovieDetailsScreen(
-    uiState: State<MovieDetailsUiState>
+    uiState: State<MovieDetailsUiState>,
+    onBackClick: () -> Unit,
+    navigateToMovie: (String) -> Unit
 ) {
-    MovieDetailsContent(uiState = uiState)
+    MovieDetailsContent(
+        uiState = uiState,
+        onBackClick = onBackClick,
+        navigateToMovie = navigateToMovie
+    )
 }
 
 @Composable
 private fun MovieDetailsContent(
-    uiState: State<MovieDetailsUiState>
+    uiState: State<MovieDetailsUiState>,
+    onBackClick: () -> Unit,
+    navigateToMovie: (String) -> Unit
 ) {
 
     when (val state = uiState.value) {
         is MovieDetailsUiState.Success -> {
-            MovieDetailsDefault(uiState = state)
+            MovieDetailsDefault(
+                uiState = state,
+                onBackClick = onBackClick,
+                navigateToMovie = navigateToMovie
+            )
         }
 
         MovieDetailsUiState.Error -> Unit
@@ -84,14 +112,21 @@ private fun MovieDetailsContent(
 
 @Composable
 private fun MovieDetailsDefault(
-    uiState: MovieDetailsUiState.Success
+    uiState: MovieDetailsUiState.Success,
+    onBackClick: () -> Unit,
+    navigateToMovie: (String) -> Unit
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    val state = rememberLazyListState()
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        state = state,
+    ) {
         item {
             MovieDetailsImage(
+                modifier = Modifier.fillMaxWidth(),
                 movieUrl = uiState.movieDetails.homepage,
                 imageUrl = (uiState).movieDetails.imageUrl ?: "",
-                modifier = Modifier.fillMaxWidth(),
             )
         }
 
@@ -103,25 +138,51 @@ private fun MovieDetailsDefault(
         }
 
         item {
-            MovieStatsRow(stats = uiState.movieDetails.stats)
+            MovieStatsRow(
+                modifier = Modifier.padding(top = Spacing_32dp),
+                stats = uiState.movieDetails.stats,
+            )
         }
+
+        item {
+            MovieDetailsHeader(header = uiState.movieDetails.tagline ?: stringResource(id = R.string.home_details_description_title))
+        }
+
 
         item {
             MovieOverview(overview = uiState.movieDetails.overview)
         }
 
-        item {
-            CastRow(cast = uiState.movieDetails.cast)
+        if (uiState.movieDetails.cast.isNotEmpty()) {
+            item {
+                MovieDetailsHeader(header = stringResource(id = R.string.home_details_similar_cast_title))
+            }
+            item {
+                CastRow(cast = uiState.movieDetails.cast)
+            }
         }
 
         item {
-            MovieDetailsHeader(stringResource(id = R.string.home_details_similar_movies_title))
+            MovieDetailsHeader(header = stringResource(id = R.string.home_details_similar_movies_title))
         }
 
         item {
+            SimilarMoviesRow(
+                movies = uiState.similarMovies,
+                onMovieClick = { movieId -> navigateToMovie(movieId) }
+            )
+        }
 
+        item {
+            Spacer(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .height(Spacing_32dp)
+            )
         }
     }
+
+    StatusBarBackground(state = state)
 }
 
 @Composable
@@ -176,7 +237,7 @@ private fun MovieDetailsImage(
 }
 
 private fun Context.shareMovie(url: String?) {
-    if(url.isNullOrBlank()) return
+    if (url.isNullOrBlank()) return
 
     val sendIntent = Intent().apply {
         action = Intent.ACTION_SEND
@@ -194,13 +255,11 @@ private fun MovieDetailsTitle(
     title: String?,
     genres: String,
 ) {
-    title?.let {
-        Text(
-            modifier = Modifier.padding(start = Spacing_16dp, end = Spacing_16dp, bottom = Spacing_8dp),
-            text = title,
-            style = MaterialTheme.typography.titleLarge
-        )
-    }
+    Text(
+        modifier = Modifier.padding(start = Spacing_16dp, end = Spacing_16dp, bottom = Spacing_8dp),
+        text = title.orEmpty(),
+        style = MaterialTheme.typography.titleLarge
+    )
     Text(
         modifier = Modifier.padding(horizontal = Spacing_16dp),
         text = genres,
@@ -209,22 +268,26 @@ private fun MovieDetailsTitle(
 }
 
 @Composable
-private fun MovieDetailsHeader(header: String) {
+private fun MovieDetailsHeader(
+    header: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
-        modifier = Modifier.padding(horizontal = Spacing_16dp),
+        modifier = modifier.padding(start = Spacing_16dp, end = Spacing_16dp, top = Spacing_32dp, bottom = Spacing_8dp),
         text = header,
-        style = MaterialTheme.typography.titleMedium
+        style = MaterialTheme.typography.headlineMedium
     )
 }
 
-
-
 @Composable
-private fun MovieStatsRow(stats: List<MovieUiStats>) {
+private fun MovieStatsRow(
+    stats: List<MovieUiStats>,
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = Spacing_16dp, vertical = Spacing_32dp),
+            .padding(horizontal = Spacing_16dp),
         horizontalArrangement = Arrangement.spacedBy(Spacing_8dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -248,9 +311,7 @@ private fun MovieStatsItem(
     contentDescription: String? = null
 ) {
     Column(
-        modifier = modifier
-            .wrapContentWidth()
-            .padding(Spacing_4dp),
+        modifier = modifier.wrapContentWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Spacing_8dp)
     ) {
@@ -291,11 +352,11 @@ private fun CastRow(
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
-        contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_32dp)
+        contentPadding = PaddingValues(horizontal = Spacing_16dp)
     ) {
         items(items = cast, key = { it.id }) { actor ->
             CastItem(
-                modifier = Modifier.fillParentMaxWidth(0.3f),
+                modifier = Modifier.fillParentMaxWidth(0.35f),
                 actor = actor,
                 asyncImageRequest = asyncImageRequest
             )
@@ -309,6 +370,8 @@ private fun CastItem(
     modifier: Modifier = Modifier,
     asyncImageRequest: ImageRequest.Builder
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Spacing_8dp),
@@ -319,7 +382,8 @@ private fun CastItem(
                 .fillMaxWidth()
                 .aspectRatio(1f)
                 .clip(CircleShape)
-                .border(width = 1.dp, color = MaterialTheme.colorScheme.onSurface, shape = CircleShape),
+                .border(width = 1.dp, color = MaterialTheme.colorScheme.onSurface, shape = CircleShape)
+                .clickable { context.openUrlInBrowser(actor.profileUrl, actor.name) },
             model = asyncImageRequest
                 .data(actor.imageUrl)
                 .placeholder(R.drawable.ic_user_tie)
@@ -333,6 +397,7 @@ private fun CastItem(
             text = actor.name ?: "",
             style = MaterialTheme.typography.labelMedium,
             maxLines = 2,
+            minLines = 2,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.onSurface,
@@ -341,10 +406,76 @@ private fun CastItem(
     }
 }
 
+@Composable
+fun SimilarMoviesRow(
+    movies: Flow<PagingData<SimilarMovieUiItem>>,
+    modifier: Modifier = Modifier,
+    asyncImageRequest: ImageRequest.Builder = rememberImageRequester(),
+    onMovieClick: (String) -> Unit
+) {
+    val moviesLazyItems = movies.collectAsLazyPagingItems()
+
+    LazyRow(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
+        contentPadding = PaddingValues(horizontal = Spacing_16dp)
+    ) {
+        items(
+            count = moviesLazyItems.itemCount,
+            key = moviesLazyItems.itemKey { it.key },
+            contentType = moviesLazyItems.itemContentType { "similar_movie" }
+        ) { index ->
+            moviesLazyItems[index]?.let { movie ->
+                SimilarMovieItem(
+                    modifier = Modifier.fillParentMaxWidth(0.28f),
+                    movie = movie,
+                    asyncImageRequest = asyncImageRequest,
+                    onMovieClick = onMovieClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SimilarMovieItem(
+    movie: SimilarMovieUiItem,
+    modifier: Modifier = Modifier,
+    asyncImageRequest: ImageRequest.Builder,
+    onMovieClick: (String) -> Unit
+) {
+    AsyncImage(
+        modifier = modifier
+            .aspectRatio(0.6f)
+            .clip(MaterialTheme.shapes.large)
+            .clickable { onMovieClick(movie.id) },
+        model = asyncImageRequest.data(movie.imageUrl).build(),
+        contentDescription = movie.contentDescription,
+        contentScale = ContentScale.Crop
+    )
+}
+
 @Preview
 @Composable
 private fun MovieDetailsPreview() {
     val uiState = remember {
+        val pager = Pager(PagingConfig(pageSize = 20)) {
+            object : PagingSource<Int, SimilarMovieUiItem>() {
+                override fun getRefreshKey(state: PagingState<Int, SimilarMovieUiItem>): Int? {
+                    return state.anchorPosition
+                }
+
+                override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SimilarMovieUiItem> {
+                    return LoadResult.Page(
+                        data = emptyList(),
+                        prevKey = null,
+                        nextKey = null
+                    )
+                }
+
+            }
+        }.flow
+
         mutableStateOf(
             MovieDetailsUiState.Success(
                 movieDetails = MovieDetailsUi(
@@ -373,12 +504,17 @@ private fun MovieDetailsPreview() {
                     popularity = 0.0,
                     stats = emptyList(),
                     homepage = "Movie Homepage"
-                )
+                ),
+                similarMovies = pager
             )
         )
     }
 
     MovieFlixTheme {
-        MovieDetailsScreen(uiState)
+        MovieDetailsScreen(
+            uiState = uiState,
+            onBackClick = {},
+            navigateToMovie = {}
+        )
     }
 }

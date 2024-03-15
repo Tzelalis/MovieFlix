@@ -13,15 +13,25 @@ import com.tzel.movieflix.ui.moviedetail.composable.MovieDetailsScreen
 private const val MovieDetailsRoute = "movie_details"
 const val MovieDetailsIdArgument = "movie_id"
 
-fun NavGraphBuilder.movieDetailsScreen() {
+fun NavGraphBuilder.movieDetailsScreen(
+    navigateToMovieDetails: (String) -> Unit,
+    onBackClick: () -> Unit
+) {
     composable("$MovieDetailsRoute/{$MovieDetailsIdArgument}") {
         val viewModel: MovieDetailsViewModel = hiltViewModel()
         val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-        MovieDetailsScreen(uiState = uiState)
+        MovieDetailsScreen(
+            uiState = uiState,
+            navigateToMovie = navigateToMovieDetails,
+            onBackClick = onBackClick
+        )
     }
 }
 
 fun NavController.navigateToMovieDetails(movieId: String) {
-    this.safeNavigate("$MovieDetailsRoute/$movieId")
+    this.safeNavigate(
+        route = "$MovieDetailsRoute/$movieId",
+        launchSingleTop = false
+    )
 }

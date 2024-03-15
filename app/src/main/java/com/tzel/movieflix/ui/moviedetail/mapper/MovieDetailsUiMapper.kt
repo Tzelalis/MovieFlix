@@ -24,7 +24,7 @@ class MovieDetailsUiMapper @Inject constructor(
             ),
             budget = details.budget,
             status = details.status,
-            tagline = details.tagline,
+            tagline = mapTagline(details.tagline),
             voteAverage = details.voteAverage,
             voteCount = details.voteCount,
             cast = details.cast.distinctBy { it.id },
@@ -41,5 +41,11 @@ class MovieDetailsUiMapper @Inject constructor(
             posterPath,
             ImageSize.PosterSize.W500
         ) ?: ""
+    }
+
+    private fun mapTagline(tagline: String?): String? {
+        if(tagline.isNullOrBlank()) return null
+
+        return tagline
     }
 }
