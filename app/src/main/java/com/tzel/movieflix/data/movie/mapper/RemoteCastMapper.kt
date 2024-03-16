@@ -2,7 +2,7 @@ package com.tzel.movieflix.data.movie.mapper
 
 import com.tzel.movieflix.data.movie.model.RemoteCast
 import com.tzel.movieflix.domain.movie.entity.Cast
-import com.tzel.movieflix.ui.core.ImagePathMapper
+import com.tzel.movieflix.ui.core.mapper.ImagePathMapper
 import javax.inject.Inject
 
 class RemoteCastMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) {

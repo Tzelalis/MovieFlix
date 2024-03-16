@@ -1,8 +1,12 @@
 package com.tzel.movieflix.ui.theme
 
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
@@ -23,14 +27,34 @@ private val DarkColorScheme = darkColorScheme(
    */
 )
 
+private object RippleDarkTheme : RippleTheme {
+
+    //Your custom implementation...
+    @Composable
+    override fun defaultColor() =
+        RippleTheme.defaultRippleColor(
+            Color.White,
+            lightTheme = true,
+        )
+
+    @Composable
+    override fun rippleAlpha(): RippleAlpha =
+        RippleTheme.defaultRippleAlpha(
+            Color.Black,
+            lightTheme = true
+        )
+}
+
 @Composable
 fun MovieFlixTheme(
     content: @Composable () -> Unit
 ) {
-    MaterialTheme(
-        colorScheme = DarkColorScheme,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+    CompositionLocalProvider(LocalRippleTheme provides RippleDarkTheme) {
+        MaterialTheme(
+            colorScheme = DarkColorScheme,
+            typography = Typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
 }

@@ -6,10 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.tzel.movieflix.ui.home.navigation.homeScreen
-import com.tzel.movieflix.ui.home.navigation.navigateToHome
-import com.tzel.movieflix.ui.moviedetail.navigation.movieDetailsScreen
-import com.tzel.movieflix.ui.moviedetail.navigation.navigateToMovieDetails
+import com.tzel.movieflix.ui.movie.home.navigation.homeScreen
+import com.tzel.movieflix.ui.movie.home.navigation.navigateToHome
+import com.tzel.movieflix.ui.movie.moviedetail.navigation.movieDetailsScreen
+import com.tzel.movieflix.ui.movie.moviedetail.navigation.navigateToMovieDetails
 import com.tzel.movieflix.ui.splash.navigation.SplashRoute
 import com.tzel.movieflix.ui.splash.navigation.splashScreen
 
