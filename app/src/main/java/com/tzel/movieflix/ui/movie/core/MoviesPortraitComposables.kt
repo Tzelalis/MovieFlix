@@ -42,7 +42,7 @@ fun MoviesPortraitLazyRow(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(2f),
+            .aspectRatio(2.2f),
         state = state,
         horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
         contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_4dp),
@@ -54,7 +54,7 @@ fun MoviesPortraitLazyRow(
         ) { index ->
             moviesLazyItems[index]?.let { movie ->
                 MoviePortraitItem(
-                    modifier = Modifier.fillParentMaxWidth(0.3f),
+                    modifier = Modifier.fillParentMaxWidth(0.28f),
                     movie = movie,
                     imageRequester = imageRequester,
                     onMovieClick = { navigateToMovieDetails(movie.id) }
@@ -80,7 +80,7 @@ private fun MoviePortraitItem(
     ) {
         AsyncImage(
             modifier = Modifier.fillMaxSize(),
-            model = imageRequester.data(movie.backdropPath).build(),
+            model = imageRequester.data(movie.posterPath).build(),
             contentDescription = movie.title,
             contentScale = ContentScale.Crop
         )
