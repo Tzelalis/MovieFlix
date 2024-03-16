@@ -1,5 +1,6 @@
 package com.tzel.movieflix.data.movie
 
+import com.tzel.movieflix.data.movie.model.LocalMovie
 import com.tzel.movieflix.data.movie.model.RemoteGenresResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieDetailsResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
@@ -17,4 +18,14 @@ interface MovieDataSource {
     suspend fun getGenres(): RemoteGenresResponse
 
     suspend fun getMoviesByGenre(genreId: String, page: Int): RemoteMovieResponse
+
+    suspend fun getLocalMovies(): List<LocalMovie>
+
+    suspend fun getFavoriteMovies(): List<LocalMovie>
+
+    suspend fun deleteMovie(vararg movie: LocalMovie)
+
+    suspend fun saveMovie(vararg movie: LocalMovie)
+
+    suspend fun updateMovies(vararg movies: LocalMovie)
 }

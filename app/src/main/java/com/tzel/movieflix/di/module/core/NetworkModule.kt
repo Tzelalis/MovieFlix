@@ -4,6 +4,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tzel.movieflix.BuildConfig
 import com.tzel.movieflix.di.module.interceptor.AuthInterceptor
+import com.tzel.movieflix.di.module.interceptor.NetworkConnectivityInterceptor
 import com.tzel.movieflix.di.qualifier.BaseApiOkHttpClient
 import dagger.Module
 import dagger.Provides
@@ -54,6 +55,7 @@ object NetworkModule {
         httpLoggingInterceptor: HttpLoggingInterceptor,
         connectionSpec: ConnectionSpec,
         authInterceptor: AuthInterceptor,
+        connectivityInterceptor: NetworkConnectivityInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -64,6 +66,7 @@ object NetworkModule {
                     addNetworkInterceptor(httpLoggingInterceptor)
                 }
             }
+            .addInterceptor(connectivityInterceptor)
             .addInterceptor(authInterceptor)
             .build()
     }

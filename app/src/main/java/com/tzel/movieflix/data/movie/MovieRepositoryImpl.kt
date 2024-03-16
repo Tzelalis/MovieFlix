@@ -16,10 +16,14 @@ class MovieRepositoryImpl @Inject constructor(
     private val remoteMovieMapper: RemoteMovieMapper,
     private val remoteMovieDetailsMapper: RemoteMovieDetailsMapper,
     private val remoteReviewsMapper: RemoteReviewsMapper,
-    private val remoteGenresMapper: RemoteGenresMapper
+    private val remoteGenresMapper: RemoteGenresMapper,
 ) : MovieRepository {
     override suspend fun getPopularMovies(page: Int): MovieResult {
-        return remoteMovieMapper(dataSource.getPopularMovies(page))
+        return try {
+            remoteMovieMapper(dataSource.getPopularMovies(page))
+        }catch (e: Exception) {
+            throw e
+        }
     }
 
     override suspend fun getMovieDetails(movieId: String): MovieDetails {

@@ -1,6 +1,8 @@
 package com.tzel.movieflix.di.module
 
 import com.tzel.movieflix.BuildConfig
+import com.tzel.movieflix.data.core.AppDatabase
+import com.tzel.movieflix.data.movie.MovieDao
 import com.tzel.movieflix.data.movie.MovieDataSource
 import com.tzel.movieflix.data.movie.MovieRepositoryImpl
 import com.tzel.movieflix.di.qualifier.BaseApiOkHttpClient
@@ -33,6 +35,12 @@ object MoviesModule {
             .addConverterFactory(converterFactory)
             .build()
             .create(MovieApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMoviesDao(appDatabase: AppDatabase): MovieDao {
+        return appDatabase.movieDao()
     }
 }
 

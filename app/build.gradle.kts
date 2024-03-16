@@ -4,10 +4,10 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.jetbrainsKotlinKapt)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -85,6 +85,10 @@ android {
         buildConfig = true
     }
 
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
     applicationVariants.all {
         outputs.all {
             val output = (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl)
@@ -108,7 +112,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     implementation(libs.hilt.navigation.compose)
 
