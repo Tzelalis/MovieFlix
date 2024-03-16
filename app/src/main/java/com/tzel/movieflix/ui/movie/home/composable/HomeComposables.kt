@@ -1,6 +1,5 @@
 package com.tzel.movieflix.ui.movie.home.composable
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,18 +14,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,9 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -47,11 +41,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.tzel.movieflix.R
 import com.tzel.movieflix.ui.core.composable.StatusBarBackground
 import com.tzel.movieflix.ui.core.composable.StringResource
+import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
+import com.tzel.movieflix.ui.movie.core.FavoriteIcon
 import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.movie.home.model.MoviesUiCategory
@@ -117,18 +111,19 @@ private fun HomeContent(
         ) { index ->
             val category = uiState.value.genreMovies[index]
             HomeSectionTitle(title = category.name)
-            CategoryMovies(
+            MoviesPortraitLazyRow(
                 movies = category.movies,
                 state = states[index],
                 navigateToMovieDetails = { navigateToMovieDetails(it) },
                 imageRequester = imageRequester
             )
         }
-        
+
         item(key = "bottom_padding") {
-            Spacer(modifier = Modifier
-                .navigationBarsPadding()
-                .padding(bottom = Spacing_32dp)
+            Spacer(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(bottom = Spacing_32dp)
             )
         }
     }
@@ -161,39 +156,6 @@ private fun PopularMovies(
             moviesLazyItems[index]?.let { movie ->
                 MovieItem(
                     modifier = Modifier.fillParentMaxWidth(0.7f),
-                    movie = movie,
-                    imageRequester = imageRequester,
-                    onMovieClick = { navigateToMovieDetails(movie.id) }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun CategoryMovies(
-    movies: Flow<PagingData<MovieUiItem>>,
-    state: LazyListState = rememberLazyListState(),
-    imageRequester: ImageRequest.Builder = rememberImageRequester(),
-    navigateToMovieDetails: (id: String) -> Unit
-) {
-    val moviesLazyItems = movies.collectAsLazyPagingItems()
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(2f),
-        state = state,
-        horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
-        contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_4dp),
-    ) {
-        items(
-            count = moviesLazyItems.itemCount,
-            key = moviesLazyItems.itemKey { it.key },
-            contentType = moviesLazyItems.itemContentType { "movie" }
-        ) { index ->
-            moviesLazyItems[index]?.let { movie ->
-                MoviePortraitItem(
-                    modifier = Modifier.fillParentMaxWidth(0.3f),
                     movie = movie,
                     imageRequester = imageRequester,
                     onMovieClick = { navigateToMovieDetails(movie.id) }
@@ -269,49 +231,6 @@ private fun MovieItem(
             FavoriteIcon(color = movie.favoriteIconColor)
         }
     }
-
-}
-
-@Composable
-private fun MoviePortraitItem(
-    modifier: Modifier = Modifier,
-    movie: MovieUiItem,
-    imageRequester: ImageRequest.Builder,
-    onMovieClick: () -> Unit
-) {
-    Box(
-        modifier = modifier
-            .fillMaxHeight()
-            .clip(MaterialTheme.shapes.large)
-            .clickable { onMovieClick() },
-        contentAlignment = Alignment.TopEnd
-    ) {
-        AsyncImage(
-            modifier = Modifier.fillMaxSize(),
-            model = imageRequester.data(movie.backdropPath).build(),
-            contentDescription = movie.title,
-            contentScale = ContentScale.Crop
-        )
-        FavoriteIcon(
-            modifier = Modifier.padding(Spacing_8dp),
-            color = movie.favoriteIconColor,
-        )
-    }
-}
-
-@Composable
-private fun FavoriteIcon(
-    color: Color,
-    modifier: Modifier = Modifier
-) {
-    val animatedColor by animateColorAsState(targetValue = color, label = "favorite_animation")
-
-    Icon(
-        modifier = modifier.size(18.dp),
-        painter = rememberAsyncImagePainter(model = R.drawable.ic_heart),
-        contentDescription = stringResource(id = R.string.home_favorite_content_description),
-        tint = animatedColor
-    )
 }
 
 @Preview

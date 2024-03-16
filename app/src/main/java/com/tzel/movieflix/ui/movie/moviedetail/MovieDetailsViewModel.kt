@@ -4,11 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.tzel.movieflix.ui.core.BaseViewModel
+import com.tzel.movieflix.ui.movie.home.mapper.MovieUiMapper
+import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.movie.moviedetail.mapper.MovieDetailsUiMapper
-import com.tzel.movieflix.ui.movie.moviedetail.mapper.SimilarMoviesUiMapper
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiState
-import com.tzel.movieflix.ui.movie.moviedetail.model.MovieReviewsUiState
-import com.tzel.movieflix.ui.movie.moviedetail.model.SimilarMoviesPagingSource
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsIdArgument
 import com.tzel.movieflix.usecase.movie.GetMovieDetailsWithReviewsUseCase
 import com.tzel.movieflix.usecase.movie.GetSimilarMoviesUseCase
@@ -24,24 +23,20 @@ class MovieDetailsViewModel @Inject constructor(
     private val movieDetailsUiMapper: MovieDetailsUiMapper,
     private val getMovieDetailsWithReviewsUseCase: GetMovieDetailsWithReviewsUseCase,
     getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
-    similarMoviesUiMapper: SimilarMoviesUiMapper,
+    moviesUiMapper: MovieUiMapper,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     private val movieId = savedStateHandle.get<String>(MovieDetailsIdArgument) ?: ""
     private val similarMovies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-        SimilarMoviesPagingSource(
-            movieId = movieId,
-            getSimilarMoviesUseCase = getSimilarMoviesUseCase,
-            similarMoviesUiMapper = similarMoviesUiMapper
+        MoviesPagingSource(
+            getMovies = { getSimilarMoviesUseCase(movieId) },
+            movieUiMapper = moviesUiMapper
         )
     }.flow
 
     private val _uiState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
     val uiState = _uiState.asStateFlow()
-
-    private val _reviewUiState = MutableStateFlow<MovieReviewsUiState>(MovieReviewsUiState.Loading)
-    val reviewUiState = _reviewUiState.asStateFlow()
 
     init {
         loadMovieDetails(movieId)
