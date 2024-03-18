@@ -28,20 +28,33 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         HomeUiState(
-            popularCategory = MoviesUiCategory(
+            onRefreshClick = ::refreshContent
+        )
+    )
+    val uiState = _uiState.asStateFlow()
+
+    init {
+        refreshContent()
+    }
+
+    private fun refreshContent(){
+        loadPopularMovies()
+        loadMovieGenres()
+    }
+
+    private fun loadPopularMovies() {
+        launch {
+            val popular = MoviesUiCategory(
                 name = StringResource(R.string.home_popular_title),
                 movies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
                     MoviesPagingSource(
                         movieToMovieUiMapper = moviesUiMapper,
                         getMovies = { page -> getPopularMoviesUseCase(page) })
                 }.flow
-            ),
-        )
-    )
-    val uiState = _uiState.asStateFlow()
+            )
 
-    init {
-        loadMovieGenres()
+            _uiState.update { it.copy(popularCategory = popular) }
+        }
     }
 
     private fun loadMovieGenres() {

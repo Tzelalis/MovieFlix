@@ -39,7 +39,7 @@ class MovieDetailsViewModel @Inject constructor(
         )
     }.flow
 
-    private val _uiState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
+    private val _uiState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading(refresh = { loadMovieDetails(movieId) }))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -48,14 +48,17 @@ class MovieDetailsViewModel @Inject constructor(
 
     private fun loadMovieDetails(movieId: String) {
         launch {
+            _uiState.update { MovieDetailsUiState.Loading(refresh = { loadMovieDetails(movieId) }) }
+
             getMovieDetailsWithReviewsUseCase(movieId).collectLatest { movieDetails ->
                 _uiState.update {
                     when (movieDetails) {
-                        null -> MovieDetailsUiState.Error
+                        null -> MovieDetailsUiState.Error(refresh = { loadMovieDetails(movieId) })
                         else -> MovieDetailsUiState.Success(
                             movieDetails = movieDetailsUiMapper(movieDetails),
                             similarMovies = similarMovies,
-                            onFavoriteClick = ::setMovieFavorite
+                            onFavoriteClick = ::setMovieFavorite,
+                            refresh = { loadMovieDetails(movieId) }
                         )
                     }
                 }

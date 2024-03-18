@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetGenresUseCase @Inject constructor(private val repo: MovieRepository) {
     suspend operator fun invoke(): List<Genre> {
         return try {
-            repo.getGenres()
+            repo.getGenres().take(10)
         } catch (e: Exception) {
             Timber.tag(GetGenresUseCase::class.java.simpleName).e(e)
             emptyList()

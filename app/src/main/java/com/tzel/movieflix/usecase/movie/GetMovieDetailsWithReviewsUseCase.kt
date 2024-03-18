@@ -20,7 +20,7 @@ class GetMovieDetailsWithReviewsUseCase @Inject constructor(
 
             if (movieDetails == null) return@flow
 
-            val reviews = getMovieReviewsUseCase(movieId, page).reviews
+            val reviews = getMovieReviewsUseCase(movieId, page)?.reviews
             emit(movieDetails.copy(reviews = reviews))
 
             getMovieFavoriteStatusUseCase(movieId).firstOrNull()?.let { isFavorite ->

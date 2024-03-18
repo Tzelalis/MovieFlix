@@ -5,13 +5,16 @@ import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import kotlinx.coroutines.flow.Flow
 
 
-sealed class MovieDetailsUiState {
-    data object Loading : MovieDetailsUiState()
+sealed class MovieDetailsUiState(
+    val onRefresh: () -> Unit
+) {
+    data class Loading(val refresh: () -> Unit) : MovieDetailsUiState(refresh)
     data class Success(
         val movieDetails: MovieDetailsUi,
         val similarMovies: Flow<PagingData<MovieUiItem>>,
         val onFavoriteClick: () -> Unit,
-    ) : MovieDetailsUiState()
+        val refresh: () -> Unit
+    ) : MovieDetailsUiState(refresh)
 
-    data object Error : MovieDetailsUiState()
+    data class Error(val refresh: () -> Unit) : MovieDetailsUiState(refresh)
 }

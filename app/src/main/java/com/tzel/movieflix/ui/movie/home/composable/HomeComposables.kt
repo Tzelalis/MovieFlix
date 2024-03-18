@@ -15,14 +15,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.Pager
@@ -44,28 +50,50 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.tzel.movieflix.ui.core.composable.StringResource
+import com.tzel.movieflix.ui.core.composable.genericPlaceholderHighlight
 import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
-import com.tzel.movieflix.ui.movie.home.model.MoviesUiCategory
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
+import gr.opap.utils.composable.modifier.placeholder.placeholder
 import kotlinx.coroutines.flow.Flow
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     uiState: State<HomeUiState>,
     navigateToMovieDetails: (id: String) -> Unit
 ) {
+    val refreshState = rememberPullToRefreshState()
+    if (refreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            uiState.value.onRefreshClick()
+        }
+    }
 
-    HomeContent(
-        uiState = uiState,
-        navigateToMovieDetails = { navigateToMovieDetails(it) }
+    LaunchedEffect(uiState.value.popularCategory, uiState.value.genreMovies) {
+        if (uiState.value.popularCategory != null || uiState.value.genreMovies.isNotEmpty()) {
+            refreshState.endRefresh()
+        }
+    }
+
+    Box(modifier = Modifier.nestedScroll(refreshState.nestedScrollConnection)) {
+        HomeContent(
+            uiState = uiState,
+            navigateToMovieDetails = navigateToMovieDetails
+        )
+    }
+
+    PullToRefreshContainer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(),
+        state = refreshState
     )
 }
 
@@ -92,12 +120,14 @@ private fun HomeContent(
     ) {
         Spacer(modifier = Modifier.statusBarsPadding())
 
-        HomeSectionTitle(title = uiState.value.popularCategory.name)
-        PopularMovies(
-            movies = uiState.value.popularCategory.movies,
-            navigateToMovieDetails = { navigateToMovieDetails(it) },
-            imageRequester = imageRequester,
-        )
+        uiState.value.popularCategory?.let { popularCategory ->
+            HomeSectionTitle(title = popularCategory.name)
+            PopularMovies(
+                movies = popularCategory.movies,
+                navigateToMovieDetails = { navigateToMovieDetails(it) },
+                imageRequester = imageRequester,
+            )
+        }
 
         uiState.value.genreMovies.forEachIndexed { index, moviesUiCategory ->
             val category = uiState.value.genreMovies[index]
@@ -164,9 +194,16 @@ private fun MovieItem(
     imageRequester: ImageRequest.Builder,
     onMovieClick: () -> Unit
 ) {
+    val isLoading = remember { mutableStateOf(true) }
+
     Column(modifier = modifier
         .fillMaxHeight()
         .clip(MaterialTheme.shapes.large)
+        .placeholder(
+            visible = { isLoading.value },
+            highlight = genericPlaceholderHighlight,
+            color = MaterialTheme.colorScheme.surface
+        )
         .clickable { onMovieClick() }
     ) {
         Box(
@@ -178,7 +215,10 @@ private fun MovieItem(
                 modifier = Modifier.fillMaxSize(),
                 model = imageRequester.data(movie.backdropPath).build(),
                 contentDescription = movie.title,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                onLoading = { isLoading.value = true },
+                onSuccess = { isLoading.value = false },
+                onError = { isLoading.value = false }
             )
 
             Box(
@@ -228,24 +268,13 @@ private fun MovieItem(
 @Composable
 private fun HomePreview() {
     val uiState = remember {
-        val pager = Pager(PagingConfig(pageSize = 20)) {
-            object : PagingSource<Int, MovieUiItem>() {
-                override fun getRefreshKey(state: PagingState<Int, MovieUiItem>): Int? {
-                    return state.anchorPosition
-                }
-
-                override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieUiItem> {
-                    return LoadResult.Page(
-                        data = emptyList(),
-                        prevKey = null,
-                        nextKey = null
-                    )
-                }
-
-            }
-        }.flow
-        val category = MoviesUiCategory(name = StringResource.Text("Popular"), movies = pager)
-        mutableStateOf(HomeUiState(category, emptyList()))
+        mutableStateOf(
+            HomeUiState(
+                popularCategory = null,
+                genreMovies = emptyList(),
+                onRefreshClick = {},
+            )
+        )
     }
 
     MovieFlixTheme {

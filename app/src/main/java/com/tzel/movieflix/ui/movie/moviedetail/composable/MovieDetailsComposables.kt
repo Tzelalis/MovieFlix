@@ -13,12 +13,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -40,7 +46,9 @@ import coil.request.ImageRequest
 import com.tzel.movieflix.R
 import com.tzel.movieflix.domain.movie.entity.Cast
 import com.tzel.movieflix.ui.core.composable.StatusBarBackground
+import com.tzel.movieflix.ui.core.composable.ErrorContent
 import com.tzel.movieflix.ui.movie.core.FavoriteIcon
+import com.tzel.movieflix.ui.core.composable.LoadingContent
 import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
@@ -62,30 +70,61 @@ fun MovieDetailsScreen(
     MovieDetailsContent(
         uiState = uiState,
         onBackClick = onBackClick,
-        navigateToMovie = navigateToMovie
+        navigateToMovie = navigateToMovie,
+        onRefreshClick = { uiState.value.onRefresh() }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MovieDetailsContent(
     uiState: State<MovieDetailsUiState>,
     onBackClick: () -> Unit,
-    navigateToMovie: (String) -> Unit
+    navigateToMovie: (String) -> Unit,
+    onRefreshClick: () -> Unit,
 ) {
 
-    when (val state = uiState.value) {
-        is MovieDetailsUiState.Success -> {
-            MovieDetailsDefault(
-                uiState = state,
-                onBackClick = onBackClick,
-                navigateToMovie = navigateToMovie
-            )
+    val refreshState = rememberPullToRefreshState()
+    if (refreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            onRefreshClick()
         }
-
-        MovieDetailsUiState.Error -> Unit
-        MovieDetailsUiState.Loading -> Unit
     }
 
+    LaunchedEffect(uiState.value) {
+        if(uiState.value !is MovieDetailsUiState.Loading) {
+            refreshState.endRefresh()
+        }
+    }
+
+
+    Box(Modifier
+        .fillMaxSize()
+        .nestedScroll(refreshState.nestedScrollConnection)
+    ) {
+        when (val state = uiState.value) {
+            is MovieDetailsUiState.Success -> {
+                MovieDetailsDefault(
+                    uiState = state,
+                    onBackClick = onBackClick,
+                    navigateToMovie = navigateToMovie
+                )
+            }
+
+            is MovieDetailsUiState.Error -> ErrorContent(
+                modifier = Modifier.fillMaxSize(),
+                onRetry = { uiState.value.onRefresh() }
+            )
+            is MovieDetailsUiState.Loading -> LoadingContent(modifier = Modifier.fillMaxSize())
+        }
+    }
+
+    PullToRefreshContainer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(),
+        state = refreshState
+    )
 }
 
 @Composable
@@ -311,8 +350,9 @@ private fun MovieDetailsPreview() {
                     isFavorite = false
                 ),
                 similarMovies = pager,
-                onFavoriteClick = {}
-            )
+                onFavoriteClick = {},
+                refresh = {}
+            ),
         )
     }
 

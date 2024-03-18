@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,10 +25,12 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.tzel.movieflix.ui.core.composable.genericPlaceholderHighlight
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
+import gr.opap.utils.composable.modifier.placeholder.placeholder
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -69,10 +73,17 @@ private fun MoviePortraitItem(
     imageRequester: ImageRequest.Builder,
     onMovieClick: () -> Unit
 ) {
+    val isLoading = remember { mutableStateOf(true) }
+
     Box(
         modifier = modifier
             .fillMaxHeight()
             .clip(MaterialTheme.shapes.large)
+            .placeholder(
+                visible = { isLoading.value },
+                highlight = genericPlaceholderHighlight,
+                color = MaterialTheme.colorScheme.surface
+            )
             .clickable { onMovieClick() },
         contentAlignment = Alignment.TopEnd
     ) {
@@ -80,7 +91,10 @@ private fun MoviePortraitItem(
             modifier = Modifier.fillMaxSize(),
             model = imageRequester.data(movie.posterPath).build(),
             contentDescription = movie.title,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            onLoading = { isLoading.value = true },
+            onSuccess = { isLoading.value = false },
+            onError = { isLoading.value = false }
         )
     }
 }
