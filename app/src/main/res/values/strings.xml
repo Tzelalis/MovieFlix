@@ -3,12 +3,11 @@
     <string name="single_param" translatable="false">%s</string>
     <string name="flix_movie">FlixMovie</string>
 
-    <!-- Error -->
+    <!-- Generic -->
     <string name="generic_error">An error occurred while loading the data.</string>
     <string name="generic_error_try_again">Try again</string>
-
-    <!-- Loading -->
     <string name="generic_loading">Loading…</string>
+    <string name="back_button_content_description">back</string>
 
     <!-- Splash -->
     <string name="splash_powered_by">Powered by Tzel</string>

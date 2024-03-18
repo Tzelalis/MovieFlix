@@ -1,6 +1,8 @@
 package com.tzel.movieflix.ui.movie.moviedetail.composable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,10 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -37,11 +43,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.tzel.movieflix.R
 import com.tzel.movieflix.domain.movie.entity.Cast
@@ -53,6 +61,8 @@ import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiState
+import com.tzel.movieflix.ui.theme.GrayLight
+import com.tzel.movieflix.ui.theme.GrayLightWithAlpha
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp
@@ -119,6 +129,13 @@ private fun MovieDetailsContent(
 
             is MovieDetailsUiState.Loading -> LoadingContent(modifier = Modifier.fillMaxSize())
         }
+
+        BackButton(
+            modifier = Modifier
+                .statusBarsPadding()
+                .align(Alignment.TopStart),
+            onBackClick = onBackClick
+        )
     }
 
     PullToRefreshContainer(
@@ -126,6 +143,26 @@ private fun MovieDetailsContent(
             .fillMaxWidth()
             .wrapContentWidth(),
         state = refreshState
+    )
+}
+
+@Composable
+fun BackButton(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit
+) {
+    Icon(
+        modifier = modifier
+            .padding(Spacing_16dp)
+            .size(32.dp)
+            .clip(CircleShape)
+            .border(1.dp, GrayLightWithAlpha, CircleShape)
+            .background(GrayLightWithAlpha.copy(alpha = 0.15f), CircleShape)
+            .clickable { onBackClick() }
+            .padding(Spacing_8dp),
+        painter = rememberAsyncImagePainter(model = R.drawable.ic_arrow_back_24),
+        contentDescription = stringResource(id = R.string.back_button_content_description),
+        tint = GrayLightWithAlpha
     )
 }
 
