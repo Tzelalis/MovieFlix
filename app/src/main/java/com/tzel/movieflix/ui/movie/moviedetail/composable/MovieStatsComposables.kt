@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.tzel.movieflix.R
+import com.tzel.movieflix.ui.core.composable.StringResource
 import com.tzel.movieflix.ui.movie.home.composable.MovieDetailsAnimatedSection
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieUiStats
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
@@ -43,7 +44,8 @@ fun MovieStatsRow(
                     MovieStatsItem(
                         modifier = Modifier.weight(1f),
                         icon = stat.icon,
-                        label = stat.label
+                        label = stat.label,
+                        contentDescription = stat.contentDescription?.build()
                     )
                 }
             }
@@ -54,7 +56,7 @@ fun MovieStatsRow(
 @Composable
 private fun MovieStatsItem(
     @DrawableRes icon: Int,
-    label: String,
+    label: StringResource,
     modifier: Modifier = Modifier,
     contentDescription: String? = null
 ) {
@@ -69,7 +71,7 @@ private fun MovieStatsItem(
             contentDescription = contentDescription
         )
         Text(
-            text = label,
+            text = label.build(),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -82,11 +84,11 @@ private fun MovieStatsRowPreview() {
     val stats = listOf(
         MovieUiStats(
             icon = R.drawable.ic_calendar,
-            label = "09 Dec 2024"
+            label = StringResource.Text("09 Dec 2024")
         ),
         MovieUiStats(
             icon = R.drawable.ic_clock,
-            label = "155"
+            label = StringResource.Text("155")
         ),
     )
 

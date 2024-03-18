@@ -1,13 +1,14 @@
 package com.tzel.movieflix.ui.movie.moviedetail.mapper
 
 import com.tzel.movieflix.R
+import com.tzel.movieflix.ui.core.composable.StringResource
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieUiStats
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
 
 class MovieStatsUiMapper @Inject constructor() {
-    operator fun invoke(releaseDate: String?, runtime: Int?): List<MovieUiStats> {
+    operator fun invoke(releaseDate: String?, runtime: Int?, voteAverage: Double?): List<MovieUiStats> {
         val stats = mutableListOf<MovieUiStats>()
 
         releaseDate?.let {
@@ -15,18 +16,28 @@ class MovieStatsUiMapper @Inject constructor() {
             stats.add(
                 MovieUiStats(
                     icon = R.drawable.ic_calendar,
-                    label = formattedDate,
-                    contentDescription = null
+                    label = StringResource.Text(formattedDate),
+                    contentDescription = StringResource(R.string.home_details_release_date_content_description)
                 )
             )
         }
 
-        runtime?.let {
+        runtime?.let { time ->
             stats.add(
                 MovieUiStats(
                     icon = R.drawable.ic_clock,
-                    label = it.toString(),
-                    contentDescription = null
+                    label = StringResource.Text(runtimeFormatting(time)),
+                    contentDescription = StringResource(R.string.home_details_runtime_content_description)
+                )
+            )
+        }
+
+        voteAverage?.let { vote ->
+            stats.add(
+                MovieUiStats(
+                    icon = R.drawable.ic_star,
+                    label = StringResource(R.string.home_details_rating_label, voteFormatting(vote)),
+                    contentDescription = StringResource(R.string.home_details_rating_content_description)
                 )
             )
         }
@@ -37,6 +48,20 @@ class MovieStatsUiMapper @Inject constructor() {
     private fun mapReleaseDateFormat(releaseDate: String): String? {
         val date = SimpleDateFormat(DATE_API_FORMAT, Locale.getDefault()).parse(releaseDate) ?: return null
         return SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(date)
+    }
+
+    private fun voteFormatting(vote: Double): String {
+        return String.format("%.1f", vote)
+    }
+
+    private fun runtimeFormatting(runtime: Int): String {
+        val hours = runtime / 60
+        val minutes = runtime % 60
+        return if (hours > 0) {
+            String.format("%dh %02dm", hours, minutes)
+        } else {
+            String.format("%dm", minutes)
+        }
     }
 
     companion object {

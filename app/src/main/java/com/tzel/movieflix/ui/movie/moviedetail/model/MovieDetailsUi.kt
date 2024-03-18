@@ -3,6 +3,7 @@ package com.tzel.movieflix.ui.movie.moviedetail.model
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import com.tzel.movieflix.domain.movie.entity.Cast
+import com.tzel.movieflix.ui.core.composable.StringResource
 import com.tzel.movieflix.ui.theme.GrayLight
 import com.tzel.movieflix.ui.theme.RedMedium
 
@@ -31,6 +32,6 @@ data class MovieDetailsUi(
 
 data class MovieUiStats(
     @DrawableRes val icon: Int,
-    val label: String,
-    val contentDescription: String? = null
+    val label: StringResource,
+    val contentDescription: StringResource? = null
 )

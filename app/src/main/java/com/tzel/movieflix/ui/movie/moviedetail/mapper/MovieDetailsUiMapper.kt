@@ -29,7 +29,7 @@ class MovieDetailsUiMapper @Inject constructor(
             voteAverage = details.voteAverage,
             voteCount = details.voteCount,
             cast = details.cast.distinctBy { it.id },
-            stats = movieStatsUiMapper(details.releaseDate, details.runtime),
+            stats = movieStatsUiMapper(details.releaseDate, details.runtime, details.voteAverage),
             homepage = details.homepage,
             reviews = reviewUiMapper(details.reviews),
             isFavorite = details.isFavorite

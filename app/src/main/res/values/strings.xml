@@ -22,4 +22,8 @@
     <string name="home_details_description_title">Description</string>
     <string name="home_details_reviews_title">Reviews</string>
     <string name="home_details_reviews_see_more">See more</string>
+    <string name="home_details_release_date_content_description">release date</string>
+    <string name="home_details_runtime_content_description">runtime</string>
+    <string name="home_details_rating_content_description">rating</string>
+    <string name="home_details_rating_label">%s/10</string>
 </resources>
