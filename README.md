@@ -24,7 +24,8 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
      
 ### Optional
   1. Skeleton loader with placeholder (only from Home Screen, Movie Details Screen use generic loading UI)
-  2. Offline Mode (Partial Implementation): Implementing offline mode with multiple genres, popular, and favorites lists necessitates a complex database structure. Only a small part for popular movies has been implemented so far.
+      - Placeholder is fork from accompanist with some changes to avoid recompositions
+  3. Offline Mode (Partial Implementation): Implementing offline mode with multiple genres, popular, and favorites lists necessitates a complex database structure. Only a small part for popular movies has been implemented so far.
 
 ### Additional
   1. Splash screen
