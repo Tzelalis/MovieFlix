@@ -2,7 +2,10 @@
 
 ## Setup
 To build the project you need to add TMDB API key property to your local.properties
+
 `api.key={your_tmdb_api_key}`
+
+In case you haven't TMDB key get one [here](https://www.themoviedb.org/settings/api)
 
 ## Install app
 You can download and install APK from [Releases](https://github.com/Tzelalis/MovieFlix/releases)
@@ -23,15 +26,19 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
      - Pull to refresh implementation
      
 ### Optional
-  1. Skeleton loader with placeholder
-  2. ~~Offline mode~~ (Offline mode with multiple genres, popular, and favorites lists require a complex database structure)
+  1. Skeleton loader with placeholder (only from Home Screen, Movie Details Screen use generic loading UI)
+      - Placeholder is fork from accompanist with some changes to avoid recompositions
+  3. Offline Mode (Partial Implementation): Implementing offline mode with multiple genres, popular, and favorites lists necessitates a complex database structure. Only a small part for popular movies has been implemented so far.
 
 ### Additional
   1. Splash screen
   2. Movies categoriezed by genres (with pagination)
   3. Open external urls like cast profiles and review to Custom Tab
   4. Import Helvetica custom font family
-  5. Modern UI base on Netflix
+  5. Generic loading and error state
+  6. Status and navigation bar override with custom implementation for color behaviour
+  7. Network interceptor to throw custom exception for no available network 
+  8. Modern UI base on Netflix
 
 ## Let's talk about project
 - Pattern: Clean Architecture with MVVM 
@@ -40,5 +47,5 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
 - DI: Hilt
 - REST APIs requests: Retrofit + Moshi + okHTTP
 - Local storage: Room DB and DataStore
-- Project setup: Gradle and Version Catalogs
+- Project setup: Gradle and Version Catalogs, flavors (dev, prod), buildTypes (debug, release), proguard, etc
 - Logs: Timber (and okhttp interceptor for http logs)
