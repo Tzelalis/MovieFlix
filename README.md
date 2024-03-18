@@ -14,7 +14,7 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
 ### Mandatory
 1. Home Screen:
     - Popular Movies (with pagination)
-    - All info: title, backdrop path (fallback strategy poster path), release date, rating
+    - All info: title, backdrop path (fallback strategy poster path), release date, ~~rating~~(rating feature is implemented only on the Movie Details Screen for UI purposes)
       
       > :warning: WARNING: Favorite status is implemented only on the Movie Details Screen due to the complexity of pagination and local flow combination
 2. Movie Details Screen:
