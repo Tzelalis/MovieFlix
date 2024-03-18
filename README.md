@@ -2,7 +2,10 @@
 
 ## Setup
 To build the project you need to add TMDB API key property to your local.properties
+
 `api.key={your_tmdb_api_key}`
+
+In case you haven't TMDB key get one [here](https://www.themoviedb.org/settings/api)
 
 ## Install app
 You can download and install APK from [Releases](https://github.com/Tzelalis/MovieFlix/releases)
