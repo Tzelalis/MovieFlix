@@ -32,3 +32,13 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
   3. Open external urls like cast profiles and review to Custom Tab
   4. Import Helvetica custom font family
   5. Modern UI base on Netflix
+
+## Let's talk about project
+- Pattern: Clean Architecture with MVVM 
+  - Clean Arch. Layers: UI, UseCase, Domain, Data, Framework
+- UI: Compose
+- DI: Hilt
+- REST APIs requests: Retrofit + Moshi + okHTTP
+- Local storage: Room DB and DataStore
+- Project setup: Gradle and Version Catalogs
+- Logs: Timber (and okhttp interceptor for http logs)
