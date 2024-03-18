@@ -16,7 +16,7 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
     - Popular Movies (with pagination)
     - All info: title, backdrop path (fallback strategy poster path), release date, ~~rating~~(rating feature is implemented only on the Movie Details Screen for UI purposes)
       
-      > :warning: WARNING: Favorite status is implemented only on the Movie Details Screen due to the complexity of pagination and local flow combination
+      > :warning: WARNING: Favorite status is implemented only on the Movie Details Screen due to the complexity of pagination and local flow combination :hourglass::shrug:
 2. Movie Details Screen:
      - All info: image, title, genres, release date, runtime, description, cast, reviews (first page), similar movies (with pagination), star rating
      - Share movie with native implementation (show only url exist)
