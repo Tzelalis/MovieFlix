@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -27,7 +26,6 @@ import coil.request.ImageRequest
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
-import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import kotlinx.coroutines.flow.Flow
 
@@ -83,10 +81,6 @@ private fun MoviePortraitItem(
             model = imageRequester.data(movie.posterPath).build(),
             contentDescription = movie.title,
             contentScale = ContentScale.Crop
-        )
-        FavoriteIcon(
-            modifier = Modifier.padding(Spacing_8dp),
-            color = movie.favoriteIconColor,
         )
     }
 }

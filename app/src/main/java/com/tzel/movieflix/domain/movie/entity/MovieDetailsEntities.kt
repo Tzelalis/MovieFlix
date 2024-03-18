@@ -19,6 +19,7 @@ data class MovieDetails(
     val cast: List<Cast>,
     val homepage: String?,
     val reviews: List<Review>? = null,
+    val isFavorite: Boolean = false
 )
 
 

@@ -1,0 +1,18 @@
+package com.tzel.movieflix.ui.movie.home.mapper
+
+import com.tzel.movieflix.domain.movie.entity.Movie
+import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
+import javax.inject.Inject
+
+class MovieUiToMovieMapper @Inject constructor() {
+    operator fun invoke(movie: MovieUiItem): Movie {
+        return Movie(
+            id = movie.id,
+            title = movie.title,
+            releaseDate = movie.releaseDate,
+            backdropPath = movie.backdropPath,
+            posterPath = movie.posterPath,
+            genresIds = emptyList()
+        )
+    }
+}

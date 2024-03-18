@@ -1,8 +1,5 @@
 package com.tzel.movieflix.ui.movie.home.model
 
-import androidx.compose.ui.graphics.Color
-import com.tzel.movieflix.ui.theme.GrayLight
-import com.tzel.movieflix.ui.theme.RedMedium
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -12,8 +9,6 @@ data class MovieUiItem(
     val posterPath: String?,
     val backdropPath: String?,
     val releaseDate: String?,
-    val adult: Boolean,
-    val isFavorite: Boolean,
     val key: String,
 ) {
     val releaseDateFormatted: String?
@@ -30,6 +25,4 @@ data class MovieUiItem(
                 null
             }
         }
-
-    val favoriteIconColor: Color = if (isFavorite) RedMedium else GrayLight
 }

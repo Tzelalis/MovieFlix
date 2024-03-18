@@ -27,7 +27,7 @@ class RemoteMovieMapper @Inject constructor() {
             releaseDate = remoteMovie.releaseDate,
             backdropPath = remoteMovie.backdropPath,
             posterPath = remoteMovie.posterPath,
-            adult = remoteMovie.adult ?: false
+            genresIds = remoteMovie.genres?.mapNotNull { it } ?: emptyList(),
         )
     }
 }

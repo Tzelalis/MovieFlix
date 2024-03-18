@@ -1,7 +1,9 @@
 package com.tzel.movieflix.ui.movie.moviedetail.composable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
@@ -37,6 +40,7 @@ import coil.request.ImageRequest
 import com.tzel.movieflix.R
 import com.tzel.movieflix.domain.movie.entity.Cast
 import com.tzel.movieflix.ui.core.composable.StatusBarBackground
+import com.tzel.movieflix.ui.movie.core.FavoriteIcon
 import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
@@ -101,6 +105,8 @@ private fun MovieDetailsDefault(
                 modifier = Modifier.fillMaxWidth(),
                 movieUrl = uiState.movieDetails.homepage,
                 imageUrl = (uiState).movieDetails.imageUrl ?: "",
+                favoriteColor = uiState.movieDetails.favoriteColor,
+                onFavoriteClick = uiState.onFavoriteClick,
             )
         }
 
@@ -121,7 +127,7 @@ private fun MovieDetailsDefault(
         item {
             MovieDetailsHeader(header = uiState.movieDetails.tagline ?: stringResource(id = R.string.home_details_description_title))
         }
-        
+
         item {
             MovieOverview(overview = uiState.movieDetails.overview)
         }
@@ -143,7 +149,7 @@ private fun MovieDetailsDefault(
         item {
             MoviesPortraitLazyRow(
                 movies = uiState.similarMovies,
-                navigateToMovieDetails = { movieId -> navigateToMovie(movieId) }
+                navigateToMovieDetails = { movieId -> navigateToMovie(movieId) },
             )
         }
 
@@ -163,9 +169,11 @@ private fun MovieDetailsDefault(
 private fun MovieDetailsImage(
     imageUrl: String,
     movieUrl: String?,
+    favoriteColor: Color,
     modifier: Modifier = Modifier,
     imageRequester: ImageRequest.Builder = rememberImageRequester(),
-    contentDescription: String? = null
+    contentDescription: String? = null,
+    onFavoriteClick: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -181,7 +189,7 @@ private fun MovieDetailsImage(
             contentScale = ContentScale.Crop
         )
 
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.4f)
@@ -192,14 +200,22 @@ private fun MovieDetailsImage(
                         0.5f to Color.Black.copy(alpha = 0.8f),
                         1f to Color.Black
                     )
-                ),
-            contentAlignment = Alignment.BottomEnd
+                )
+                .padding(Spacing_16dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.Bottom
         ) {
+            Spacer(modifier = Modifier.weight(0.8f))
+            FavoriteIcon(
+                modifier = Modifier.weight(0.1f),
+                color = favoriteColor,
+                onClick = { onFavoriteClick() }
+            )
+            Spacer(modifier = Modifier.width(Spacing_16dp))
             movieUrl?.let { url ->
                 Icon(
                     modifier = Modifier
-                        .padding(Spacing_16dp)
-                        .fillMaxWidth(0.09f)
+                        .weight(0.1f)
                         .noRippleClickable { context.sharePlainText(url) },
                     painter = painterResource(R.drawable.ic_square_share),
                     tint = MaterialTheme.colorScheme.onTertiary,
@@ -291,9 +307,11 @@ private fun MovieDetailsPreview() {
                     popularity = 0.0,
                     stats = emptyList(),
                     homepage = "Movie Homepage",
-                    reviews = emptyList()
+                    reviews = emptyList(),
+                    isFavorite = false
                 ),
-                similarMovies = pager
+                similarMovies = pager,
+                onFavoriteClick = {}
             )
         )
     }

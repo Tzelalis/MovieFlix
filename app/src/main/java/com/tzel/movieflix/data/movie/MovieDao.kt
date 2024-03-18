@@ -6,21 +6,25 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.tzel.movieflix.data.movie.model.LocalMovie
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
     @Query("SELECT * FROM movies")
-    fun getAll(): List<LocalMovie>
+    suspend fun getAll(): List<LocalMovie>
 
-    @Query("SELECT * FROM movies WHERE is_favorite == 1")
-    fun getFavorites(): List<LocalMovie>
+    @Query("SELECT * FROM movies WHERE movie_id == :movieId AND is_favorite == 1")
+    fun getMovieFavoriteStatus(movieId: Long): Flow<List<LocalMovie>>
+
+    @Query("SELECT * FROM movies WHERE is_popular == 1")
+    fun getAllPopular(): Flow<List<LocalMovie>>
 
     @Insert
-    fun insert(vararg movies: LocalMovie)
+    suspend fun insert(vararg movies: LocalMovie)
 
     @Delete
-    fun delete(vararg movies: LocalMovie)
+    suspend fun delete(vararg movies: LocalMovie)
 
     @Update
-    fun update(vararg movies: LocalMovie)
+    suspend fun update(vararg movies: LocalMovie)
 }

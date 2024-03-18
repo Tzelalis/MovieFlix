@@ -10,6 +10,7 @@ sealed class MovieDetailsUiState {
     data class Success(
         val movieDetails: MovieDetailsUi,
         val similarMovies: Flow<PagingData<MovieUiItem>>,
+        val onFavoriteClick: () -> Unit,
     ) : MovieDetailsUiState()
 
     data object Error : MovieDetailsUiState()

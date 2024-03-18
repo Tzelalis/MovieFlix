@@ -5,12 +5,15 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.tzel.movieflix.BuildConfig
 import com.tzel.movieflix.data.core.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import timber.log.Timber
+import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 @Module
@@ -32,6 +35,16 @@ object StorageModule {
     fun provideRoomDatabase(
         @ApplicationContext context: Context,
     ): AppDatabase {
-        return Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "app_database").build()
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "app_database"
+        ).apply {
+            if(BuildConfig.DEBUG) {
+                setQueryCallback({ sqlQuery, bindArgs ->
+                    Timber.tag("AppDatabase").v("SQL Query: $sqlQuery SQL Args: $bindArgs")
+                }, Executors.newSingleThreadExecutor())
+            }
+        }.build()
     }
 }

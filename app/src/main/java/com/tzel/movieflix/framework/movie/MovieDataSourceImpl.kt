@@ -9,12 +9,14 @@ import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
 import com.tzel.movieflix.data.movie.model.RemoteReviewsResponse
 import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
 import com.tzel.movieflix.utils.composable.api.requireNotNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MovieDataSourceImpl @Inject constructor(
     private val executeOn: ExecuteOn,
     private val api: MovieApi,
-    //private val dao: MovieDao,
+    private val dao: MovieDao,
 ) : MovieDataSource {
     override suspend fun getPopularMovies(page: Int): RemoteMovieResponse {
         return executeOn.background {
@@ -54,33 +56,43 @@ class MovieDataSourceImpl @Inject constructor(
 
     override suspend fun getLocalMovies(): List<LocalMovie> {
         return executeOn.background {
-            emptyList()
-            //dao.getAll()
+            dao.getAll()
         }
     }
 
-    override suspend fun getFavoriteMovies(): List<LocalMovie> {
+    override fun getPopularMovies(): Flow<List<LocalMovie>> {
+        return dao.getAllPopular()
+    }
+
+    override suspend fun deleteLocalMovies(vararg movie: LocalMovie) {
         return executeOn.background {
-            //dao.getFavorites()
-            emptyList()
+            dao.delete(*movie)
         }
     }
 
-    override suspend fun deleteMovie(vararg movie: LocalMovie) {
+    override suspend fun saveLocalMovies(vararg movies: LocalMovie) {
         return executeOn.background {
-            //dao.delete(*movie)
+            movies.forEach { movie ->
+                try {
+                    dao.insert(movie)
+                } catch (e: Exception) {
+                    dao.update(movie)
+                }
+            }
         }
     }
 
-    override suspend fun saveMovie(vararg movie: LocalMovie) {
+    override suspend fun updateLocalMovies(vararg movies: LocalMovie) {
         return executeOn.background {
-            //dao.insert(*movie)
+            try {
+                dao.update(*movies)
+            } catch (e: Exception) {
+                dao.insert(*movies)
+            }
         }
     }
 
-    override suspend fun updateMovies(vararg movies: LocalMovie) {
-        return executeOn.background {
-            //dao.update(*movies)
-        }
+    override fun getMovieFavoriteStatus(movieId: Long): Flow<Boolean> {
+        return dao.getMovieFavoriteStatus(movieId).map { it.isNotEmpty() }
     }
 }

@@ -6,7 +6,7 @@ import com.tzel.movieflix.ui.core.mapper.ImageSize
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import javax.inject.Inject
 
-class MovieUiMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) {
+class MovieToMovieUiMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) {
     operator fun invoke(movies: List<Movie>, page: Int): List<MovieUiItem> {
         return movies.map { movie -> mapMovie(movie, page) }.distinctBy { it.id }
     }
@@ -19,8 +19,6 @@ class MovieUiMapper @Inject constructor(private val imagePathMapper: ImagePathMa
             releaseDate = movie.releaseDate,
             backdropPath = imagePathMapper(movie.backdropPath, ImageSize.BackdropSize.W1280),
             posterPath = imagePathMapper(movie.posterPath, ImageSize.PosterSize.W500),
-            adult = movie.adult,
-            isFavorite = false  //todo add functionality for isFavorite
         )
     }
 }

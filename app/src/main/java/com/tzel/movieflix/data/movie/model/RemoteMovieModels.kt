@@ -19,4 +19,5 @@ data class RemoteMovie(
     @Json(name = "backdrop_path") val backdropPath: String?,
     @Json(name = "poster_path") val posterPath: String?,
     val adult: Boolean?,
+    val genres: List<Long?>?
 )

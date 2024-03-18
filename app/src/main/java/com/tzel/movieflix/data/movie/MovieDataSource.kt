@@ -5,6 +5,7 @@ import com.tzel.movieflix.data.movie.model.RemoteGenresResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieDetailsResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
 import com.tzel.movieflix.data.movie.model.RemoteReviewsResponse
+import kotlinx.coroutines.flow.Flow
 
 interface MovieDataSource {
     suspend fun getPopularMovies(page: Int): RemoteMovieResponse
@@ -21,11 +22,14 @@ interface MovieDataSource {
 
     suspend fun getLocalMovies(): List<LocalMovie>
 
-    suspend fun getFavoriteMovies(): List<LocalMovie>
+    fun getMovieFavoriteStatus(movieId: Long): Flow<Boolean>
 
-    suspend fun deleteMovie(vararg movie: LocalMovie)
+    fun getPopularMovies(): Flow<List<LocalMovie>>
 
-    suspend fun saveMovie(vararg movie: LocalMovie)
+    suspend fun deleteLocalMovies(vararg movie: LocalMovie)
 
-    suspend fun updateMovies(vararg movies: LocalMovie)
+    suspend fun saveLocalMovies(vararg movies: LocalMovie)
+
+    suspend fun updateLocalMovies(vararg movies: LocalMovie)
+
 }
