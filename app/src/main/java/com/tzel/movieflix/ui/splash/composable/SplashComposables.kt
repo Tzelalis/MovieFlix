@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.tzel.movieflix.R
 import com.tzel.movieflix.ui.splash.model.SplashUiState
+import com.tzel.movieflix.ui.theme.RedDark
 import com.tzel.movieflix.ui.theme.Spacing_32dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 
@@ -56,7 +57,7 @@ private fun LogoText() {
         mutableStateOf(false)
     }
     val animationFraction by animateFloatAsState(
-        targetValue = if (isScaled.value) 1f else 0f,
+        targetValue = if (isScaled.value) 2f else 0f,
         animationSpec = tween(
             durationMillis = 700,
             easing = LinearEasing,
@@ -80,9 +81,10 @@ private fun LogoText() {
                 scaleY = scale
                 alpha = animationFraction
             },
-        text = "FlixMovie",
+        text = stringResource(id = R.string.flix_movie),
         maxLines = 1,
         style = MaterialTheme.typography.headlineLarge,
+        color = RedDark
     )
 }
 
@@ -103,7 +105,9 @@ private fun SplashSideEffects(
     navigateToHome: () -> Unit
 ) {
     LaunchedEffect(key1 = shouldNavigateToHome) {
-        navigateToHome()
+        if(shouldNavigateToHome){
+            navigateToHome()
+        }
     }
 }
 

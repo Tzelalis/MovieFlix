@@ -6,6 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.tzel.movieflix.R
 
@@ -67,10 +68,10 @@ val Typography = Typography(
     ),
     headlineLarge = TextStyle(
         fontFamily = Helvetica,
-        fontWeight = FontWeight.Black,
-        fontSize = 24.sp,
-        lineHeight = 32.sp,
-        letterSpacing = 0.sp
+        fontWeight = FontWeight.Thin,
+        fontSize = 28.sp,
+        lineHeight = 1.5.em,
+        letterSpacing = 1.sp
     ),
     headlineMedium = TextStyle(
         fontFamily = Helvetica,

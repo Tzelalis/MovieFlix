@@ -17,7 +17,7 @@ class SplashViewModel @Inject constructor() : BaseViewModel() {
 
     init {
         launch {
-            delay(1500) //dummy delay to show splash screen (request should replace it)
+            delay(700) //dummy delay to show splash screen (request should replace it)
             _uiState.update { it.copy(navigateToHome = true) }
         }
     }

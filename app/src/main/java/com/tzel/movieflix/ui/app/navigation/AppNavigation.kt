@@ -23,7 +23,7 @@ internal fun AppNavHost(
         navController = navController,
         startDestination = SplashRoute,
     ) {
-        splashScreen(navigateToDashboard = { navController.navigateToHome() })
+        splashScreen(navigateToDashboard = { navController.navigateToHome(SplashRoute) })
 
         homeScreen(navigateToMovieDetails = { id -> navController.navigateToMovieDetails(id) })
 

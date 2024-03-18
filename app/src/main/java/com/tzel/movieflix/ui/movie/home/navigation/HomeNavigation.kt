@@ -27,6 +27,6 @@ fun NavGraphBuilder.homeScreen(
     }
 }
 
-fun NavController.navigateToHome() {
-    this.safeNavigate(HomeRoute)
+fun NavController.navigateToHome(popUpToRoute: String? = null) {
+    this.safeNavigate(HomeRoute, popUpToRoute = popUpToRoute, inclusive = true)
 }
