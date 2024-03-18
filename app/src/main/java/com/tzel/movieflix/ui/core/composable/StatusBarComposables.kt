@@ -1,5 +1,6 @@
 package com.tzel.movieflix.ui.core.composable
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -31,6 +32,31 @@ fun StatusBarBackground(
             } else if (state.firstVisibleItemIndex == 0) {
                 abs((state.firstVisibleItemScrollOffset / state.layoutInfo.visibleItemsInfo[0].size.toFloat()) * 0.7f).coerceIn(0f, 1f)
             } else 0.7f
+        }
+    }
+
+    StatusBarBackground(
+        modifier = modifier,
+        alpha = { statusBarAlpha },
+        color = color,
+        maxFloat = maxFloat
+    )
+}
+
+@Composable
+fun StatusBarBackground(
+    modifier: Modifier = Modifier,
+    state: ScrollState,
+    color: Color = Color.Black,
+    maxFloat: Float = 0.7f
+) {
+    val statusBarAlpha by remember {
+        derivedStateOf {
+            if (state.value == 0) {
+                0f
+            } else {
+                state.value * 0.7f.coerceIn(0f, 1f)
+            }
         }
     }
 
