@@ -28,7 +28,7 @@ class MovieRepositoryImpl @Inject constructor(
 ) : MovieRepository {
     override suspend fun getPopularMovies(page: Int): MovieResult {
         return try {
-            val popularMoviesResult = remoteMovieMapper(dataSource.getPopularMovies(page))
+            val popularMoviesResult = remoteMovieMapper(dataSource.getLocalPopularMovies(page))
             val localMovies = localMoviesToMoviesMapper(dataSource.getLocalMovies())
 
             if (popularMoviesResult.page == 1) {
@@ -77,7 +77,7 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun setFavoriteMovie(movie: Movie) {
         val localMovie = moviesToLocalMoviesMapper.mapMovie(movie = movie) ?: return
 
-        dataSource.updateLocalMovies(localMovie)
+        dataSource.saveLocalMovies(localMovie)
     }
 
     override fun getMovieFavoriteStatus(movieId: String): Flow<Boolean> {

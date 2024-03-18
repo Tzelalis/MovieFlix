@@ -18,7 +18,7 @@ class MovieDataSourceImpl @Inject constructor(
     private val api: MovieApi,
     private val dao: MovieDao,
 ) : MovieDataSource {
-    override suspend fun getPopularMovies(page: Int): RemoteMovieResponse {
+    override suspend fun getLocalPopularMovies(page: Int): RemoteMovieResponse {
         return executeOn.background {
             api.fetchPopularMovies(page = page).requireNotNull()
         }
@@ -60,7 +60,7 @@ class MovieDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun getPopularMovies(): Flow<List<LocalMovie>> {
+    override fun getLocalPopularMovies(): Flow<List<LocalMovie>> {
         return dao.getAllPopular()
     }
 
@@ -78,16 +78,6 @@ class MovieDataSourceImpl @Inject constructor(
                 } catch (e: Exception) {
                     dao.update(movie)
                 }
-            }
-        }
-    }
-
-    override suspend fun updateLocalMovies(vararg movies: LocalMovie) {
-        return executeOn.background {
-            try {
-                dao.update(*movies)
-            } catch (e: Exception) {
-                dao.insert(*movies)
             }
         }
     }
