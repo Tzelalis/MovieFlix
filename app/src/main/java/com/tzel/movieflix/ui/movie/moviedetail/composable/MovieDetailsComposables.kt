@@ -45,10 +45,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.tzel.movieflix.R
 import com.tzel.movieflix.domain.movie.entity.Cast
-import com.tzel.movieflix.ui.core.composable.StatusBarBackground
 import com.tzel.movieflix.ui.core.composable.ErrorContent
-import com.tzel.movieflix.ui.movie.core.FavoriteIcon
 import com.tzel.movieflix.ui.core.composable.LoadingContent
+import com.tzel.movieflix.ui.core.composable.StatusBarBackground
+import com.tzel.movieflix.ui.movie.core.FavoriteIcon
 import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
@@ -92,15 +92,16 @@ private fun MovieDetailsContent(
     }
 
     LaunchedEffect(uiState.value) {
-        if(uiState.value !is MovieDetailsUiState.Loading) {
+        if (uiState.value !is MovieDetailsUiState.Loading) {
             refreshState.endRefresh()
         }
     }
 
 
-    Box(Modifier
-        .fillMaxSize()
-        .nestedScroll(refreshState.nestedScrollConnection)
+    Box(
+        Modifier
+            .fillMaxSize()
+            .nestedScroll(refreshState.nestedScrollConnection)
     ) {
         when (val state = uiState.value) {
             is MovieDetailsUiState.Success -> {
@@ -115,6 +116,7 @@ private fun MovieDetailsContent(
                 modifier = Modifier.fillMaxSize(),
                 onRetry = { uiState.value.onRefresh() }
             )
+
             is MovieDetailsUiState.Loading -> LoadingContent(modifier = Modifier.fillMaxSize())
         }
     }

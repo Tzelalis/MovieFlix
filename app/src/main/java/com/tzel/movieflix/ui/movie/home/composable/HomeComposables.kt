@@ -79,7 +79,10 @@ fun HomeScreen(
         }
     }
 
-    Box(modifier = Modifier.nestedScroll(refreshState.nestedScrollConnection)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .nestedScroll(refreshState.nestedScrollConnection)
+    ) {
         HomeContent(
             uiState = uiState,
             navigateToMovieDetails = navigateToMovieDetails
