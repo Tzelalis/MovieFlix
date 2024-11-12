@@ -13,6 +13,7 @@ import com.tzel.movieflix.usecase.movie.GetGenresUseCase
 import com.tzel.movieflix.usecase.movie.GetMoviesByGenreUseCase
 import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,24 +27,24 @@ class HomeViewModel @Inject constructor(
     private val getMoviesByGenreUseCase: GetMoviesByGenreUseCase,
 ) : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        HomeUiState(
-            onRefreshClick = ::refreshContent
-        )
-    )
+    private val _uiState = MutableStateFlow(HomeUiState(onRefreshClick = ::refreshContent))
     val uiState = _uiState.asStateFlow()
+
+    private var popularMoviesJob: Job? = null
+    private var genreMoviesJob: Job? = null
 
     init {
         refreshContent()
     }
 
-    private fun refreshContent(){
+    private fun refreshContent() {
         loadPopularMovies()
         loadMovieGenres()
     }
 
     private fun loadPopularMovies() {
-        launch {
+        popularMoviesJob?.cancel()
+        popularMoviesJob = launch {
             val popular = MoviesUiCategory(
                 name = StringResource(R.string.home_popular_title),
                 movies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
@@ -58,7 +59,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadMovieGenres() {
-        launch {
+        genreMoviesJob?.cancel()
+        genreMoviesJob = launch {
             val genres = getGenresUseCase()
 
             val movieGenrePagingSources = mutableListOf<MoviesUiCategory>()

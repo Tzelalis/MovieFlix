@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -8,18 +9,19 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.room)
+    alias(libs.plugins.compose)
 }
 
 android {
     namespace = "com.tzel.movieflix"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.tzel.movieflix"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 35
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -73,12 +75,21 @@ android {
         jvmTarget = "17"
     }
 
+    lint {
+        abortOnError = false
+    }
+
     buildFeatures {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
+    // https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-compiler.html#compose-compiler-options-dsl
+    composeCompiler {
+        featureFlags = setOf(
+            ComposeFeatureFlag.OptimizeNonSkippingGroups
+        )
+
+        reportsDestination = layout.buildDirectory.dir("compose_compiler")
     }
 
     buildFeatures {

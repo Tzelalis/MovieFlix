@@ -15,19 +15,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
@@ -60,40 +54,14 @@ import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import gr.opap.utils.composable.modifier.placeholder.placeholder
 import kotlinx.coroutines.flow.Flow
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     uiState: State<HomeUiState>,
     navigateToMovieDetails: (id: String) -> Unit
 ) {
-    val refreshState = rememberPullToRefreshState()
-    if (refreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            uiState.value.onRefreshClick()
-        }
-    }
-
-    LaunchedEffect(uiState.value.popularCategory, uiState.value.genreMovies) {
-        if (uiState.value.popularCategory != null || uiState.value.genreMovies.isNotEmpty()) {
-            refreshState.endRefresh()
-        }
-    }
-
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .nestedScroll(refreshState.nestedScrollConnection)
-    ) {
-        HomeContent(
-            uiState = uiState,
-            navigateToMovieDetails = navigateToMovieDetails
-        )
-    }
-
-    PullToRefreshContainer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentWidth(),
-        state = refreshState
+    HomeContent(
+        uiState = uiState,
+        navigateToMovieDetails = navigateToMovieDetails
     )
 }
 
@@ -129,8 +97,7 @@ private fun HomeContent(
             )
         }
 
-        uiState.value.genreMovies.forEachIndexed { index, moviesUiCategory ->
-            val category = uiState.value.genreMovies[index]
+        uiState.value.genreMovies.forEachIndexed { index, category ->
             key("genre_movies_$index") {
                 HomeSectionTitle(title = category.name)
                 MoviesPortraitLazyRow(
