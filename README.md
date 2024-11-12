@@ -16,7 +16,7 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
     - Popular Movies (with pagination)
     - All info: title, backdrop path (fallback strategy poster path), release date, ~~rating~~(rating feature is implemented only on the Movie Details Screen for UI purposes)
       
-      > :warning: WARNING: Favorite status is implemented only on the Movie Details Screen due to the complexity of pagination and local flow combination
+      > :warning: WARNING: Favorite status is implemented only on the Movie Details Screen due to the complexity of pagination and local flow combination :hourglass::shrug:
 2. Movie Details Screen:
      - All info: image, title, genres, release date, runtime, description, cast, reviews (first page), similar movies (with pagination), star rating
      - Share movie with native implementation (show only url exist)
@@ -26,7 +26,7 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
      - Pull to refresh implementation
      
 ### Optional
-  1. Skeleton loader with placeholder (only from Home Screen, Movie Details Screen use generic loading UI)
+  1. Skeleton loader with placeholder (only to Home Screen, Movie Details Screen use generic loading UI)
       - Placeholder is fork from accompanist with some changes to avoid recompositions
   3. Offline Mode (Partial Implementation): Implementing offline mode with multiple genres, popular, and favorites lists necessitates a complex database structure. Only a small part for popular movies has been implemented so far.
 
@@ -42,10 +42,15 @@ You can download and install APK from [Releases](https://github.com/Tzelalis/Mov
 
 ## Let's talk about project
 - Pattern: Clean Architecture with MVVM 
-  - Clean Arch. Layers: UI, UseCase, Domain, Data, Framework
+  - Clean Architecture Layers:
+    [UI](https://github.com/Tzelalis/MovieFlix/tree/master/app/src/main/java/com/tzel/movieflix/ui),
+    [UseCase](https://github.com/Tzelalis/MovieFlix/tree/master/app/src/main/java/com/tzel/movieflix/usecase),
+    [Domain](https://github.com/Tzelalis/MovieFlix/tree/master/app/src/main/java/com/tzel/movieflix/domain),
+    [Data](https://github.com/Tzelalis/MovieFlix/tree/master/app/src/main/java/com/tzel/movieflix/data),
+    [Framework](https://github.com/Tzelalis/MovieFlix/tree/master/app/src/main/java/com/tzel/movieflix/framework)
 - UI: Compose
-- DI: Hilt
+- DI: [Hilt](https://github.com/Tzelalis/MovieFlix/tree/master/app/src/main/java/com/tzel/movieflix/di)
 - REST APIs requests: Retrofit + Moshi + okHTTP
 - Local storage: Room DB and DataStore
-- Project setup: Gradle and Version Catalogs, flavors (dev, prod), buildTypes (debug, release), proguard, etc
+- Project setup: Gradle and [Version Catalogs](https://github.com/Tzelalis/MovieFlix/blob/master/gradle/libs.versions.toml), flavors (dev, prod), buildTypes (debug, release), proguard, etc
 - Logs: Timber (and okhttp interceptor for http logs)
