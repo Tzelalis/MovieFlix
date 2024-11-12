@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.tzel.movieflix.R
 import com.tzel.movieflix.ui.core.composable.StringResource
 import com.tzel.movieflix.ui.movie.home.composable.MovieDetailsAnimatedSection

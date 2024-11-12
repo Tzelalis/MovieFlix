@@ -138,7 +138,8 @@ dependencies {
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.retrofit.converter.moshi)
 
-    implementation(libs.coil.compose)
+    implementation(libs.coil)
+    implementation(libs.coil.network)
 
     implementation(libs.androidx.datastore)
 

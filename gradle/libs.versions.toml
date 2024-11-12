@@ -15,7 +15,7 @@ timber = "5.0.1"
 moshi = "1.15.0"
 okHttp = "4.12.0"
 retrofit = "2.11.0"
-coil = "2.5.0"
+coil = "3.0.2"
 datastore = "1.1.1"
 room = "2.6.1"
 paging = "3.3.2"
@@ -60,8 +60,9 @@ okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-i
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 squareup-retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 
-# https://github.com/coil-kt/coil/blob/main/CHANGELOG.md
-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+# Coil (https://github.com/coil-kt/coil/blob/main/CHANGELOG.md)
+coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
 # https://developer.android.com/jetpack/androidx/releases/datastore
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }

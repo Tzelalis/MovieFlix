@@ -22,8 +22,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
 import com.tzel.movieflix.ui.core.composable.genericPlaceholderHighlight
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.theme.Spacing_16dp
