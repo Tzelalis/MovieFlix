@@ -3,20 +3,27 @@ package com.tzel.movieflix.ui.movie.home.navigation
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import com.tzel.movieflix.ui.core.navigation.safeNavigate
+import com.tzel.movieflix.ui.core.navigation.NavigationDestination
 import com.tzel.movieflix.ui.movie.home.HomeViewModel
 import com.tzel.movieflix.ui.movie.home.composable.HomeScreen
+import kotlinx.serialization.Serializable
 
-
-private const val HomeRoute = "home"
+@Serializable
+data object HomeDestination: NavigationDestination() {
+    override val builder: NavOptionsBuilder.() -> Unit
+        get() = {
+            launchSingleTop = true
+            popUpTo(0)
+        }
+}
 
 fun NavGraphBuilder.homeScreen(
     navigateToMovieDetails: (id: String) -> Unit
 ) {
-    composable(HomeRoute) {
+    composable<HomeDestination> {
         val viewModel: HomeViewModel = hiltViewModel()
         val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -25,8 +32,4 @@ fun NavGraphBuilder.homeScreen(
             navigateToMovieDetails = navigateToMovieDetails
         )
     }
-}
-
-fun NavController.navigateToHome(popUpToRoute: String? = null) {
-    this.safeNavigate(HomeRoute, popUpToRoute = popUpToRoute, inclusive = true)
 }

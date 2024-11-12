@@ -6,12 +6,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.tzel.movieflix.ui.movie.home.navigation.HomeDestination
 import com.tzel.movieflix.ui.movie.home.navigation.homeScreen
-import com.tzel.movieflix.ui.movie.home.navigation.navigateToHome
+import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.movieDetailsScreen
-import com.tzel.movieflix.ui.movie.moviedetail.navigation.navigateToMovieDetails
-import com.tzel.movieflix.ui.splash.navigation.SplashRoute
+import com.tzel.movieflix.ui.splash.navigation.SplashDestination
 import com.tzel.movieflix.ui.splash.navigation.splashScreen
+import com.tzel.movieflix.utils.ext.safeNavigate
 
 @Composable
 internal fun AppNavHost(
@@ -21,14 +22,14 @@ internal fun AppNavHost(
     NavHost(
         modifier = modifier.fillMaxSize(),
         navController = navController,
-        startDestination = SplashRoute,
+        startDestination = SplashDestination,
     ) {
-        splashScreen(navigateToDashboard = { navController.navigateToHome(SplashRoute) })
+        splashScreen(navigateToDashboard = { navController.safeNavigate(HomeDestination) })
 
-        homeScreen(navigateToMovieDetails = { id -> navController.navigateToMovieDetails(id) })
+        homeScreen(navigateToMovieDetails = { id -> navController.safeNavigate(MovieDetailsDestination(id)) })
 
         movieDetailsScreen(
-            navigateToMovieDetails = { id -> navController.navigateToMovieDetails(id) },
+            navigateToMovieDetails = { id -> navController.safeNavigate(MovieDetailsDestination(id)) },
             onBackClick = { navController.navigateUp() }
         )
     }

@@ -2,22 +2,25 @@ package com.tzel.movieflix.ui.movie.moviedetail.navigation
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import com.tzel.movieflix.ui.core.navigation.safeNavigate
+import com.tzel.movieflix.ui.core.navigation.NavigationDestination
 import com.tzel.movieflix.ui.movie.moviedetail.MovieDetailsViewModel
 import com.tzel.movieflix.ui.movie.moviedetail.composable.MovieDetailsScreen
+import kotlinx.serialization.Serializable
 
-
-private const val MovieDetailsRoute = "movie_details"
-const val MovieDetailsIdArgument = "movie_id"
+@Serializable
+data class MovieDetailsDestination(val id: String) : NavigationDestination() {
+    override val builder: NavOptionsBuilder.() -> Unit
+        get() = { launchSingleTop = false }
+}
 
 fun NavGraphBuilder.movieDetailsScreen(
     navigateToMovieDetails: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    composable("$MovieDetailsRoute/{$MovieDetailsIdArgument}") {
+    composable<MovieDetailsDestination> {
         val viewModel: MovieDetailsViewModel = hiltViewModel()
         val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -27,11 +30,4 @@ fun NavGraphBuilder.movieDetailsScreen(
             onBackClick = onBackClick
         )
     }
-}
-
-fun NavController.navigateToMovieDetails(movieId: String) {
-    this.safeNavigate(
-        route = "$MovieDetailsRoute/$movieId",
-        launchSingleTop = false
-    )
 }

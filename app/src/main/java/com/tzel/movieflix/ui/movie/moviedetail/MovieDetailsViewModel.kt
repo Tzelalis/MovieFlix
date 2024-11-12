@@ -1,6 +1,7 @@
 package com.tzel.movieflix.ui.movie.moviedetail
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.tzel.movieflix.ui.core.BaseViewModel
@@ -9,7 +10,7 @@ import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.movie.moviedetail.mapper.MovieDetailsUiMapper
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiState
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiToMovieMapper
-import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsIdArgument
+import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.usecase.movie.GetMovieDetailsWithReviewsUseCase
 import com.tzel.movieflix.usecase.movie.GetSimilarMoviesUseCase
 import com.tzel.movieflix.usecase.movie.SetMovieFavoriteUseCase
@@ -31,19 +32,20 @@ class MovieDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    private val movieId = savedStateHandle.get<String>(MovieDetailsIdArgument) ?: ""
+    private val args = savedStateHandle.toRoute<MovieDetailsDestination>()
+
     private val similarMovies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
         MoviesPagingSource(
-            getMovies = { getSimilarMoviesUseCase(movieId) },
+            getMovies = { getSimilarMoviesUseCase(args.id) },
             movieToMovieUiMapper = moviesUiMapper
         )
     }.flow
 
-    private val _uiState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading(refresh = { loadMovieDetails(movieId) }))
+    private val _uiState = MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading(refresh = { loadMovieDetails(args.id) }))
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadMovieDetails(movieId)
+        loadMovieDetails(args.id)
     }
 
     private fun loadMovieDetails(movieId: String) {
