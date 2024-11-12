@@ -12,6 +12,7 @@ import com.tzel.movieflix.ui.movie.home.model.MoviesUiCategory
 import com.tzel.movieflix.usecase.movie.GetGenresUseCase
 import com.tzel.movieflix.usecase.movie.GetMoviesByGenreUseCase
 import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
+import com.tzel.movieflix.usecase.movie.GetUpcomingMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +26,7 @@ class HomeViewModel @Inject constructor(
     private val moviesUiMapper: MovieToMovieUiMapper,
     private val getGenresUseCase: GetGenresUseCase,
     private val getMoviesByGenreUseCase: GetMoviesByGenreUseCase,
+    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState(onRefreshClick = ::refreshContent))
@@ -32,6 +34,7 @@ class HomeViewModel @Inject constructor(
 
     private var popularMoviesJob: Job? = null
     private var genreMoviesJob: Job? = null
+    private var upcomingMoviesJob: Job? = null
 
     init {
         refreshContent()
@@ -39,6 +42,7 @@ class HomeViewModel @Inject constructor(
 
     private fun refreshContent() {
         loadPopularMovies()
+        loadUpcomingMovies()
         loadMovieGenres()
     }
 
@@ -55,6 +59,22 @@ class HomeViewModel @Inject constructor(
             )
 
             _uiState.update { it.copy(popularCategory = popular) }
+        }
+    }
+
+    private fun loadUpcomingMovies() {
+        upcomingMoviesJob?.cancel()
+        upcomingMoviesJob = launch {
+            val upcoming = MoviesUiCategory(
+                name = TextBuilder.StringResource(R.string.home_upcoming_title),
+                movies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
+                    MoviesPagingSource(
+                        movieToMovieUiMapper = moviesUiMapper,
+                        getMovies = { page -> getUpcomingMoviesUseCase(page) })
+                }.flow
+            )
+
+            _uiState.update { it.copy(upcomingCategory = upcoming) }
         }
     }
 

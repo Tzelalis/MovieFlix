@@ -30,4 +30,7 @@ interface MovieApi {
 
     @GET("3/search/movie?include_adult=false&language=en-US")
     suspend fun searchMovies(@Query("query") title: String, @Query("page") page: Int): Response<RemoteMovieResponse>
+
+    @GET("/3/movie/upcoming?language=en-US")
+    suspend fun getUpcoming(@Query("page") page: Int): Response<RemoteMovieResponse>
 }

@@ -206,6 +206,9 @@ private fun MovieDetailsDefault(
 
         item {
             MoviesPortraitLazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(2.2f),
                 movies = similarMovies,
                 navigateToMovieDetails = { movieId -> navigateToMovie(movieId) },
             )

@@ -3,10 +3,8 @@ package com.tzel.movieflix.ui.movie.core
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -35,14 +33,14 @@ import gr.opap.utils.composable.modifier.placeholder.placeholder
 @Composable
 fun MoviesPortraitLazyRow(
     movies: LazyPagingItems<MovieUiItem>,
+    modifier: Modifier = Modifier,
+    itemWidthPer: Float = 0.28f,
     state: LazyListState = rememberLazyListState(),
     imageRequester: ImageRequest.Builder = rememberImageRequester(),
     navigateToMovieDetails: (id: String) -> Unit
 ) {
     LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(2.2f),
+        modifier = modifier,
         state = state,
         horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
         contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_4dp),
@@ -54,7 +52,7 @@ fun MoviesPortraitLazyRow(
         ) { index ->
             movies[index]?.let { movie ->
                 MoviePortraitItem(
-                    modifier = Modifier.fillParentMaxWidth(0.28f),
+                    modifier = Modifier.fillParentMaxWidth(itemWidthPer),
                     movie = movie,
                     imageRequester = imageRequester,
                     onMovieClick = { navigateToMovieDetails(movie.id) }

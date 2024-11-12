@@ -24,5 +24,7 @@ interface MovieRepository {
 
     suspend fun searchMovies(query: String, page: Int): MovieResult
 
+    suspend fun upcomingMovies(page: Int): MovieResult
+
     fun getMovieFavoriteStatus(movieId: String): Flow<Boolean>
 }

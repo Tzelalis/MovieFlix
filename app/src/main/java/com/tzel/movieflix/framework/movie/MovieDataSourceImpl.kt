@@ -91,4 +91,10 @@ class MovieDataSourceImpl @Inject constructor(
             api.searchMovies(title, page).requireNotNull()
         }
     }
+
+    override suspend fun upcomingMovies(page: Int): RemoteMovieResponse {
+        return executeOn.background {
+            api.getUpcoming(page).requireNotNull()
+        }
+    }
 }

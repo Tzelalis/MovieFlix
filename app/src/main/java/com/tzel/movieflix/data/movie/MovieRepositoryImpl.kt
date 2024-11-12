@@ -84,6 +84,10 @@ class MovieRepositoryImpl @Inject constructor(
         return remoteMovieMapper(dataSource.searchMovies(query, page))
     }
 
+    override suspend fun upcomingMovies(page: Int): MovieResult {
+        return remoteMovieMapper(dataSource.upcomingMovies(page))
+    }
+
     override fun getMovieFavoriteStatus(movieId: String): Flow<Boolean> {
         val id = movieId.toLongOrNull() ?: return flow { emit(false) }
 

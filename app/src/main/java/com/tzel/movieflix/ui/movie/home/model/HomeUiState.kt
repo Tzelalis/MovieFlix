@@ -6,9 +6,16 @@ import kotlinx.coroutines.flow.Flow
 
 data class HomeUiState(
     val popularCategory: MoviesUiCategory? = null,
+    val upcomingCategory: MoviesUiCategory? = null,
     val genreMovies: List<MoviesUiCategory> = emptyList(),
     val onRefreshClick: () -> Unit
-)
+) {
+    val firstSectionGenres: List<MoviesUiCategory>
+        get() = genreMovies.take(2)
+
+    val secondSectionGenres: List<MoviesUiCategory>
+        get() = genreMovies.drop(2)
+}
 
 data class MoviesUiCategory(
     val name: TextBuilder,
