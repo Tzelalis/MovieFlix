@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -64,6 +64,7 @@ import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
+import com.tzel.movieflix.ui.theme.Sizes
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import com.tzel.movieflix.utils.composable.modifier.noRippleClickable
 import com.tzel.movieflix.utils.ext.sharePlainText
@@ -133,7 +134,7 @@ fun BackButton(
     Icon(
         modifier = modifier
             .padding(Spacing_16dp)
-            .size(32.dp)
+            .size(Sizes.Icons.medium)
             .clip(CircleShape)
             .border(1.dp, GrayLightWithAlpha, CircleShape)
             .background(GrayLightWithAlpha.copy(alpha = 0.15f), CircleShape)
@@ -258,25 +259,24 @@ private fun MovieDetailsImage(
                         1f to Color.Black
                     )
                 )
-                .padding(Spacing_16dp),
-            horizontalArrangement = Arrangement.End,
+                .padding(Spacing_16dp)
+                .wrapContentWidth(Alignment.End),
+            horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
             verticalAlignment = Alignment.Bottom
         ) {
-            Spacer(modifier = Modifier.weight(0.8f))
             FavoriteIcon(
-                modifier = Modifier.weight(0.1f),
+                modifier = Modifier.size(Sizes.Icons.small),
                 color = favoriteColor,
                 onClick = { onFavoriteClick() }
             )
-            Spacer(modifier = Modifier.width(Spacing_16dp))
             movieUrl?.let { url ->
                 Icon(
                     modifier = Modifier
-                        .weight(0.1f)
+                        .size(Sizes.Icons.small)
                         .noRippleClickable { context.sharePlainText(url) },
                     painter = painterResource(R.drawable.ic_square_share),
                     tint = MaterialTheme.colorScheme.onTertiary,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.home_details_share_movie_content_description),
                 )
             }
         }

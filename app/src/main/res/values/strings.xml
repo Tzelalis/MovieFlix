@@ -26,4 +26,5 @@
     <string name="home_details_runtime_content_description">runtime</string>
     <string name="home_details_rating_content_description">rating</string>
     <string name="home_details_rating_label">%s/10</string>
+    <string name="home_details_share_movie_content_description">share movie</string>
 </resources>

@@ -81,7 +81,7 @@ private fun CastItem(
                 .placeholder(R.drawable.ic_user_tie)
                 .error(R.drawable.ic_user_tie)
                 .build(),
-            contentDescription = null,
+            contentDescription = actor.name,
             contentScale = ContentScale.Crop
         )
 
