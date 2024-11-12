@@ -1,7 +1,7 @@
 package com.tzel.movieflix.ui.movie.moviedetail.mapper
 
 import com.tzel.movieflix.R
-import com.tzel.movieflix.ui.core.composable.StringResource
+import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieUiStats
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -16,8 +16,8 @@ class MovieStatsUiMapper @Inject constructor() {
             stats.add(
                 MovieUiStats(
                     icon = R.drawable.ic_calendar,
-                    label = StringResource.Text(formattedDate),
-                    contentDescription = StringResource(R.string.home_details_release_date_content_description)
+                    label = TextBuilder.Text(formattedDate),
+                    contentDescription = TextBuilder.StringResource(R.string.home_details_release_date_content_description)
                 )
             )
         }
@@ -26,8 +26,8 @@ class MovieStatsUiMapper @Inject constructor() {
             stats.add(
                 MovieUiStats(
                     icon = R.drawable.ic_clock,
-                    label = StringResource.Text(runtimeFormatting(time)),
-                    contentDescription = StringResource(R.string.home_details_runtime_content_description)
+                    label = TextBuilder.Text(runtimeFormatting(time)),
+                    contentDescription = TextBuilder.StringResource(R.string.home_details_runtime_content_description)
                 )
             )
         }
@@ -36,8 +36,8 @@ class MovieStatsUiMapper @Inject constructor() {
             stats.add(
                 MovieUiStats(
                     icon = R.drawable.ic_star,
-                    label = StringResource(R.string.home_details_rating_label, voteFormatting(vote)),
-                    contentDescription = StringResource(R.string.home_details_rating_content_description)
+                    label = TextBuilder.StringResource(R.string.home_details_rating_label, voteFormatting(vote)),
+                    contentDescription = TextBuilder.StringResource(R.string.home_details_rating_content_description)
                 )
             )
         }
@@ -51,16 +51,16 @@ class MovieStatsUiMapper @Inject constructor() {
     }
 
     private fun voteFormatting(vote: Double): String {
-        return String.format("%.1f", vote)
+        return String.format(Locale.getDefault(), "%.1f", vote)
     }
 
     private fun runtimeFormatting(runtime: Int): String {
         val hours = runtime / 60
         val minutes = runtime % 60
         return if (hours > 0) {
-            String.format("%dh %02dm", hours, minutes)
+            String.format(Locale.getDefault(), "%dh %02dm", hours, minutes)
         } else {
-            String.format("%dm", minutes)
+            String.format(Locale.getDefault(), "%dm", minutes)
         }
     }
 

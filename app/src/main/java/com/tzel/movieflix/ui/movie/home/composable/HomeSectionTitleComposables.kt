@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.tzel.movieflix.ui.core.composable.StringResource
+import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp
@@ -15,7 +15,7 @@ import com.tzel.movieflix.ui.theme.Spacing_4dp
 
 @Composable
 fun HomeSectionTitle(
-    title: StringResource,
+    title: TextBuilder,
     modifier: Modifier = Modifier,
 ) {
     Text(
@@ -29,6 +29,6 @@ fun HomeSectionTitle(
 @Composable
 private fun HomeSectionTitlePreview() {
     MovieFlixTheme {
-        HomeSectionTitle(title = StringResource.Text("Popular"))
+        HomeSectionTitle(title = TextBuilder.Text("Popular"))
     }
 }

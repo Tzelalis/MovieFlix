@@ -22,5 +22,7 @@ interface MovieRepository {
 
     suspend fun setFavoriteMovie(movie: Movie)
 
+    suspend fun searchMovies(query: String, page: Int): MovieResult
+
     fun getMovieFavoriteStatus(movieId: String): Flow<Boolean>
 }

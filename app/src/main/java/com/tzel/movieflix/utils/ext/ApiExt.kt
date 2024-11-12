@@ -1,4 +1,4 @@
-package com.tzel.movieflix.utils.composable.api
+package com.tzel.movieflix.utils.ext
 
 import retrofit2.Response
 

@@ -8,7 +8,7 @@ import com.tzel.movieflix.data.movie.model.RemoteMovieDetailsResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
 import com.tzel.movieflix.data.movie.model.RemoteReviewsResponse
 import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
-import com.tzel.movieflix.utils.composable.api.requireNotNull
+import com.tzel.movieflix.utils.ext.requireNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -84,5 +84,11 @@ class MovieDataSourceImpl @Inject constructor(
 
     override fun getMovieFavoriteStatus(movieId: Long): Flow<Boolean> {
         return dao.getMovieFavoriteStatus(movieId).map { it.isNotEmpty() }
+    }
+
+    override suspend fun searchMovies(title: String, page: Int): RemoteMovieResponse {
+        return executeOn.background {
+            api.searchMovies(title, page).requireNotNull()
+        }
     }
 }

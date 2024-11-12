@@ -61,10 +61,10 @@ import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiState
 import com.tzel.movieflix.ui.theme.GrayLightWithAlpha
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
+import com.tzel.movieflix.ui.theme.Sizes
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
-import com.tzel.movieflix.ui.theme.Sizes
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import com.tzel.movieflix.utils.composable.modifier.noRippleClickable
 import com.tzel.movieflix.utils.ext.sharePlainText
@@ -79,7 +79,7 @@ fun MovieDetailsScreen(
         uiState = uiState,
         onBackClick = onBackClick,
         navigateToMovie = navigateToMovie,
-        onRefreshClick = { uiState.value.onRefresh() }
+        onRefreshClick = uiState.value.onRefresh
     )
 }
 

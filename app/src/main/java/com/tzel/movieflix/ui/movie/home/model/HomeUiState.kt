@@ -1,7 +1,7 @@
 package com.tzel.movieflix.ui.movie.home.model
 
 import androidx.paging.PagingData
-import com.tzel.movieflix.ui.core.composable.StringResource
+import com.tzel.movieflix.ui.core.composable.TextBuilder
 import kotlinx.coroutines.flow.Flow
 
 data class HomeUiState(
@@ -11,6 +11,6 @@ data class HomeUiState(
 )
 
 data class MoviesUiCategory(
-    val name: StringResource,
+    val name: TextBuilder,
     val movies: Flow<PagingData<MovieUiItem>>
 )

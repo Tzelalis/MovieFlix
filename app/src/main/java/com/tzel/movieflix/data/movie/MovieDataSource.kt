@@ -30,4 +30,5 @@ interface MovieDataSource {
 
     suspend fun saveLocalMovies(vararg movies: LocalMovie)
 
+    suspend fun searchMovies(title: String, page: Int): RemoteMovieResponse
 }

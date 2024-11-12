@@ -1,6 +1,5 @@
 package com.tzel.movieflix.ui.movie.core
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -29,6 +29,7 @@ import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
+import com.tzel.movieflix.utils.composable.modifier.clickableWithLifecycle
 import gr.opap.utils.composable.modifier.placeholder.placeholder
 
 @Composable
@@ -64,10 +65,11 @@ fun MoviesPortraitLazyRow(
 }
 
 @Composable
-private fun MoviePortraitItem(
+fun MoviePortraitItem(
     modifier: Modifier = Modifier,
     movie: MovieUiItem,
     imageRequester: ImageRequest.Builder,
+    clip: Shape = MaterialTheme.shapes.large,
     onMovieClick: () -> Unit
 ) {
     val isLoading = remember { mutableStateOf(true) }
@@ -79,9 +81,9 @@ private fun MoviePortraitItem(
             .placeholder(
                 visible = { isLoading.value },
                 highlight = genericPlaceholderHighlight,
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.tertiaryContainer
             )
-            .clickable { onMovieClick() },
+            .clickableWithLifecycle { onMovieClick() },
         contentAlignment = Alignment.TopEnd
     ) {
         AsyncImage(

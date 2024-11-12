@@ -1,6 +1,5 @@
 <resources>
     <string name="empty" translatable="false" />
-    <string name="single_param" translatable="false">%s</string>
     <string name="flix_movie">FlixMovie</string>
 
     <!-- Generic -->
@@ -15,6 +14,8 @@
     <!-- Home -->
     <string name="home_popular_title">Popular</string>
     <string name="home_favorite_content_description">favorite movie</string>
+    <string name="home_search_content_description">search</string>
+    <string name="home_clear_content_description">clear</string>
 
     <!-- Home Details -->
     <string name="home_details_similar_movies_title">Similar Movies</string>
@@ -27,4 +28,9 @@
     <string name="home_details_rating_content_description">rating</string>
     <string name="home_details_rating_label">%s/10</string>
     <string name="home_details_share_movie_content_description">share movie</string>
+
+    <!-- Search -->
+    <string name="search_title">Search…</string>
+    <string name="search_textfield_placeholder">Search your favorite movies</string>
+    <string name="search_textfield_content_description">search</string>
 </resources>

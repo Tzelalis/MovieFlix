@@ -27,4 +27,7 @@ interface MovieApi {
 
     @GET("/3/discover/movie?sort_by=popularity.desc&include_adult=false")
     suspend fun fetchMoviesByGenre(@Query("with_genres") genreId: String, @Query("page") page: Int): Response<RemoteMovieResponse>
+
+    @GET("3/search/movie?include_adult=false&language=en-US")
+    suspend fun searchMovies(@Query("query") title: String, @Query("page") page: Int): Response<RemoteMovieResponse>
 }

@@ -21,7 +21,7 @@ data object HomeDestination: NavigationDestination() {
 }
 
 fun NavGraphBuilder.homeScreen(
-    navigateToMovieDetails: (id: String) -> Unit
+    navigateTo: (NavigationDestination) -> Unit
 ) {
     composable<HomeDestination> {
         val viewModel: HomeViewModel = hiltViewModel()
@@ -29,7 +29,7 @@ fun NavGraphBuilder.homeScreen(
 
         HomeScreen(
             uiState = uiState,
-            navigateToMovieDetails = navigateToMovieDetails
+            navigateTo = navigateTo
         )
     }
 }

@@ -1,7 +1,6 @@
 package com.tzel.movieflix.ui.movie.home.composable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,43 +32,48 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
-import com.tzel.movieflix.ui.core.composable.StatusBarBackground
 import com.tzel.movieflix.ui.core.composable.genericPlaceholderHighlight
+import com.tzel.movieflix.ui.core.navigation.NavigationDestination
 import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
+import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
+import com.tzel.movieflix.ui.search.navigation.SearchDestination
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
+import com.tzel.movieflix.ui.theme.Sizes
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
+import com.tzel.movieflix.utils.composable.modifier.clickableWithLifecycle
 import gr.opap.utils.composable.modifier.placeholder.placeholder
 
 @Composable
 fun HomeScreen(
     uiState: State<HomeUiState>,
-    navigateToMovieDetails: (id: String) -> Unit
+    navigateTo: (NavigationDestination) -> Unit
 ) {
     HomeContent(
         uiState = uiState,
-        navigateToMovieDetails = navigateToMovieDetails
+        navigateTo = navigateTo
     )
 }
 
 @Composable
 private fun HomeContent(
     uiState: State<HomeUiState>,
-    navigateToMovieDetails: (id: String) -> Unit
+    navigateTo: (NavigationDestination) -> Unit
 ) {
     val imageRequester = rememberImageRequester()
-    val state = rememberScrollState()
+    val state = rememberLazyListState()
 
     //collect paging data outside lazy column to avoid multiple requests
     val popularMovies = uiState.value.popularCategory?.movies?.collectAsLazyPagingItems()
@@ -77,45 +81,58 @@ private fun HomeContent(
         genre.movies.collectAsLazyPagingItems()
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item {
-            Spacer(modifier = Modifier.statusBarsPadding())
-        }
 
-        item {
-            uiState.value.popularCategory?.let { category ->
-                HomeSectionTitle(title = category.name)
+
+    Box {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = state
+        ) {
+            item {
+                Spacer(
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .height(Sizes.NavigationBars.small)
+                )
             }
-            popularMovies?.let {
-                PopularMovies(
-                    movies = popularMovies,
-                    navigateToMovieDetails = { navigateToMovieDetails(it) },
-                    imageRequester = imageRequester,
+
+            item {
+                uiState.value.popularCategory?.let { category ->
+                    HomeSectionTitle(title = category.name)
+                }
+                popularMovies?.let {
+                    PopularMovies(
+                        movies = popularMovies,
+                        navigateToMovieDetails = { navigateTo(MovieDetailsDestination(it)) },
+                        imageRequester = imageRequester,
+                    )
+                }
+            }
+
+            uiState.value.genreMovies.forEachIndexed { index, category ->
+                item("genre_movies_$index") {
+                    HomeSectionTitle(title = category.name)
+                    MoviesPortraitLazyRow(
+                        movies = genresMovies[index],
+                        navigateToMovieDetails = { navigateTo(MovieDetailsDestination(it)) },
+                        imageRequester = imageRequester,
+                    )
+                }
+            }
+
+            item {
+                Spacer(
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .padding(bottom = Spacing_32dp)
                 )
             }
         }
 
-        uiState.value.genreMovies.forEachIndexed { index, category ->
-            item("genre_movies_$index") {
-                HomeSectionTitle(title = category.name)
-                MoviesPortraitLazyRow(
-                    movies = genresMovies[index],
-                    navigateToMovieDetails = { navigateToMovieDetails(it) },
-                    imageRequester = imageRequester,
-                )
-            }
-        }
-
-        item {
-            Spacer(
-                modifier = Modifier
-                    .navigationBarsPadding()
-                    .padding(bottom = Spacing_32dp)
-            )
-        }
+        HomeTopBar(
+            onSearchClick = { navigateTo(SearchDestination) }
+        )
     }
-
-    StatusBarBackground(state = state)
 }
 
 @Composable
@@ -139,11 +156,11 @@ private fun PopularMovies(
             contentType = movies.itemContentType { "movie" }
         ) { index ->
             movies[index]?.let { movie ->
-                MovieItem(
+                PopularMovieItem(
                     modifier = Modifier.fillParentMaxWidth(0.7f),
                     movie = movie,
                     imageRequester = imageRequester,
-                    onMovieClick = { navigateToMovieDetails(movie.id) },
+                    onMovieClick = dropUnlessResumed { navigateToMovieDetails(movie.id) },
                 )
             }
         }
@@ -151,7 +168,7 @@ private fun PopularMovies(
 }
 
 @Composable
-private fun MovieItem(
+private fun PopularMovieItem(
     modifier: Modifier = Modifier,
     movie: MovieUiItem,
     imageRequester: ImageRequest.Builder,
@@ -159,15 +176,16 @@ private fun MovieItem(
 ) {
     val isLoading = remember { mutableStateOf(true) }
 
-    Column(modifier = modifier
-        .fillMaxHeight()
-        .clip(MaterialTheme.shapes.large)
-        .placeholder(
-            visible = { isLoading.value },
-            highlight = genericPlaceholderHighlight,
-            color = MaterialTheme.colorScheme.surface
-        )
-        .clickable { onMovieClick() }
+    Column(
+        modifier = modifier
+            .fillMaxHeight()
+            .clip(MaterialTheme.shapes.large)
+            .placeholder(
+                visible = { isLoading.value },
+                highlight = genericPlaceholderHighlight,
+                color = MaterialTheme.colorScheme.tertiaryContainer
+            )
+            .clickableWithLifecycle { onMovieClick() }
     ) {
         Box(
             modifier = Modifier
@@ -243,7 +261,7 @@ private fun HomePreview() {
     MovieFlixTheme {
         HomeScreen(
             uiState = uiState,
-            navigateToMovieDetails = {}
+            navigateTo = {}
         )
     }
 }

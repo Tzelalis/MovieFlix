@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.tzel.movieflix.R
 import com.tzel.movieflix.ui.core.BaseViewModel
-import com.tzel.movieflix.ui.core.composable.StringResource
+import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.movie.home.mapper.MovieToMovieUiMapper
 import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
@@ -46,7 +46,7 @@ class HomeViewModel @Inject constructor(
         popularMoviesJob?.cancel()
         popularMoviesJob = launch {
             val popular = MoviesUiCategory(
-                name = StringResource(R.string.home_popular_title),
+                name = TextBuilder.StringResource(R.string.home_popular_title),
                 movies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
                     MoviesPagingSource(
                         movieToMovieUiMapper = moviesUiMapper,
@@ -75,7 +75,7 @@ class HomeViewModel @Inject constructor(
                 }.flow
 
                 val category = MoviesUiCategory(
-                    name = StringResource.Text(genre.name),
+                    name = TextBuilder.Text(genre.name),
                     movies = pagingSource
                 )
                 movieGenrePagingSources.add(category)
