@@ -45,6 +45,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -150,6 +151,7 @@ private fun MovieDetailsDefault(
     navigateToMovie: (String) -> Unit
 ) {
     val state = rememberLazyListState()
+    val similarMovies = uiState.similarMovies.collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -203,7 +205,7 @@ private fun MovieDetailsDefault(
 
         item {
             MoviesPortraitLazyRow(
-                movies = uiState.similarMovies,
+                movies = similarMovies,
                 navigateToMovieDetails = { movieId -> navigateToMovie(movieId) },
             )
         }

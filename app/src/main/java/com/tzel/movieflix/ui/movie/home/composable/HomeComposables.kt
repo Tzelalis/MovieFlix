@@ -15,16 +15,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,7 +33,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
@@ -52,7 +51,6 @@ import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import gr.opap.utils.composable.modifier.placeholder.placeholder
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun HomeScreen(
@@ -72,49 +70,49 @@ private fun HomeContent(
 ) {
     val imageRequester = rememberImageRequester()
     val state = rememberScrollState()
-    val states = mutableListOf<LazyListState>()
-    uiState.value.genreMovies.forEach { _ ->
-        states.add(rememberLazyListState())
+
+    //collect paging data outside lazy column to avoid multiple requests
+    val popularMovies = uiState.value.popularCategory?.movies?.collectAsLazyPagingItems()
+    val genresMovies = uiState.value.genreMovies.map { genre ->
+        genre.movies.collectAsLazyPagingItems()
     }
 
-    /*
-        LazyColumn with multiple horizontal LazyRow pagination has issue.
-        Request same pages on vertical scroll!
-        */
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(state),
-    ) {
-        Spacer(modifier = Modifier.statusBarsPadding())
-
-        uiState.value.popularCategory?.let { popularCategory ->
-            HomeSectionTitle(title = popularCategory.name)
-            PopularMovies(
-                movies = popularCategory.movies,
-                navigateToMovieDetails = { navigateToMovieDetails(it) },
-                imageRequester = imageRequester,
-            )
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        item {
+            Spacer(modifier = Modifier.statusBarsPadding())
         }
 
-        uiState.value.genreMovies.forEachIndexed { index, category ->
-            key("genre_movies_$index") {
+        item {
+            uiState.value.popularCategory?.let { category ->
                 HomeSectionTitle(title = category.name)
-                MoviesPortraitLazyRow(
-                    movies = category.movies,
-                    state = states[index],
+            }
+            popularMovies?.let {
+                PopularMovies(
+                    movies = popularMovies,
                     navigateToMovieDetails = { navigateToMovieDetails(it) },
                     imageRequester = imageRequester,
                 )
             }
-
         }
 
-        Spacer(
-            modifier = Modifier
-                .navigationBarsPadding()
-                .padding(bottom = Spacing_32dp)
-        )
+        uiState.value.genreMovies.forEachIndexed { index, category ->
+            item("genre_movies_$index") {
+                HomeSectionTitle(title = category.name)
+                MoviesPortraitLazyRow(
+                    movies = genresMovies[index],
+                    navigateToMovieDetails = { navigateToMovieDetails(it) },
+                    imageRequester = imageRequester,
+                )
+            }
+        }
+
+        item {
+            Spacer(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(bottom = Spacing_32dp)
+            )
+        }
     }
 
     StatusBarBackground(state = state)
@@ -122,13 +120,11 @@ private fun HomeContent(
 
 @Composable
 private fun PopularMovies(
-    movies: Flow<PagingData<MovieUiItem>>,
+    movies: LazyPagingItems<MovieUiItem>,
     state: LazyListState = rememberLazyListState(),
     imageRequester: ImageRequest.Builder = rememberImageRequester(),
     navigateToMovieDetails: (id: String) -> Unit,
 ) {
-    val moviesLazyItems = movies.collectAsLazyPagingItems()
-
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -138,11 +134,11 @@ private fun PopularMovies(
         contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_4dp),
     ) {
         items(
-            count = moviesLazyItems.itemCount,
-            key = moviesLazyItems.itemKey { it.key },
-            contentType = moviesLazyItems.itemContentType { "movie" }
+            count = movies.itemCount,
+            key = movies.itemKey { it.key },
+            contentType = movies.itemContentType { "movie" }
         ) { index ->
-            moviesLazyItems[index]?.let { movie ->
+            movies[index]?.let { movie ->
                 MovieItem(
                     modifier = Modifier.fillParentMaxWidth(0.7f),
                     movie = movie,

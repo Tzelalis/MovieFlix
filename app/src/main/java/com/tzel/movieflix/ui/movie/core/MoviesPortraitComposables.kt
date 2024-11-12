@@ -19,8 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
@@ -31,16 +30,14 @@ import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import gr.opap.utils.composable.modifier.placeholder.placeholder
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun MoviesPortraitLazyRow(
-    movies: Flow<PagingData<MovieUiItem>>,
+    movies: LazyPagingItems<MovieUiItem>,
     state: LazyListState = rememberLazyListState(),
     imageRequester: ImageRequest.Builder = rememberImageRequester(),
     navigateToMovieDetails: (id: String) -> Unit
 ) {
-    val moviesLazyItems = movies.collectAsLazyPagingItems()
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,11 +47,11 @@ fun MoviesPortraitLazyRow(
         contentPadding = PaddingValues(horizontal = Spacing_16dp, vertical = Spacing_4dp),
     ) {
         items(
-            count = moviesLazyItems.itemCount,
-            key = moviesLazyItems.itemKey { it.key },
-            contentType = moviesLazyItems.itemContentType { "movie" }
+            count = movies.itemCount,
+            key = movies.itemKey { it.key },
+            contentType = movies.itemContentType { "movie" }
         ) { index ->
-            moviesLazyItems[index]?.let { movie ->
+            movies[index]?.let { movie ->
                 MoviePortraitItem(
                     modifier = Modifier.fillParentMaxWidth(0.28f),
                     movie = movie,
