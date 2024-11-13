@@ -8,6 +8,7 @@ import com.tzel.movieflix.data.movie.model.RemoteMovieDetailsResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
 import com.tzel.movieflix.data.movie.model.RemoteReviewsResponse
 import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
+import com.tzel.movieflix.domain.movie.entity.TimeWindow
 import com.tzel.movieflix.utils.ext.requireNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -95,6 +96,17 @@ class MovieDataSourceImpl @Inject constructor(
     override suspend fun upcomingMovies(page: Int): RemoteMovieResponse {
         return executeOn.background {
             api.getUpcoming(page).requireNotNull()
+        }
+    }
+
+    override suspend fun getTrendingMovies(timeWindow: TimeWindow, page: Int): RemoteMovieResponse {
+        val timeWindowKey = when (timeWindow) {
+            TimeWindow.Day -> "day"
+            TimeWindow.Week -> "week"
+        }
+
+        return executeOn.background {
+            api.getTrending(timeWindowKey, page).requireNotNull()
         }
     }
 }

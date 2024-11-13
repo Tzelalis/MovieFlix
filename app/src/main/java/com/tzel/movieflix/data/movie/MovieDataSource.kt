@@ -5,6 +5,7 @@ import com.tzel.movieflix.data.movie.model.RemoteGenresResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieDetailsResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
 import com.tzel.movieflix.data.movie.model.RemoteReviewsResponse
+import com.tzel.movieflix.domain.movie.entity.TimeWindow
 import kotlinx.coroutines.flow.Flow
 
 interface MovieDataSource {
@@ -33,4 +34,6 @@ interface MovieDataSource {
     suspend fun searchMovies(title: String, page: Int): RemoteMovieResponse
 
     suspend fun upcomingMovies(page: Int): RemoteMovieResponse
+
+    suspend fun getTrendingMovies(timeWindow: TimeWindow, page: Int): RemoteMovieResponse
 }

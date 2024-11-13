@@ -49,7 +49,7 @@ private fun HomeContent(
 
     //collect paging data outside lazy column to avoid multiple requests
     val popularMovies = uiState.value.popularCategory?.movies?.collectAsLazyPagingItems()
-    val upcomingMovies = uiState.value.upcomingCategory?.movies?.collectAsLazyPagingItems()
+    val upcomingMovies = uiState.value.trendingCategory?.movies?.collectAsLazyPagingItems()
     val firstSectionGenresMovies = uiState.value.firstSectionGenres.map { genre ->
         genre.movies.collectAsLazyPagingItems()
     }
@@ -98,7 +98,7 @@ private fun HomeContent(
             }
 
             item {
-                uiState.value.upcomingCategory?.let { category ->
+                uiState.value.trendingCategory?.let { category ->
                     HomeSectionTitle(title = category.name)
                 }
                 upcomingMovies?.let { movies ->

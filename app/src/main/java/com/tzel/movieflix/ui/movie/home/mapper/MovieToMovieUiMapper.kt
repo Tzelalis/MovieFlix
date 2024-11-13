@@ -8,10 +8,12 @@ import javax.inject.Inject
 
 class MovieToMovieUiMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) {
     operator fun invoke(movies: List<Movie>, page: Int): List<MovieUiItem> {
-        return movies.map { movie -> mapMovie(movie, page) }.distinctBy { it.id }
+        return movies.mapNotNull { movie -> invoke(movie, page) }.distinctBy { it.id }
     }
 
-    private fun mapMovie(movie: Movie, page: Int): MovieUiItem {
+    operator fun invoke(movie: Movie?, page: Int = 1): MovieUiItem? {
+        if (movie == null) return null
+
         return MovieUiItem(
             id = movie.id,
             key = "${movie.id}$page",

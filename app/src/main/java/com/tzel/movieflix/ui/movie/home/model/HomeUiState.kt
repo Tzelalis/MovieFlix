@@ -5,8 +5,9 @@ import com.tzel.movieflix.ui.core.composable.TextBuilder
 import kotlinx.coroutines.flow.Flow
 
 data class HomeUiState(
+    val trendMovie: MovieUiItem? = null,
     val popularCategory: MoviesUiCategory? = null,
-    val upcomingCategory: MoviesUiCategory? = null,
+    val trendingCategory: MoviesUiCategory? = null,
     val genreMovies: List<MoviesUiCategory> = emptyList(),
     val onRefreshClick: () -> Unit
 ) {

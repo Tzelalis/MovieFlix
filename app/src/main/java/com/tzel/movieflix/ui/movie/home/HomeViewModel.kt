@@ -3,6 +3,7 @@ package com.tzel.movieflix.ui.movie.home
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.tzel.movieflix.R
+import com.tzel.movieflix.domain.movie.entity.TimeWindow
 import com.tzel.movieflix.ui.core.BaseViewModel
 import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.movie.home.mapper.MovieToMovieUiMapper
@@ -13,6 +14,8 @@ import com.tzel.movieflix.usecase.movie.GetGenresUseCase
 import com.tzel.movieflix.usecase.movie.GetMoviesByGenreUseCase
 import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
 import com.tzel.movieflix.usecase.movie.GetUpcomingMoviesUseCase
+import com.tzel.movieflix.usecase.movie.trending.GetFirstTrendMovieUseCase
+import com.tzel.movieflix.usecase.movie.trending.GetTrendingMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +29,9 @@ class HomeViewModel @Inject constructor(
     private val moviesUiMapper: MovieToMovieUiMapper,
     private val getGenresUseCase: GetGenresUseCase,
     private val getMoviesByGenreUseCase: GetMoviesByGenreUseCase,
-    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
+    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
+    private val getFirstTrendMovieUseCase: GetFirstTrendMovieUseCase,
+    private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState(onRefreshClick = ::refreshContent))
@@ -34,16 +39,24 @@ class HomeViewModel @Inject constructor(
 
     private var popularMoviesJob: Job? = null
     private var genreMoviesJob: Job? = null
-    private var upcomingMoviesJob: Job? = null
+    private var trendingMoviesJob: Job? = null
 
     init {
         refreshContent()
     }
 
     private fun refreshContent() {
+        loadTrendingOfDay()
         loadPopularMovies()
-        loadUpcomingMovies()
+        loadTrendingMovies()
         loadMovieGenres()
+    }
+
+    private fun loadTrendingOfDay() {
+        launch {
+            val trending = getFirstTrendMovieUseCase()
+            _uiState.update { it.copy(trendMovie = moviesUiMapper(trending)) }
+        }
     }
 
     private fun loadPopularMovies() {
@@ -62,19 +75,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadUpcomingMovies() {
-        upcomingMoviesJob?.cancel()
-        upcomingMoviesJob = launch {
-            val upcoming = MoviesUiCategory(
-                name = TextBuilder.StringResource(R.string.home_upcoming_title),
+    private fun loadTrendingMovies() {
+        trendingMoviesJob?.cancel()
+        trendingMoviesJob = launch {
+            val trending = MoviesUiCategory(
+                name = TextBuilder.StringResource(R.string.home_trending_title),
                 movies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
                     MoviesPagingSource(
                         movieToMovieUiMapper = moviesUiMapper,
-                        getMovies = { page -> getUpcomingMoviesUseCase(page) })
+                        getMovies = { page -> getTrendingMoviesUseCase(TimeWindow.Week, page) })
                 }.flow
             )
 
-            _uiState.update { it.copy(upcomingCategory = upcoming) }
+            _uiState.update { it.copy(trendingCategory = trending) }
         }
     }
 

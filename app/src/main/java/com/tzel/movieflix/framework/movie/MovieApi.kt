@@ -33,4 +33,7 @@ interface MovieApi {
 
     @GET("/3/movie/upcoming?language=en-US")
     suspend fun getUpcoming(@Query("page") page: Int): Response<RemoteMovieResponse>
+
+    @GET("/3/trending/movie/{time_window}?language=en-US")
+    suspend fun getTrending(@Path("time_window") timeWindow: String, @Query("page") page: Int): Response<RemoteMovieResponse>
 }

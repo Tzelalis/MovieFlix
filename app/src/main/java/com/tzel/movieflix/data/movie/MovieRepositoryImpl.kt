@@ -12,6 +12,7 @@ import com.tzel.movieflix.domain.movie.entity.Movie
 import com.tzel.movieflix.domain.movie.entity.MovieDetails
 import com.tzel.movieflix.domain.movie.entity.MovieResult
 import com.tzel.movieflix.domain.movie.entity.ReviewsResult
+import com.tzel.movieflix.domain.movie.entity.TimeWindow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -86,6 +87,10 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun upcomingMovies(page: Int): MovieResult {
         return remoteMovieMapper(dataSource.upcomingMovies(page))
+    }
+
+    override suspend fun getTrendingMovies(timeWindow: TimeWindow, page: Int): MovieResult {
+        return remoteMovieMapper(dataSource.getTrendingMovies(timeWindow, page))
     }
 
     override fun getMovieFavoriteStatus(movieId: String): Flow<Boolean> {
