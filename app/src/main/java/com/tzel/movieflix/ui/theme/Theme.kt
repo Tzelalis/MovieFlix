@@ -9,6 +9,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = RedMedium,
     secondary = PurpleGrey80,
     surface = Color.White,
+    onSurface = Color.Black,
     tertiary = GrayDark,
     tertiaryContainer = GrayDark,
     onTertiary = GrayLight,

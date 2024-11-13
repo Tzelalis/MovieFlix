@@ -12,6 +12,7 @@
     <string name="splash_powered_by">Powered by Tzel</string>
 
     <!-- Home -->
+    <string name="home_trending_label">Daily Trend</string>
     <string name="home_popular_title">Popular</string>
     <string name="home_trending_title">Trending movies of the week</string>
     <string name="home_favorite_content_description">favorite movie</string>

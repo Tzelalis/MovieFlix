@@ -96,7 +96,8 @@ private fun HomeContent(
 
                     TrendMovieOfTheDay(
                         movie = it,
-                        imageRequest = imageRequester
+                        imageRequest = imageRequester,
+                        onClick = { navigateTo(MovieDetailsDestination(it.id)) }
                     )
                 }
             }
