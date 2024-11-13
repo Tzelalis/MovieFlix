@@ -86,8 +86,8 @@ private fun HomeContent(
             modifier = Modifier.fillMaxSize(),
             state = state
         ) {
-            item {
-                uiState.value.trendMovie?.let {
+            uiState.value.trendMovie?.let {
+                item {
                     Spacer(
                         modifier = Modifier
                             .statusBarsPadding()
