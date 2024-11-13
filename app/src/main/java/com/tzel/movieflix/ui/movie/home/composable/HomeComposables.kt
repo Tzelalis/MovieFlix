@@ -13,9 +13,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.tzel.movieflix.ui.core.navigation.NavigationDestination
@@ -46,6 +48,20 @@ private fun HomeContent(
 ) {
     val imageRequester = rememberImageRequester()
     val state = rememberLazyListState()
+    val density = LocalDensity.current
+
+    val fraction = remember() {
+        derivedStateOf {
+            if (state.firstVisibleItemIndex > 0) return@derivedStateOf 0f
+
+            val itemHeight = state.layoutInfo.visibleItemsInfo.firstOrNull()?.size?.toFloat() ?: return@derivedStateOf 0f
+            val topBarHeight = with(density) { Sizes.NavigationBars.small.toPx() }
+            val totalCalculatedHeight = itemHeight * 0.8f - topBarHeight
+
+            val offset = state.firstVisibleItemScrollOffset / totalCalculatedHeight
+            1f - offset.coerceIn(0f, 1f)
+        }
+    }
 
     //collect paging data outside lazy column to avoid multiple requests
     val popularMovies = uiState.value.popularCategory?.movies?.collectAsLazyPagingItems()
@@ -58,16 +74,31 @@ private fun HomeContent(
     }
 
     Box {
+        TrendingBackground(
+            imageUrl = uiState.value.trendBackground,
+            isVisible = { state.firstVisibleItemIndex == 0 },
+            alpha = { fraction.value },
+            modifier = Modifier.fillMaxSize(),
+            imageRequester = imageRequester
+        )
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = state
         ) {
             item {
-                Spacer(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .height(Sizes.NavigationBars.small)
-                )
+                uiState.value.trendMovie?.let {
+                    Spacer(
+                        modifier = Modifier
+                            .statusBarsPadding()
+                            .height(Sizes.NavigationBars.small)
+                    )
+
+                    TrendMovieOfTheDay(
+                        movie = it,
+                        imageRequest = imageRequester
+                    )
+                }
             }
 
             item {
@@ -138,6 +169,7 @@ private fun HomeContent(
         }
 
         HomeTopBar(
+            alpha = { 1 - fraction.value },
             onSearchClick = { navigateTo(SearchDestination) }
         )
     }

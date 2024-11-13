@@ -6,7 +6,8 @@ import javax.inject.Inject
 
 class RemoteMovieDetailsMapper @Inject constructor(
     private val remoteCastMapper: RemoteCastMapper,
-    private val mapGenres: RemoteGenresMapper
+    private val mapGenres: RemoteGenresMapper,
+    private val remoteMovieImagesMapper: RemoteMovieImagesMapper
 ) {
     operator fun invoke(response: RemoteMovieDetailsResponse): MovieDetails {
         if (response.id == null) throw IllegalArgumentException("Movie id cannot be null")
@@ -29,7 +30,8 @@ class RemoteMovieDetailsMapper @Inject constructor(
                 voteAverage = voteAverage,
                 voteCount = voteCount,
                 cast = remoteCastMapper(credits?.cast),
-                homepage = homepage
+                homepage = homepage,
+                images = remoteMovieImagesMapper(images)
             )
         }
     }

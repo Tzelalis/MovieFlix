@@ -55,8 +55,8 @@ class MovieRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMovieDetails(movieId: String): MovieDetails {
-        return remoteMovieDetailsMapper(dataSource.getMovieDetails(movieId))
+    override suspend fun getMovieDetails(movieId: String, includeImages: Boolean): MovieDetails {
+        return remoteMovieDetailsMapper(dataSource.getMovieDetails(movieId, includeImages))
     }
 
     override suspend fun getMovieReviews(movieId: String, page: Int): ReviewsResult {

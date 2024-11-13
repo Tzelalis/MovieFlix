@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface MovieDataSource {
     suspend fun getLocalPopularMovies(page: Int): RemoteMovieResponse
 
-    suspend fun getMovieDetails(movieId: String): RemoteMovieDetailsResponse
+    suspend fun getMovieDetails(movieId: String, includeImages: Boolean): RemoteMovieDetailsResponse
 
     suspend fun getSimilarMovies(movieId: String, page: Int): RemoteMovieResponse
 

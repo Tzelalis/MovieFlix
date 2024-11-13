@@ -10,13 +10,14 @@ class MovieDetailsUiMapper @Inject constructor(
     private val imagePathMapper: ImagePathMapper,
     private val movieStatsUiMapper: MovieStatsUiMapper,
     private val reviewUiMapper: ReviewUiMapper,
+    private val moviesImagesUiMapper: MoviesImagesUiMapper
 ) {
     operator fun invoke(details: MovieDetails): MovieDetailsUi {
         return MovieDetailsUi(
             id = details.id,
             title = details.title,
             adult = details.adult,
-            genres = details.genres.joinToString(separator = ", ", transform = { it.name }),
+            genres = details.genres,
             popularity = details.popularity,
             overview = details.overview,
             imageUrl = mapImageUrl(
@@ -32,6 +33,8 @@ class MovieDetailsUiMapper @Inject constructor(
             stats = movieStatsUiMapper(details.releaseDate, details.runtime, details.voteAverage),
             homepage = details.homepage,
             reviews = reviewUiMapper(details.reviews),
+            posterUrl = imagePathMapper(details.posterPath),
+            images = details.images?.let { moviesImagesUiMapper(it) },
             isFavorite = details.isFavorite
         )
     }

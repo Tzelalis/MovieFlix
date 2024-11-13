@@ -21,6 +21,7 @@ class MovieToMovieUiMapper @Inject constructor(private val imagePathMapper: Imag
             releaseDate = movie.releaseDate,
             backdropPath = imagePathMapper(movie.backdropPath, ImageSize.BackdropSize.W1280),
             posterPath = imagePathMapper(movie.posterPath, ImageSize.PosterSize.W500),
+            genres = emptyList()
         )
     }
 }

@@ -22,5 +22,6 @@ data class RemoteMovieDetailsResponse(
     @Json(name = "vote_average") val voteAverage: Double?,
     @Json(name = "vote_count") val voteCount: Int?,
     val credits: RemoteCastResponse?,
-    val homepage: String?
+    val homepage: String?,
+    val images: RemoteMovieImages
 )

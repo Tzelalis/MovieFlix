@@ -18,9 +18,9 @@ data class MovieDetails(
     val voteCount: Int?,
     val cast: List<Cast>,
     val homepage: String?,
+    val images: MovieImages?,
     val reviews: List<Review>? = null,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
 )
-
 
 

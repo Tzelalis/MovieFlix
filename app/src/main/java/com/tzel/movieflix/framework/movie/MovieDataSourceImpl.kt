@@ -25,9 +25,11 @@ class MovieDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMovieDetails(movieId: String): RemoteMovieDetailsResponse {
+    override suspend fun getMovieDetails(movieId: String, includeImages: Boolean): RemoteMovieDetailsResponse {
         return executeOn.background {
-            api.fetchMovieDetails(movieId = movieId).requireNotNull()
+            val includes = if (includeImages) "images" else null
+
+            api.fetchMovieDetails(movieId = movieId, includes = includes).requireNotNull()
         }
     }
 

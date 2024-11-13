@@ -1,5 +1,6 @@
 package com.tzel.movieflix.ui.movie.home.model
 
+import com.tzel.movieflix.domain.movie.entity.Genre
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -9,6 +10,7 @@ data class MovieUiItem(
     val posterPath: String?,
     val backdropPath: String?,
     val releaseDate: String?,
+    val genres: List<Genre>,
     val key: String,
 ) {
     val releaseDateFormatted: String?

@@ -14,7 +14,10 @@ interface MovieApi {
     suspend fun fetchPopularMovies(@Query("page") page: Int): Response<RemoteMovieResponse>
 
     @GET("/3/movie/{movie_id}?append_to_response=credits")
-    suspend fun fetchMovieDetails(@Path("movie_id") movieId: String): Response<RemoteMovieDetailsResponse>
+    suspend fun fetchMovieDetails(
+        @Path("movie_id") movieId: String,
+        @Query("append_to_response") includes: String? = null
+    ): Response<RemoteMovieDetailsResponse>
 
     @GET("/3/movie/{movie_id}/similar")
     suspend fun fetchSimilarMovies(@Path("movie_id") movieId: String, @Query("page") page: Int): Response<RemoteMovieResponse>

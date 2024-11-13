@@ -10,10 +10,10 @@ import com.tzel.movieflix.ui.movie.home.mapper.MovieToMovieUiMapper
 import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.movie.home.model.MoviesUiCategory
+import com.tzel.movieflix.ui.movie.moviedetail.mapper.MovieDetailsUiMapper
 import com.tzel.movieflix.usecase.movie.GetGenresUseCase
 import com.tzel.movieflix.usecase.movie.GetMoviesByGenreUseCase
 import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
-import com.tzel.movieflix.usecase.movie.GetUpcomingMoviesUseCase
 import com.tzel.movieflix.usecase.movie.trending.GetFirstTrendMovieUseCase
 import com.tzel.movieflix.usecase.movie.trending.GetTrendingMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,9 +29,9 @@ class HomeViewModel @Inject constructor(
     private val moviesUiMapper: MovieToMovieUiMapper,
     private val getGenresUseCase: GetGenresUseCase,
     private val getMoviesByGenreUseCase: GetMoviesByGenreUseCase,
-    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getFirstTrendMovieUseCase: GetFirstTrendMovieUseCase,
     private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
+    private val movieDetailsUiMapper: MovieDetailsUiMapper
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState(onRefreshClick = ::refreshContent))
@@ -54,8 +54,8 @@ class HomeViewModel @Inject constructor(
 
     private fun loadTrendingOfDay() {
         launch {
-            val trending = getFirstTrendMovieUseCase()
-            _uiState.update { it.copy(trendMovie = moviesUiMapper(trending)) }
+            val trending = getFirstTrendMovieUseCase() ?: return@launch
+            _uiState.update { it.copy(trendMovie = movieDetailsUiMapper(trending)) }
         }
     }
 

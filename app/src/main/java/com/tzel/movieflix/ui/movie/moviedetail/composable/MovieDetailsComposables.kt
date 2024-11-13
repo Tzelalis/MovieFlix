@@ -51,6 +51,7 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import com.tzel.movieflix.R
 import com.tzel.movieflix.domain.movie.entity.Cast
+import com.tzel.movieflix.domain.movie.entity.Genre
 import com.tzel.movieflix.ui.core.composable.ErrorContent
 import com.tzel.movieflix.ui.core.composable.LoadingContent
 import com.tzel.movieflix.ui.core.composable.StatusBarBackground
@@ -171,7 +172,7 @@ private fun MovieDetailsDefault(
         item {
             MovieDetailsTitle(
                 title = uiState.movieDetails.title,
-                genres = uiState.movieDetails.genres
+                genres = uiState.movieDetails.genresText
             )
         }
 
@@ -348,7 +349,7 @@ private fun MovieDetailsPreview() {
                     imageUrl = "Movie Backdrop Path",
                     voteAverage = 5.0,
                     voteCount = 100,
-                    genres = "Action, Adventure",
+                    genres = listOf(Genre("1", "Action"), Genre("2", "Action")),
                     tagline = "Movie Tagline",
                     budget = "1000000",
                     status = "Movie Status",
@@ -368,6 +369,8 @@ private fun MovieDetailsPreview() {
                     stats = emptyList(),
                     homepage = "Movie Homepage",
                     reviews = emptyList(),
+                    posterUrl = "",
+                    images = null,
                     isFavorite = false
                 ),
                 similarMovies = pager,

@@ -1,6 +1,5 @@
 package com.tzel.movieflix.ui.movie.home.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.tzel.movieflix.R
@@ -27,12 +27,17 @@ import com.tzel.movieflix.utils.composable.modifier.clickableWithLifecycle
 @Composable
 fun HomeTopBar(
     modifier: Modifier = Modifier,
+    alpha: () -> Float = { 1f },
     onSearchClick: () -> Unit,
 ) {
+    val backgroundColor = MaterialTheme.colorScheme.background
+
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
+            .drawBehind {
+                drawRect(color = backgroundColor.copy(alpha = alpha().coerceAtMost(0.7f)))
+            }
             .statusBarsPadding()
             .height(Sizes.NavigationBars.small),
         horizontalArrangement = Arrangement.End,
