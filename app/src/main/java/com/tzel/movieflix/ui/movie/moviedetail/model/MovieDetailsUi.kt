@@ -4,6 +4,9 @@ import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import com.tzel.movieflix.domain.movie.entity.Cast
 import com.tzel.movieflix.domain.movie.entity.Genre
+import com.tzel.movieflix.domain.movie.entity.VideoItem
+import com.tzel.movieflix.domain.movie.entity.VideoSite
+import com.tzel.movieflix.domain.movie.entity.VideoType
 import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.theme.GrayLight
 import com.tzel.movieflix.ui.theme.RedMedium
@@ -27,6 +30,7 @@ data class MovieDetailsUi(
     val homepage: String?,
     val reviews: List<ReviewUi>,
     val images: MovieImagesUi?,
+    val videos: List<VideoItem>,
     val isFavorite: Boolean
 ) {
     val favoriteColor: Color
@@ -34,6 +38,9 @@ data class MovieDetailsUi(
 
     val genresText: String
         get() = genres.joinToString(separator = ", ", transform = { it.name })
+
+    val trailerVideo: VideoItem?
+        get() = videos.firstOrNull { it.type == VideoType.Trailer && it.site == VideoSite.YouTube }
 }
 
 data class MovieUiStats(

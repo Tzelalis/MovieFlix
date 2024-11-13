@@ -13,7 +13,7 @@ interface MovieApi {
     @GET("/3/movie/popular")
     suspend fun fetchPopularMovies(@Query("page") page: Int): Response<RemoteMovieResponse>
 
-    @GET("/3/movie/{movie_id}?append_to_response=credits")
+    @GET("/3/movie/{movie_id}")
     suspend fun fetchMovieDetails(
         @Path("movie_id") movieId: String,
         @Query("append_to_response") includes: String? = null

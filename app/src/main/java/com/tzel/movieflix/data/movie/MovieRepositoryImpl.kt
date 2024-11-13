@@ -34,7 +34,7 @@ class MovieRepositoryImpl @Inject constructor(
 
             if (popularMoviesResult.page == 1) {
                 val popularMoviesWithFavorite = popularMoviesResult.movies.map { movie ->
-                    val isFavorite = localMovies.find { movie.id == it.id  }?.isFavorite ?: false
+                    val isFavorite = localMovies.find { movie.id == it.id }?.isFavorite ?: false
                     movie.copy(isFavorite = isFavorite)
                 }
                 val localMoviesWithFavorite = moviesToLocalMoviesMapper(popularMoviesWithFavorite, true)
@@ -55,8 +55,14 @@ class MovieRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMovieDetails(movieId: String, includeImages: Boolean): MovieDetails {
-        return remoteMovieDetailsMapper(dataSource.getMovieDetails(movieId, includeImages))
+    override suspend fun getMovieDetails(movieId: String, includeImages: Boolean, includeVideos: Boolean): MovieDetails {
+        return remoteMovieDetailsMapper(
+            dataSource.getMovieDetails(
+                movieId = movieId,
+                includeImages = includeImages,
+                includeVideos = includeVideos
+            )
+        )
     }
 
     override suspend fun getMovieReviews(movieId: String, page: Int): ReviewsResult {

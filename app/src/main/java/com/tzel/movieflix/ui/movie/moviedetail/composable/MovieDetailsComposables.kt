@@ -68,7 +68,9 @@ import com.tzel.movieflix.ui.theme.Spacing_32dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import com.tzel.movieflix.utils.composable.modifier.noRippleClickable
+import com.tzel.movieflix.utils.ext.openYoutubeVideo
 import com.tzel.movieflix.utils.ext.sharePlainText
+
 
 @Composable
 fun MovieDetailsScreen(
@@ -177,8 +179,20 @@ private fun MovieDetailsDefault(
         }
 
         item {
+            uiState.movieDetails.trailerVideo?.let { trailer ->
+                val context = LocalContext.current
+                TrailerButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        context.openYoutubeVideo(trailer.key)
+                    }
+                )
+            }
+        }
+
+        item {
             MovieStatsRow(
-                modifier = Modifier.padding(top = Spacing_32dp),
+                modifier = Modifier.padding(top = Spacing_16dp),
                 stats = uiState.movieDetails.stats,
             )
         }
@@ -371,6 +385,7 @@ private fun MovieDetailsPreview() {
                     reviews = emptyList(),
                     posterUrl = "",
                     images = null,
+                    videos = emptyList(),
                     isFavorite = false
                 ),
                 similarMovies = pager,

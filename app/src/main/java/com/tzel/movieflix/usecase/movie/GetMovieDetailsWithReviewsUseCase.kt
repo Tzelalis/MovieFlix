@@ -14,7 +14,7 @@ class GetMovieDetailsWithReviewsUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(movieId: String, page: Int = 1): Flow<MovieDetails?> {
         return flow {
-            val movieDetails = getMovieDetailsUseCase(movieId)
+            val movieDetails = getMovieDetailsUseCase(movieId, includeVideos = true)
 
             emit(movieDetails)
 

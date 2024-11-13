@@ -6,9 +6,17 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class GetMovieDetailsUseCase @Inject constructor(private val repo: MovieRepository) {
-    suspend operator fun invoke(movieId: String, includeImages: Boolean = false): MovieDetails? {
+    suspend operator fun invoke(
+        movieId: String,
+        includeImages: Boolean = false,
+        includeVideos: Boolean = false
+    ): MovieDetails? {
         return try {
-            repo.getMovieDetails(movieId = movieId, includeImages = includeImages)
+            repo.getMovieDetails(
+                movieId = movieId,
+                includeImages = includeImages,
+                includeVideos = includeVideos
+            )
         } catch (e: Exception) {
             Timber.tag(GetMovieDetailsUseCase::class.java.simpleName).e(e)
             null

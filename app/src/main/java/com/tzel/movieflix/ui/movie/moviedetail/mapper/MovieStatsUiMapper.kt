@@ -11,15 +11,16 @@ class MovieStatsUiMapper @Inject constructor() {
     operator fun invoke(releaseDate: String?, runtime: Int?, voteAverage: Double?): List<MovieUiStats> {
         val stats = mutableListOf<MovieUiStats>()
 
-        releaseDate?.let {
-            val formattedDate = mapReleaseDateFormat(it) ?: return@let
-            stats.add(
-                MovieUiStats(
-                    icon = R.drawable.ic_calendar,
-                    label = TextBuilder.Text(formattedDate),
-                    contentDescription = TextBuilder.StringResource(R.string.home_details_release_date_content_description)
+        if (!releaseDate.isNullOrBlank()) {
+            mapReleaseDateFormat(releaseDate)?.let { formattedDate ->
+                stats.add(
+                    MovieUiStats(
+                        icon = R.drawable.ic_calendar,
+                        label = TextBuilder.Text(formattedDate),
+                        contentDescription = TextBuilder.StringResource(R.string.home_details_release_date_content_description)
+                    )
                 )
-            )
+            }
         }
 
         runtime?.let { time ->

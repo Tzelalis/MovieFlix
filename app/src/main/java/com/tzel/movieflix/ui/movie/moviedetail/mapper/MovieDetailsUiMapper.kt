@@ -35,6 +35,7 @@ class MovieDetailsUiMapper @Inject constructor(
             reviews = reviewUiMapper(details.reviews),
             posterUrl = imagePathMapper(details.posterPath),
             images = details.images?.let { moviesImagesUiMapper(it) },
+            videos = details.videos,
             isFavorite = details.isFavorite
         )
     }
