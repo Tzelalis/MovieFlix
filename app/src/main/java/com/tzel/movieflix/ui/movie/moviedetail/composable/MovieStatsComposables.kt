@@ -73,7 +73,7 @@ private fun MovieStatsItem(
         Text(
             text = label.build(),
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
