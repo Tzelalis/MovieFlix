@@ -137,7 +137,7 @@ private fun PopularMovieItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(topStart = Spacing_8dp, bottomEnd = Spacing_8dp))
+                .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(bottomStart = Spacing_8dp, bottomEnd = Spacing_8dp))
                 .padding(vertical = Spacing_8dp, horizontal = Spacing_16dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Spacing_8dp)
