@@ -45,7 +45,7 @@
 
     <!-- Sign-in -->
     <string name="sign_in_title">Sign In</string>
-    <string name="sign_in_success_subtitle">Sign in to access your favorite movies and more!</string>
+    <string name="sign_in_success_subtitle">Congratulations! You have successfully signed in.</string>
     <string name="sign_in_error_button">Cancel</string>
     <string name="sign_in_success_button">Done</string>
 </resources>
