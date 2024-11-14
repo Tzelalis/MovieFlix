@@ -1,6 +1,8 @@
 package com.tzel.movieflix.ui.app.navigation
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,6 +28,10 @@ internal fun AppNavHost(
         modifier = modifier.fillMaxSize(),
         navController = navController,
         startDestination = SplashDestination,
+        enterTransition = { slideInHorizontally { it } },
+        popExitTransition = { slideOutHorizontally { it } },
+        exitTransition = { slideOutHorizontally { -it } },
+        popEnterTransition = { slideInHorizontally { -it } },
     ) {
         splashScreen(navigateTo = { destination -> navController.safeNavigate(destination) })
 
