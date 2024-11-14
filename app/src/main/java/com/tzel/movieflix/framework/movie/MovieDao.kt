@@ -1,4 +1,4 @@
-package com.tzel.movieflix.data.movie
+package com.tzel.movieflix.framework.movie
 
 import androidx.room.Dao
 import androidx.room.Delete

@@ -11,11 +11,15 @@ import retrofit2.http.Query
 
 interface MovieApi {
     @GET("/3/movie/popular")
-    suspend fun fetchPopularMovies(@Query("page") page: Int): Response<RemoteMovieResponse>
+    suspend fun fetchPopularMovies(
+        @Query("page") page: Int,
+        @Query("language") language: String?
+    ): Response<RemoteMovieResponse>
 
     @GET("/3/movie/{movie_id}")
     suspend fun fetchMovieDetails(
         @Path("movie_id") movieId: String,
+        @Query("language") language: String?,
         @Query("append_to_response") includes: String? = null
     ): Response<RemoteMovieDetailsResponse>
 
@@ -26,17 +30,28 @@ interface MovieApi {
     suspend fun fetchMovieReviews(@Path("movie_id") movieId: String, @Query("page") page: Int): Response<RemoteReviewsResponse>
 
     @GET("/3/genre/movie/list")
-    suspend fun fetchGenres(): Response<RemoteGenresResponse>
+    suspend fun fetchGenres(@Query("language") language: String?): Response<RemoteGenresResponse>
 
     @GET("/3/discover/movie?sort_by=popularity.desc&include_adult=false")
     suspend fun fetchMoviesByGenre(@Query("with_genres") genreId: String, @Query("page") page: Int): Response<RemoteMovieResponse>
 
-    @GET("3/search/movie?include_adult=false&language=en-US")
-    suspend fun searchMovies(@Query("query") title: String, @Query("page") page: Int): Response<RemoteMovieResponse>
+    @GET("3/search/movie?include_adult=false")
+    suspend fun searchMovies(
+        @Query("query") title: String,
+        @Query("page") page: Int,
+        @Query("language") language: String?
+    ): Response<RemoteMovieResponse>
 
-    @GET("/3/movie/upcoming?language=en-US")
-    suspend fun getUpcoming(@Query("page") page: Int): Response<RemoteMovieResponse>
+    @GET("/3/movie/upcoming")
+    suspend fun getUpcoming(
+        @Query("page") page: Int,
+        @Query("language") language: String?
+    ): Response<RemoteMovieResponse>
 
-    @GET("/3/trending/movie/{time_window}?language=en-US")
-    suspend fun getTrending(@Path("time_window") timeWindow: String, @Query("page") page: Int): Response<RemoteMovieResponse>
+    @GET("/3/trending/movie/{time_window}")
+    suspend fun getTrending(
+        @Path("time_window") timeWindow: String,
+        @Query("page") page: Int,
+        @Query("language") language: String?
+    ): Response<RemoteMovieResponse>
 }

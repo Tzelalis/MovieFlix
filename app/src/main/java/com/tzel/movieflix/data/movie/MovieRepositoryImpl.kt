@@ -6,6 +6,7 @@ import com.tzel.movieflix.data.movie.mapper.RemoteGenresMapper
 import com.tzel.movieflix.data.movie.mapper.RemoteMovieDetailsMapper
 import com.tzel.movieflix.data.movie.mapper.RemoteMovieMapper
 import com.tzel.movieflix.data.movie.mapper.RemoteReviewsMapper
+import com.tzel.movieflix.domain.configuration.ConfigurationRepository
 import com.tzel.movieflix.domain.movie.MovieRepository
 import com.tzel.movieflix.domain.movie.entity.Genre
 import com.tzel.movieflix.domain.movie.entity.Movie
@@ -26,10 +27,12 @@ class MovieRepositoryImpl @Inject constructor(
     private val remoteGenresMapper: RemoteGenresMapper,
     private val localMoviesToMoviesMapper: LocalMoviesToMoviesMapper,
     private val moviesToLocalMoviesMapper: MoviesToLocalMoviesMapper,
+    private val configurationRepository: ConfigurationRepository,
 ) : MovieRepository {
     override suspend fun getPopularMovies(page: Int): MovieResult {
         return try {
-            val popularMoviesResult = remoteMovieMapper(dataSource.getLocalPopularMovies(page))
+            val lang = configurationRepository.getSavedLanguage()?.code
+            val popularMoviesResult = remoteMovieMapper(dataSource.getLocalPopularMovies(page = page, language = lang))
             val localMovies = localMoviesToMoviesMapper(dataSource.getLocalMovies())
 
             if (popularMoviesResult.page == 1) {
@@ -56,13 +59,34 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMovieDetails(movieId: String, includeImages: Boolean, includeVideos: Boolean): MovieDetails {
-        return remoteMovieDetailsMapper(
+        val lang = configurationRepository.getSavedLanguage()?.code
+        var details = remoteMovieDetailsMapper(
             dataSource.getMovieDetails(
                 movieId = movieId,
                 includeImages = includeImages,
-                includeVideos = includeVideos
+                includeVideos = includeVideos,
+                language = lang
             )
         )
+
+        val infoMissing = details.overview.isNullOrBlank() || details.videos.isEmpty()
+        if (infoMissing && lang != configurationRepository.getBackupLanguage().code) {
+            val englishDetails = remoteMovieDetailsMapper(
+                dataSource.getMovieDetails(
+                    movieId = movieId,
+                    includeImages = includeImages,
+                    includeVideos = includeVideos,
+                    language = null
+                )
+            )
+            details = details.copy(
+                overview = if (details.overview.isNullOrBlank()) englishDetails.overview else details.overview,
+                videos = details.videos.ifEmpty { englishDetails.videos },
+                homepage = if (details.homepage.isNullOrBlank()) englishDetails.homepage else details.homepage
+            )
+        }
+
+        return details
     }
 
     override suspend fun getMovieReviews(movieId: String, page: Int): ReviewsResult {
@@ -74,7 +98,13 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getGenres(): List<Genre> {
-        return remoteGenresMapper(dataSource.getGenres().genres)
+        val lang = configurationRepository.getSavedLanguage()?.code
+        var genres = dataSource.getGenres(language = lang).genres
+
+        if (genres.isNullOrEmpty() || genres.any { it?.name == null }) {
+            genres = dataSource.getGenres(language = null).genres
+        }
+        return remoteGenresMapper(genres)
     }
 
     override suspend fun getMoviesByGenre(genreId: String, page: Int): MovieResult {
@@ -88,15 +118,18 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun searchMovies(query: String, page: Int): MovieResult {
-        return remoteMovieMapper(dataSource.searchMovies(query, page))
+        val lang = configurationRepository.getSavedLanguage()?.code
+        return remoteMovieMapper(dataSource.searchMovies(title = query, page = page, language = lang))
     }
 
     override suspend fun upcomingMovies(page: Int): MovieResult {
-        return remoteMovieMapper(dataSource.upcomingMovies(page))
+        val lang = configurationRepository.getSavedLanguage()?.code
+        return remoteMovieMapper(dataSource.upcomingMovies(page = page, language = lang))
     }
 
     override suspend fun getTrendingMovies(timeWindow: TimeWindow, page: Int): MovieResult {
-        return remoteMovieMapper(dataSource.getTrendingMovies(timeWindow, page))
+        val lang = configurationRepository.getSavedLanguage()?.code
+        return remoteMovieMapper(dataSource.getTrendingMovies(timeWindow, page, language = lang))
     }
 
     override fun getMovieFavoriteStatus(movieId: String): Flow<Boolean> {

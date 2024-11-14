@@ -20,14 +20,11 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -54,6 +51,7 @@ import com.tzel.movieflix.domain.movie.entity.Cast
 import com.tzel.movieflix.domain.movie.entity.Genre
 import com.tzel.movieflix.ui.core.composable.ErrorContent
 import com.tzel.movieflix.ui.core.composable.LoadingContent
+import com.tzel.movieflix.ui.core.composable.MVButton
 import com.tzel.movieflix.ui.core.composable.StatusBarBackground
 import com.tzel.movieflix.ui.movie.core.FavoriteIcon
 import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
@@ -82,28 +80,16 @@ fun MovieDetailsScreen(
         uiState = uiState,
         onBackClick = onBackClick,
         navigateToMovie = navigateToMovie,
-        onRefreshClick = uiState.value.onRefresh
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MovieDetailsContent(
     uiState: State<MovieDetailsUiState>,
     onBackClick: () -> Unit,
     navigateToMovie: (String) -> Unit,
-    onRefreshClick: () -> Unit,
 ) {
-    val isLoading = remember(uiState.value) {
-        derivedStateOf {
-            uiState.value is MovieDetailsUiState.Loading
-        }
-    }
-
-    PullToRefreshBox(
-        isRefreshing = isLoading.value,
-        onRefresh = onRefreshClick
-    ) {
+    Box() {
         when (val state = uiState.value) {
             is MovieDetailsUiState.Success -> {
                 MovieDetailsDefault(
@@ -121,9 +107,7 @@ private fun MovieDetailsContent(
         }
 
         BackButton(
-            modifier = Modifier
-                .statusBarsPadding()
-                .align(Alignment.TopStart),
+            modifier = Modifier.statusBarsPadding(),
             onBackClick = onBackClick
         )
     }
@@ -181,8 +165,10 @@ private fun MovieDetailsDefault(
         item {
             uiState.movieDetails.trailerVideo?.let { trailer ->
                 val context = LocalContext.current
-                TrailerButton(
+                MVButton(
                     modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(id = R.string.home_details_watch_trailer_button),
+                    leadingIcon = painterResource(id = R.drawable.ic_play_arrow),
                     onClick = {
                         context.openYoutubeVideo(trailer.key)
                     }

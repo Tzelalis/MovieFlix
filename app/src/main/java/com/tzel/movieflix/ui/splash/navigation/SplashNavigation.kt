@@ -12,14 +12,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object SplashDestination : NavigationDestination()
 
-fun NavGraphBuilder.splashScreen(navigateToDashboard: () -> Unit) {
+fun NavGraphBuilder.splashScreen(navigateTo: (NavigationDestination) -> Unit) {
     composable<SplashDestination> {
         val viewModel: SplashViewModel = hiltViewModel()
         val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
         SplashScreen(
             uiState = uiState,
-            navigateToHome = navigateToDashboard
+            navigateTo = navigateTo
         )
     }
 }

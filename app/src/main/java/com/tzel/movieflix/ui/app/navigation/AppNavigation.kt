@@ -1,12 +1,13 @@
 package com.tzel.movieflix.ui.app.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.tzel.movieflix.ui.movie.home.navigation.HomeDestination
+import com.tzel.movieflix.ui.language.navigation.languageScreen
 import com.tzel.movieflix.ui.movie.home.navigation.homeScreen
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.movieDetailsScreen
@@ -15,6 +16,7 @@ import com.tzel.movieflix.ui.splash.navigation.SplashDestination
 import com.tzel.movieflix.ui.splash.navigation.splashScreen
 import com.tzel.movieflix.utils.ext.safeNavigate
 
+@SuppressLint("RestrictedApi")
 @Composable
 internal fun AppNavHost(
     modifier: Modifier = Modifier,
@@ -25,7 +27,12 @@ internal fun AppNavHost(
         navController = navController,
         startDestination = SplashDestination,
     ) {
-        splashScreen(navigateToDashboard = { navController.safeNavigate(HomeDestination) })
+        splashScreen(navigateTo = { destination -> navController.safeNavigate(destination) })
+
+        languageScreen(
+            navigateTo = { destination -> navController.safeNavigate(destination) },
+            navigateBack = { navController.navigateUp() },
+        )
 
         homeScreen(navigateTo = { destination -> navController.safeNavigate(destination) })
 

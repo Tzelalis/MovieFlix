@@ -36,4 +36,10 @@
     <string name="search_title">Search…</string>
     <string name="search_textfield_placeholder">Search your favorite movies</string>
     <string name="search_textfield_content_description">search</string>
+
+    <!-- Language -->
+    <string name="language_textfield_placeholder">Search language…</string>
+    <string name="language_title">App Language</string>
+    <string name="language_subtitle">Pick your app language!\nJust a heads-up: English usually has the most content available.</string>
+    <string name="language_select_button">Save</string>
 </resources>

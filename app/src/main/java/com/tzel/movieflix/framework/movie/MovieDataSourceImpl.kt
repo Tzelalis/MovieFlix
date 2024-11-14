@@ -1,6 +1,5 @@
 package com.tzel.movieflix.framework.movie
 
-import com.tzel.movieflix.data.movie.MovieDao
 import com.tzel.movieflix.data.movie.MovieDataSource
 import com.tzel.movieflix.data.movie.model.LocalMovie
 import com.tzel.movieflix.data.movie.model.RemoteGenresResponse
@@ -19,16 +18,17 @@ class MovieDataSourceImpl @Inject constructor(
     private val api: MovieApi,
     private val dao: MovieDao,
 ) : MovieDataSource {
-    override suspend fun getLocalPopularMovies(page: Int): RemoteMovieResponse {
+    override suspend fun getLocalPopularMovies(page: Int, language: String?): RemoteMovieResponse {
         return executeOn.background {
-            api.fetchPopularMovies(page = page).requireNotNull()
+            api.fetchPopularMovies(page = page, language = language).requireNotNull()
         }
     }
 
     override suspend fun getMovieDetails(
         movieId: String,
         includeImages: Boolean,
-        includeVideos: Boolean
+        includeVideos: Boolean,
+        language: String?
     ): RemoteMovieDetailsResponse {
         return executeOn.background {
             val includes = mutableListOf<String>().apply {
@@ -37,7 +37,7 @@ class MovieDataSourceImpl @Inject constructor(
                 if (includeVideos) add("videos")
             }.joinToString(separator = ",")
 
-            api.fetchMovieDetails(movieId = movieId, includes = includes).requireNotNull()
+            api.fetchMovieDetails(movieId = movieId, includes = includes, language = language).requireNotNull()
         }
     }
 
@@ -53,9 +53,9 @@ class MovieDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGenres(): RemoteGenresResponse {
+    override suspend fun getGenres(language: String?): RemoteGenresResponse {
         return executeOn.background {
-            api.fetchGenres().requireNotNull()
+            api.fetchGenres(language = language).requireNotNull()
         }
     }
 
@@ -97,26 +97,26 @@ class MovieDataSourceImpl @Inject constructor(
         return dao.getMovieFavoriteStatus(movieId).map { it.isNotEmpty() }
     }
 
-    override suspend fun searchMovies(title: String, page: Int): RemoteMovieResponse {
+    override suspend fun searchMovies(title: String, page: Int, language: String?): RemoteMovieResponse {
         return executeOn.background {
-            api.searchMovies(title, page).requireNotNull()
+            api.searchMovies(title = title, page = page, language = language).requireNotNull()
         }
     }
 
-    override suspend fun upcomingMovies(page: Int): RemoteMovieResponse {
+    override suspend fun upcomingMovies(page: Int, language: String?): RemoteMovieResponse {
         return executeOn.background {
-            api.getUpcoming(page).requireNotNull()
+            api.getUpcoming(page = page, language = language).requireNotNull()
         }
     }
 
-    override suspend fun getTrendingMovies(timeWindow: TimeWindow, page: Int): RemoteMovieResponse {
+    override suspend fun getTrendingMovies(timeWindow: TimeWindow, page: Int, language: String?): RemoteMovieResponse {
         val timeWindowKey = when (timeWindow) {
             TimeWindow.Day -> "day"
             TimeWindow.Week -> "week"
         }
 
         return executeOn.background {
-            api.getTrending(timeWindowKey, page).requireNotNull()
+            api.getTrending(timeWindow = timeWindowKey, page = page, language = language).requireNotNull()
         }
     }
 }

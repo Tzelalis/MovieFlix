@@ -1,14 +1,14 @@
-package com.tzel.movieflix.di.module
+package com.tzel.movieflix.di.module.configuration
 
 import com.tzel.movieflix.BuildConfig
+import com.tzel.movieflix.data.configuration.ConfigurationDataSource
+import com.tzel.movieflix.data.configuration.ConfigurationRepositoryImpl
 import com.tzel.movieflix.data.core.AppDatabase
-import com.tzel.movieflix.data.movie.MovieDataSource
-import com.tzel.movieflix.data.movie.MovieRepositoryImpl
 import com.tzel.movieflix.di.qualifier.BaseApiOkHttpClient
-import com.tzel.movieflix.domain.movie.MovieRepository
-import com.tzel.movieflix.framework.movie.MovieApi
-import com.tzel.movieflix.framework.movie.MovieDao
-import com.tzel.movieflix.framework.movie.MovieDataSourceImpl
+import com.tzel.movieflix.domain.configuration.ConfigurationRepository
+import com.tzel.movieflix.framework.configuration.ConfigurationApi
+import com.tzel.movieflix.framework.configuration.ConfigurationDao
+import com.tzel.movieflix.framework.configuration.ConfigurationDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,26 +21,26 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MoviesModule {
+object ConfigurationModule {
 
     @Singleton
     @Provides
     fun provideMovieApi(
         converterFactory: MoshiConverterFactory,
         @BaseApiOkHttpClient okHttpClient: OkHttpClient
-    ): MovieApi {
+    ): ConfigurationApi {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
             .build()
-            .create(MovieApi::class.java)
+            .create(ConfigurationApi::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideMoviesDao(appDatabase: AppDatabase): MovieDao {
-        return appDatabase.movieDao()
+    fun provideMoviesDao(appDatabase: AppDatabase): ConfigurationDao {
+        return appDatabase.configurationDao()
     }
 }
 
@@ -49,8 +49,8 @@ object MoviesModule {
 interface MovieBindsModule {
 
     @Binds
-    fun bindMovieRepositoryImpl(repo: MovieRepositoryImpl): MovieRepository
+    fun bindMovieRepositoryImpl(repo: ConfigurationRepositoryImpl): ConfigurationRepository
 
     @Binds
-    fun bindMovieDataSourceImpl(dataSource: MovieDataSourceImpl): MovieDataSource
+    fun bindMovieDataSourceImpl(dataSource: ConfigurationDataSourceImpl): ConfigurationDataSource
 }

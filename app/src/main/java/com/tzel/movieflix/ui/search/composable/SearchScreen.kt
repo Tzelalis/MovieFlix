@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -16,10 +17,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.tzel.movieflix.R
+import com.tzel.movieflix.ui.core.composable.MFTextField
 import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.core.navigation.NavigationDestination
 import com.tzel.movieflix.ui.movie.core.Headline
@@ -63,7 +66,12 @@ private fun SearchContent(
             onBackClick = onBackClick
         )
 
-        SearchTextField(textFieldState = uiState.value.textFieldState)
+        MFTextField(
+            modifier = Modifier.fillMaxWidth(),
+            textFieldState = uiState.value.textFieldState,
+            iconRes = R.drawable.ic_search,
+            placeholder = stringResource(R.string.search_textfield_placeholder),
+        )
 
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize(),

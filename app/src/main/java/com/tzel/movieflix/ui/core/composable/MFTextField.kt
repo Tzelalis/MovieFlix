@@ -1,13 +1,14 @@
-package com.tzel.movieflix.ui.search.composable
+package com.tzel.movieflix.ui.core.composable
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -35,15 +36,16 @@ import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 
 @Composable
-fun SearchTextField(
+fun MFTextField(
     modifier: Modifier = Modifier,
+    placeholder: String? = null,
+    @DrawableRes iconRes: Int? = null,
     textFieldState: TextFieldState,
 ) {
     val isTextEmpty = remember(textFieldState.text) { derivedStateOf { textFieldState.text.isEmpty() } }
 
     BasicTextField(
         modifier = modifier
-            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.tertiaryContainer)
             .padding(horizontal = Spacing_16dp, vertical = Spacing_8dp),
         state = textFieldState,
@@ -52,25 +54,31 @@ fun SearchTextField(
         cursorBrush = SolidColor(Color.White),
         decorator = { innerText ->
             Row(
-                modifier = Modifier.height(IntrinsicSize.Max),
+                modifier = Modifier
+                    .heightIn(min = Sizes.Icons.medium)
+                    .height(IntrinsicSize.Max),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Spacing_16dp)
             ) {
-                Icon(
-                    modifier = Modifier.size(Sizes.Icons.medium),
-                    painter = painterResource(R.drawable.ic_search),
-                    contentDescription = stringResource(R.string.search_textfield_content_description),
-                    tint = MaterialTheme.colorScheme.onTertiary,
-                )
+                iconRes?.let {
+                    Icon(
+                        modifier = Modifier.size(Sizes.Icons.medium),
+                        painter = painterResource(iconRes),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onTertiary,
+                    )
+                }
 
                 Box(modifier = Modifier.weight(1f)) {
-                    if (isTextEmpty.value) {
-                        Text(
-                            text = stringResource(R.string.search_textfield_placeholder),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onTertiary,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                    placeholder?.let {
+                        if (isTextEmpty.value) {
+                            Text(
+                                text = placeholder,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onTertiary,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
                     innerText()
                 }

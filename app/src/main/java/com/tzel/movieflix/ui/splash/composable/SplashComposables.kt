@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.tzel.movieflix.R
+import com.tzel.movieflix.ui.core.navigation.NavigationDestination
 import com.tzel.movieflix.ui.splash.model.SplashUiState
 import com.tzel.movieflix.ui.theme.RedDark
 import com.tzel.movieflix.ui.theme.Spacing_32dp
@@ -30,11 +31,11 @@ import com.tzel.movieflix.ui.theme.Spacing_8dp
 @Composable
 fun SplashScreen(
     uiState: State<SplashUiState>,
-    navigateToHome: () -> Unit
+    navigateTo: (NavigationDestination) -> Unit
 ) {
     SplashSideEffects(
-        shouldNavigateToHome = uiState.value.navigateToHome,
-        navigateToHome = navigateToHome
+        destination = { uiState.value.navigate },
+        navigateTo = navigateTo
     )
 
     SplashContent()
@@ -42,7 +43,6 @@ fun SplashScreen(
 
 @Composable
 private fun SplashContent() {
-
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -101,12 +101,12 @@ private fun PoweredByText(modifier: Modifier = Modifier) {
 
 @Composable
 private fun SplashSideEffects(
-    shouldNavigateToHome: Boolean,
-    navigateToHome: () -> Unit
+    destination: () -> NavigationDestination?,
+    navigateTo: (NavigationDestination) -> Unit
 ) {
-    LaunchedEffect(key1 = shouldNavigateToHome) {
-        if(shouldNavigateToHome){
-            navigateToHome()
+    LaunchedEffect(key1 = destination()) {
+        destination()?.let { destination ->
+            navigateTo(destination)
         }
     }
 }
@@ -116,12 +116,12 @@ private fun SplashSideEffects(
 private fun SplashPreview() {
     val uiState = remember {
         mutableStateOf(
-            SplashUiState(navigateToHome = false)
+            SplashUiState(navigate = null)
         )
     }
 
     SplashScreen(
         uiState = uiState,
-        navigateToHome = {}
+        navigateTo = {}
     )
 }
