@@ -1,7 +1,9 @@
 package com.tzel.movieflix.ui.movie.home
 
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.tzel.movieflix.R
 import com.tzel.movieflix.domain.movie.entity.TimeWindow
 import com.tzel.movieflix.ui.core.BaseViewModel
@@ -34,7 +36,7 @@ class HomeViewModel @Inject constructor(
     private val movieDetailsUiMapper: MovieDetailsUiMapper
 ) : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState(onRefreshClick = ::refreshContent))
+    private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
     private var popularMoviesJob: Job? = null
@@ -68,7 +70,7 @@ class HomeViewModel @Inject constructor(
                     MoviesPagingSource(
                         movieToMovieUiMapper = moviesUiMapper,
                         getMovies = { page -> getPopularMoviesUseCase(page) })
-                }.flow
+                }.flow.cachedIn(viewModelScope)
             )
 
             _uiState.update { it.copy(popularCategory = popular) }
@@ -84,7 +86,7 @@ class HomeViewModel @Inject constructor(
                     MoviesPagingSource(
                         movieToMovieUiMapper = moviesUiMapper,
                         getMovies = { page -> getTrendingMoviesUseCase(TimeWindow.Week, page) })
-                }.flow
+                }.flow.cachedIn(viewModelScope)
             )
 
             _uiState.update { it.copy(trendingCategory = trending) }
@@ -105,7 +107,7 @@ class HomeViewModel @Inject constructor(
                         getMovies = { page ->
                             getMoviesByGenreUseCase(genre.id, page)
                         })
-                }.flow
+                }.flow.cachedIn(viewModelScope)
 
                 val category = MoviesUiCategory(
                     name = TextBuilder.Text(genre.name),

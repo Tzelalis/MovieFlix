@@ -87,7 +87,7 @@ private fun HomeContent(
             state = state
         ) {
             uiState.value.trendMovie?.let {
-                item {
+                item(key = "trend_movie") {
                     Spacer(
                         modifier = Modifier
                             .statusBarsPadding()
@@ -102,7 +102,7 @@ private fun HomeContent(
                 }
             }
 
-            item {
+            item(key = "popular_movies") {
                 uiState.value.popularCategory?.let { category ->
                     HomeSectionTitle(title = category.name)
                 }
@@ -116,7 +116,10 @@ private fun HomeContent(
             }
 
             uiState.value.firstSectionGenres.forEachIndexed { index, category ->
-                item("genre_movies_$index") {
+                item(
+                    key = "genre_movies_$index",
+                    contentType = "genre_movies"
+                ) {
                     HomeSectionTitle(title = category.name)
                     MoviesPortraitLazyRow(
                         modifier = Modifier
@@ -129,7 +132,7 @@ private fun HomeContent(
                 }
             }
 
-            item {
+            item(key = "trending_movies") {
                 uiState.value.trendingCategory?.let { category ->
                     HomeSectionTitle(title = category.name)
                 }
@@ -147,7 +150,10 @@ private fun HomeContent(
             }
 
             uiState.value.secondSectionGenres.forEachIndexed { index, category ->
-                item("second_section_genre_movies_$index") {
+                item(
+                    key = "second_section_genre_movies_$index",
+                    contentType = "genre_movies"
+                ) {
                     HomeSectionTitle(title = category.name)
                     MoviesPortraitLazyRow(
                         modifier = Modifier
@@ -160,7 +166,7 @@ private fun HomeContent(
                 }
             }
 
-            item {
+            item("bottom_spacing") {
                 Spacer(
                     modifier = Modifier
                         .navigationBarsPadding()
