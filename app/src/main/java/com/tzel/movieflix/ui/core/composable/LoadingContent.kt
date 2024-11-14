@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.tzel.movieflix.R
 import com.tzel.movieflix.ui.theme.Spacing_32dp
 import gr.opap.utils.composable.modifier.placeholder.PlaceholderHighlight
@@ -31,7 +32,7 @@ fun LoadingContent(modifier: Modifier = Modifier) {
     ) {
         CircularProgressIndicator(
             modifier = Modifier
-                .fillMaxWidth(0.4f)
+                .size(80.dp)
                 .aspectRatio(1f),
             color = MaterialTheme.colorScheme.primary
         )
