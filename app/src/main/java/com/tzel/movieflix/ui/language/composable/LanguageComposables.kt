@@ -151,6 +151,7 @@ private fun LanguageContent(
             MVButton(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(Spacing_16dp)
                     .align(Alignment.BottomCenter),
                 text = stringResource(R.string.language_select_button),
                 onClick = { uiState.saveLanguage() }

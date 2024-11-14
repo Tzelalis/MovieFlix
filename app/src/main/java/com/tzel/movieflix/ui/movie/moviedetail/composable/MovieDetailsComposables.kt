@@ -166,7 +166,9 @@ private fun MovieDetailsDefault(
             uiState.movieDetails.trailerVideo?.let { trailer ->
                 val context = LocalContext.current
                 MVButton(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Spacing_16dp),
                     text = stringResource(id = R.string.home_details_watch_trailer_button),
                     leadingIcon = painterResource(id = R.drawable.ic_play_arrow),
                     onClick = {

@@ -11,6 +11,6 @@ class GetFirstTrendMovieUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): MovieDetails? {
         val movie = getTrendingMoviesUseCase(timeWindow = TimeWindow.Day, page = 1)?.movies?.firstOrNull() ?: return null
-        return getMovieDetailsUseCase(movie.id, includeImages = true)
+        return getMovieDetailsUseCase(movie.id, includeImages = true, includeVideos = true)
     }
 }
