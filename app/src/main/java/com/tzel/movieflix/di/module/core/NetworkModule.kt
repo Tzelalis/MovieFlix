@@ -3,7 +3,6 @@ package com.tzel.movieflix.di.module.core
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tzel.movieflix.BuildConfig
-import com.tzel.movieflix.data.core.AppDatabase
 import com.tzel.movieflix.di.module.interceptor.AuthInterceptor
 import com.tzel.movieflix.di.module.interceptor.NetworkConnectivityInterceptor
 import com.tzel.movieflix.di.qualifier.BaseApiOkHttpClient
@@ -11,7 +10,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.runBlocking
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -58,7 +56,6 @@ object NetworkModule {
         connectionSpec: ConnectionSpec,
         authInterceptor: AuthInterceptor,
         connectivityInterceptor: NetworkConnectivityInterceptor,
-        db: AppDatabase
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -69,7 +66,13 @@ object NetworkModule {
                     addNetworkInterceptor(httpLoggingInterceptor)
                 }
             }
-            .addInterceptor { chain ->
+            .addInterceptor(connectivityInterceptor)
+            .addInterceptor(authInterceptor)
+            .build()
+    }
+}
+
+/*.addInterceptor { chain ->
                 val original = chain.request()
                 val originalUrl = original.url
 
@@ -84,10 +87,4 @@ object NetworkModule {
                     .build()
 
                 chain.proceed(requestWithSession)
-            }
-            .addInterceptor(connectivityInterceptor)
-            .addInterceptor(authInterceptor)
-            .build()
-    }
-}
-
+            }*/
