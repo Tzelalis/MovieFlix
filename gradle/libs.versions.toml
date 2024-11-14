@@ -8,8 +8,8 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycle = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.01"
-navigation = "2.8.3"
+composeBom = "2024.11.00"
+navigation = "2.8.4"
 hilt = "2.52"
 composeHilt = "1.2.0"
 timber = "5.0.1"
@@ -19,9 +19,10 @@ retrofit = "2.11.0"
 coil = "3.0.2"
 datastore = "1.1.1"
 room = "2.6.1"
-paging = "3.3.2"
+paging = "3.3.4"
 browser = "1.8.0"
 serializationJson = "1.6.3"
+material = "1.8.0-alpha06"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +37,8 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material = { group = "androidx.compose.material", name = "material", version.ref = "material" }
+androidx-material-navigation = { group = "androidx.compose.material", name = "material-navigation", version.ref = "material" }
 
 # https://developer.android.com/jetpack/androidx/releases/activity
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }

@@ -23,11 +23,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object MoviesModule {
 
+
+
     @Singleton
     @Provides
     fun provideMovieApi(
         converterFactory: MoshiConverterFactory,
-        @BaseApiOkHttpClient okHttpClient: OkHttpClient
+        @BaseApiOkHttpClient okHttpClient: OkHttpClient,
     ): MovieApi {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)

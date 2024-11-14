@@ -23,4 +23,10 @@ interface ConfigurationDao {
 
     @Query("SELECT * FROM configuration LIMIT 1")
     suspend fun getConfiguration(): LocalConfiguration?
+
+    @Query("UPDATE configuration SET session_id = :sessionId WHERE id = 1")
+    suspend fun saveSessionId(sessionId: String)
+
+    @Query("UPDATE configuration SET temp_request_token = :tempToken, temp_request_expiration = :expiresAt  WHERE id = 1")
+    suspend fun saveTemporaryToken(tempToken: String?, expiresAt: String?)
 }

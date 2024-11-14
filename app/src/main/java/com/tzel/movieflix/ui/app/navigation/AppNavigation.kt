@@ -14,6 +14,7 @@ import com.tzel.movieflix.ui.movie.home.navigation.homeScreen
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.movieDetailsScreen
 import com.tzel.movieflix.ui.search.navigation.searchScreen
+import com.tzel.movieflix.ui.signin.navigation.signInScreen
 import com.tzel.movieflix.ui.splash.navigation.SplashDestination
 import com.tzel.movieflix.ui.splash.navigation.splashScreen
 import com.tzel.movieflix.utils.ext.safeNavigate
@@ -39,6 +40,8 @@ internal fun AppNavHost(
             navigateTo = { destination -> navController.safeNavigate(destination) },
             navigateBack = { navController.navigateUp() },
         )
+
+        signInScreen(navigateBack = { navController.navigateUp() })
 
         homeScreen(navigateTo = { destination -> navController.safeNavigate(destination) })
 

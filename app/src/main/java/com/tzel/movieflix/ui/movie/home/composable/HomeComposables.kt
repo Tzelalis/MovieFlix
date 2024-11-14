@@ -25,6 +25,7 @@ import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.ui.search.navigation.SearchDestination
+import com.tzel.movieflix.ui.signin.navigation.SignInDestination
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Sizes
 import com.tzel.movieflix.ui.theme.Spacing_32dp
@@ -33,7 +34,7 @@ import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 @Composable
 fun HomeScreen(
     uiState: State<HomeUiState>,
-    navigateTo: (NavigationDestination) -> Unit
+    navigateTo: (NavigationDestination) -> Unit,
 ) {
     HomeContent(
         uiState = uiState,
@@ -44,7 +45,7 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     uiState: State<HomeUiState>,
-    navigateTo: (NavigationDestination) -> Unit
+    navigateTo: (NavigationDestination) -> Unit,
 ) {
     val imageRequester = rememberImageRequester()
     val state = rememberLazyListState()
@@ -97,7 +98,8 @@ private fun HomeContent(
                     TrendMovieOfTheDay(
                         movie = it,
                         imageRequest = imageRequester,
-                        onClick = { navigateTo(MovieDetailsDestination(it.id)) }
+                        onClick = { navigateTo(SignInDestination) }
+                        //onClick = { navigateTo(MovieDetailsDestination(it.id)) }
                     )
                 }
             }

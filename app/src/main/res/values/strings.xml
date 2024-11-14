@@ -42,4 +42,10 @@
     <string name="language_title">App Language</string>
     <string name="language_subtitle">Pick your app language!\nJust a heads-up: English usually has the most content available.</string>
     <string name="language_select_button">Save</string>
+
+    <!-- Sign-in -->
+    <string name="sign_in_title">Sign In</string>
+    <string name="sign_in_success_subtitle">Sign in to access your favorite movies and more!</string>
+    <string name="sign_in_error_button">Cancel</string>
+    <string name="sign_in_success_button">Done</string>
 </resources>
