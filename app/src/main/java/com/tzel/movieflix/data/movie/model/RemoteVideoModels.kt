@@ -1,11 +1,14 @@
 package com.tzel.movieflix.data.movie.model
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class RemoteVideoResponse(
     val results: List<RemoteVideoItem?>?
 )
 
+@JsonClass(generateAdapter = true)
 data class RemoteVideoItem(
     val id: String?,
     val key: String?,

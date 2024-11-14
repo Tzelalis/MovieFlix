@@ -183,8 +183,7 @@ private fun HomePreview() {
         mutableStateOf(
             HomeUiState(
                 popularCategory = null,
-                genreMovies = emptyList(),
-                onRefreshClick = {},
+                genreMovies = emptyList()
             )
         )
     }
