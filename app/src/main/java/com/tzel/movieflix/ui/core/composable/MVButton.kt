@@ -3,6 +3,7 @@ package com.tzel.movieflix.ui.core.composable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,16 +27,17 @@ fun MVButton(
     modifier: Modifier = Modifier,
     text: String,
     leadingIcon: Painter? = null,
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
+    ),
     onClick: () -> Unit
 ) {
     CompositionLocalProvider(LocalRippleConfiguration provides RippleConfiguration(color = Color.Black, rippleAlpha = null)) {
         Button(
             modifier = modifier,
             shape = MaterialTheme.shapes.small,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-            ),
+            colors = colors,
             contentPadding = PaddingValues(Spacing_8dp),
             onClick = onClick
         ) {
@@ -54,7 +56,6 @@ fun MVButton(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = text,
                 style = MaterialTheme.typography.bodyLarge.copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }

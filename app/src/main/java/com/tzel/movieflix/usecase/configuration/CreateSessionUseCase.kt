@@ -7,7 +7,7 @@ import javax.inject.Inject
 class CreateSessionUseCase @Inject constructor(private val repo: ConfigurationRepository) {
     suspend operator fun invoke(token: String): Boolean {
         return try {
-            repo.createSession(token)
+            repo.createAccessToken(token)
             true
         } catch (e: Exception) {
             Timber.tag(CreateSessionUseCase::class.java.simpleName).e(e)

@@ -10,6 +10,7 @@ data class HomeUiState(
     val popularCategory: MoviesUiCategory? = null,
     val trendingCategory: MoviesUiCategory? = null,
     val genreMovies: List<MoviesUiCategory> = emptyList(),
+    val addToWatchlist: (MovieDetailsUi) -> Unit,
 ) {
     val firstSectionGenres: List<MoviesUiCategory>
         get() = genreMovies.take(2)

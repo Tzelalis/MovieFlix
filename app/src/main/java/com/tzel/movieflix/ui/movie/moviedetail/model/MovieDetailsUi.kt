@@ -1,6 +1,8 @@
 package com.tzel.movieflix.ui.movie.moviedetail.model
 
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import com.tzel.movieflix.domain.movie.entity.Cast
 import com.tzel.movieflix.domain.movie.entity.Genre
@@ -31,7 +33,8 @@ data class MovieDetailsUi(
     val reviews: List<ReviewUi>,
     val images: MovieImagesUi?,
     val videos: List<VideoItem>,
-    val isFavorite: Boolean
+    val isFavorite: Boolean,
+    val watchlistState: MutableState<WatchlistState> = mutableStateOf(WatchlistState.Added)
 ) {
     val favoriteColor: Color
         get() = if (isFavorite) RedMedium else GrayLight

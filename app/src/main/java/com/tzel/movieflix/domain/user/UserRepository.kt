@@ -1,5 +1,7 @@
 package com.tzel.movieflix.domain.user
 
 interface UserRepository {
-    fun rateMovie(movieId: String, rate: Double)
+    suspend fun rateMovie(movieId: String, rating: Double): Boolean
+
+    suspend fun addToWatchlist(movieId: String, status: Boolean): Boolean
 }

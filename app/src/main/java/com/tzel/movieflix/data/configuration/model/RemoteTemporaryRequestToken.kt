@@ -4,6 +4,6 @@ import com.squareup.moshi.Json
 
 data class RemoteTemporaryRequestToken(
     val success: Boolean?,
-    val expiresAt: String?,
+    @Json(name = "status_code") val statusCode: String?,
     @Json(name = "request_token") val token: String?,
 )

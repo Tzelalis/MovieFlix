@@ -4,12 +4,12 @@ import com.tzel.movieflix.domain.configuration.ConfigurationRepository
 import timber.log.Timber
 import javax.inject.Inject
 
-class GetSavedSessionUseCase @Inject constructor(private val repo: ConfigurationRepository) {
+class GetAccountIdUseCase @Inject constructor(private val repo: ConfigurationRepository) {
     suspend operator fun invoke(): String? {
         return try {
-            repo.getSavedSessionId()
+            repo.getSavedAccountId()
         } catch (e: Exception) {
-            Timber.tag(GetSavedSessionUseCase::class.java.simpleName).e(e)
+            Timber.tag(GetAccountIdUseCase::class.java.simpleName).e(e)
             null
         }
     }

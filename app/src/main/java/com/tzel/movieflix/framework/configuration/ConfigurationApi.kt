@@ -1,7 +1,7 @@
 package com.tzel.movieflix.framework.configuration
 
+import com.tzel.movieflix.data.configuration.model.RemoteAccessToken
 import com.tzel.movieflix.data.configuration.model.RemoteLanguage
-import com.tzel.movieflix.data.configuration.model.RemoteSession
 import com.tzel.movieflix.data.configuration.model.RemoteSessionRequest
 import com.tzel.movieflix.data.configuration.model.RemoteTemporaryRequestToken
 import retrofit2.Response
@@ -13,9 +13,9 @@ interface ConfigurationApi {
     @GET("/3/configuration/languages")
     suspend fun getAvailableLanguages(): Response<List<RemoteLanguage?>>
 
-    @GET("/3/authentication/token/new")
+    @POST("/4/auth/request_token")
     suspend fun requestTemporaryRequestToken(): Response<RemoteTemporaryRequestToken>
 
-    @POST("/3/authentication/session/new")
-    suspend fun createSession(@Body requestToken: RemoteSessionRequest): Response<RemoteSession>
+    @POST("/4/auth/access_token")
+    suspend fun createAccessToken(@Body requestToken: RemoteSessionRequest): Response<RemoteAccessToken>
 }

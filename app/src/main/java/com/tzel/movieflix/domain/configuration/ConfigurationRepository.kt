@@ -1,9 +1,10 @@
 package com.tzel.movieflix.domain.configuration
 
 import com.tzel.movieflix.domain.configuration.entity.Language
-import com.tzel.movieflix.domain.configuration.entity.TemporaryRequestToken
 
 interface ConfigurationRepository {
+    suspend fun initConfiguration()
+
     suspend fun getAvailableLanguages(): List<Language>
 
     suspend fun saveLanguage(language: Language)
@@ -12,9 +13,9 @@ interface ConfigurationRepository {
 
     suspend fun getBackupLanguage(): Language
 
-    suspend fun createSession(requestToken: String): Boolean
+    suspend fun getTemporaryToken(): String?
 
-    suspend fun getSavedSessionId(): String?
+    suspend fun createAccessToken(requestToken: String): Boolean
 
-    suspend fun getTemporaryToken(): TemporaryRequestToken?
+    suspend fun getSavedAccountId(): String?
 }

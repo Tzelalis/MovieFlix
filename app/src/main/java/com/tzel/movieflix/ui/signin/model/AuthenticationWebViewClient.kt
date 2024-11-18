@@ -5,7 +5,7 @@ import com.tzel.movieflix.utils.composable.webview.model.AdvancedWebViewClient
 
 class AuthenticationWebViewClient(val saveSession: () -> Unit) : AdvancedWebViewClient() {
     override fun onPageFinished(view: WebView, url: String?) {
-        if (url?.contains("/allow") == true) {
+        if (url?.contains("/auth/access/approve") == true) {
             saveSession()
         }
 

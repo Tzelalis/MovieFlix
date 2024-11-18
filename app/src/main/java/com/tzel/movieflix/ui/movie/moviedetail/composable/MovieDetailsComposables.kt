@@ -168,7 +168,7 @@ private fun MovieDetailsDefault(
                 MVButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(Spacing_16dp),
+                        .padding(start = Spacing_16dp, end = Spacing_16dp, top = Spacing_16dp),
                     text = stringResource(id = R.string.home_details_watch_trailer_button),
                     leadingIcon = painterResource(id = R.drawable.ic_play_arrow),
                     onClick = {
@@ -176,6 +176,17 @@ private fun MovieDetailsDefault(
                     }
                 )
             }
+        }
+
+        item {
+            AddToWatchlistComposables(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = Spacing_16dp, end = Spacing_16dp, bottom = Spacing_16dp),
+                state = uiState.movieDetails.watchlistState,
+                text = stringResource(id = R.string.home_details_watchlist_button),
+                onClick = uiState.addToWatchlist
+            )
         }
 
         item {
@@ -378,6 +389,7 @@ private fun MovieDetailsPreview() {
                 ),
                 similarMovies = pager,
                 onFavoriteClick = {},
+                addToWatchlist = {},
                 refresh = {}
             ),
         )

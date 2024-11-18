@@ -13,6 +13,7 @@ sealed class MovieDetailsUiState(
         val movieDetails: MovieDetailsUi,
         val similarMovies: Flow<PagingData<MovieUiItem>>,
         val onFavoriteClick: () -> Unit,
+        val addToWatchlist: () -> Unit,
         val refresh: () -> Unit
     ) : MovieDetailsUiState(refresh)
 

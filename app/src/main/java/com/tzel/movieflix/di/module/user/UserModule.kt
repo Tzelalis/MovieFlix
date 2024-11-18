@@ -33,7 +33,7 @@ object UserModule {
         connectionSpec: ConnectionSpec,
         authInterceptor: AuthInterceptor,
         connectivityInterceptor: NetworkConnectivityInterceptor,
-        authenticationInterceptor: AuthenticationInterceptor
+        sessionInterceptor: SessionInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -44,7 +44,7 @@ object UserModule {
                     addNetworkInterceptor(httpLoggingInterceptor)
                 }
             }
-            .addInterceptor(authenticationInterceptor)
+            .addInterceptor(sessionInterceptor)
             .addInterceptor(connectivityInterceptor)
             .addInterceptor(authInterceptor)
             .build()

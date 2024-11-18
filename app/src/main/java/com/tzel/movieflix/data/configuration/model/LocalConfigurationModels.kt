@@ -8,14 +8,13 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "configuration")
 data class LocalConfiguration(
     @PrimaryKey val id: Int = 1,
-    @Embedded(prefix = "temp_request_") val temporaryToken: LocalTemporaryRequestToken = LocalTemporaryRequestToken(),
-    @ColumnInfo(name = "session_id") val sessionId: String? = null,
     @Embedded(prefix = "lang_") val language: LocalLanguage,
+    @Embedded(prefix = "account_") val user: LocalAccount,
 )
 
-data class LocalTemporaryRequestToken(
-    @ColumnInfo(name = "token") val requestToken: String? = null,
-    @ColumnInfo(name = "expiration") val expiresAt: String? = null,
+data class LocalAccount(
+    @ColumnInfo(name = "access_token") val accessToken: String? = null,
+    @ColumnInfo(name = "account_id") val accountId: String? = null,
 )
 
 

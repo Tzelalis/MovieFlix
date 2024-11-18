@@ -13,6 +13,7 @@ import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.movie.home.model.MoviesUiCategory
 import com.tzel.movieflix.ui.movie.moviedetail.mapper.MovieDetailsUiMapper
+import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.usecase.movie.GetGenresUseCase
 import com.tzel.movieflix.usecase.movie.GetMoviesByGenreUseCase
 import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
@@ -33,15 +34,21 @@ class HomeViewModel @Inject constructor(
     private val getMoviesByGenreUseCase: GetMoviesByGenreUseCase,
     private val getFirstTrendMovieUseCase: GetFirstTrendMovieUseCase,
     private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
-    private val movieDetailsUiMapper: MovieDetailsUiMapper
+    private val movieDetailsUiMapper: MovieDetailsUiMapper,
 ) : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState())
+    private val _uiState = MutableStateFlow(
+        HomeUiState(
+            addToWatchlist = ::addToWatchList
+        )
+    )
+
     val uiState = _uiState.asStateFlow()
 
     private var popularMoviesJob: Job? = null
     private var genreMoviesJob: Job? = null
     private var trendingMoviesJob: Job? = null
+    private var watchlistMoviesJob: Job? = null
 
     init {
         refreshContent()
@@ -93,6 +100,23 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun loadWatchlistMovies() {
+        watchlistMoviesJob?.cancel()
+        watchlistMoviesJob = launch {
+            /*val watchlist = MoviesUiCategory(
+                name = TextBuilder.StringResource(R.string.home_watchlist_title),
+                movies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
+                    MoviesPagingSource(
+                        movieToMovieUiMapper = moviesUiMapper,
+                        getMovies = { page -> emptyL })
+                }.flow.cachedIn(viewModelScope)
+            )
+
+            _uiState.update { it.copy(watchlistCategory = watchlist) }
+        */
+        }
+    }
+
     private fun loadMovieGenres() {
         genreMoviesJob?.cancel()
         genreMoviesJob = launch {
@@ -117,6 +141,12 @@ class HomeViewModel @Inject constructor(
             }
 
             _uiState.update { it.copy(genreMovies = movieGenrePagingSources) }
+        }
+    }
+
+    private fun addToWatchList(movieDetailsUi: MovieDetailsUi) {
+        launch {
+
         }
     }
 

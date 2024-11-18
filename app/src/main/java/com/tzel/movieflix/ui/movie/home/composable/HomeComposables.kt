@@ -98,7 +98,8 @@ private fun HomeContent(
                     TrendMovieOfTheDay(
                         movie = it,
                         imageRequest = imageRequester,
-                        onClick = { navigateTo(SignInDestination) }
+                        onClick = { navigateTo(SignInDestination) },
+                        addToWatchList = { uiState.value.addToWatchlist(it) },
                         //onClick = { navigateTo(MovieDetailsDestination(it.id)) }
                     )
                 }
@@ -191,7 +192,10 @@ private fun HomePreview() {
         mutableStateOf(
             HomeUiState(
                 popularCategory = null,
-                genreMovies = emptyList()
+                trendingCategory = null,
+                trendMovie = null,
+                genreMovies = emptyList(),
+                addToWatchlist = {},
             )
         )
     }

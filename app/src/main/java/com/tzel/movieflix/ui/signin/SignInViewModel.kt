@@ -34,7 +34,7 @@ class SignInViewModel @Inject constructor(
 
         launch {
             val tempToken = getTemporaryRequestTokenUseCase() ?: return@launch
-            _uiState.update { state.copy(token = tempToken.requestToken) }
+            _uiState.update { state.copy(token = tempToken) }
             Timber.d("tempToken: $tempToken")
         }
     }

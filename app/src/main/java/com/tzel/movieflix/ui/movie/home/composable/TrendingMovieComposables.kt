@@ -2,12 +2,15 @@ package com.tzel.movieflix.ui.movie.home.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +39,8 @@ fun TrendMovieOfTheDay(
     movie: MovieDetailsUi,
     imageRequest: ImageRequest.Builder = rememberImageRequester(),
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    addToWatchList: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -67,16 +71,31 @@ fun TrendMovieOfTheDay(
             color = MaterialTheme.colorScheme.onSurface,
         )
 
-        movie.trailerVideo?.let { trailerUrl ->
-            MVButton(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth(0.8f)
-                    .padding(Spacing_8dp),
-                text = stringResource(R.string.home_details_watch_trailer_button),
-                leadingIcon = painterResource(id = R.drawable.ic_play_arrow),
-                onClick = { context.openYoutubeVideo(trailerUrl.key) }
-            )
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = Spacing_16dp, vertical = Spacing_8dp),
+            horizontalArrangement = Arrangement.spacedBy(Spacing_8dp)
+        ) {
+            movie.trailerVideo?.let { trailerUrl ->
+                MVButton(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.home_trend_movie_watch_trailer_button),
+                    leadingIcon = painterResource(id = R.drawable.ic_play_arrow),
+                    onClick = { context.openYoutubeVideo(trailerUrl.key) }
+                )
+                MVButton(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.home_trend_movie_watchlist_button),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.surface
+                    ),
+                    leadingIcon = painterResource(id = R.drawable.ic_add),
+                    onClick = { addToWatchList() }
+                )
+            }
         }
     }
 }

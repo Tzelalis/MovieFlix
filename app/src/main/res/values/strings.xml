@@ -15,9 +15,12 @@
     <string name="home_trending_label">Daily Trend</string>
     <string name="home_popular_title">Popular</string>
     <string name="home_trending_title">Trending movies of the week</string>
+    <string name="home_watchlist_title">My Watchlist\n</string>
     <string name="home_favorite_content_description">favorite movie</string>
     <string name="home_search_content_description">search</string>
     <string name="home_clear_content_description">clear</string>
+    <string name="home_trend_movie_watch_trailer_button">Trailer</string>
+    <string name="home_trend_movie_watchlist_button">Watchlist</string>
 
     <!-- Movie Details -->
     <string name="home_details_similar_movies_title">Similar Movies</string>
@@ -31,6 +34,7 @@
     <string name="home_details_rating_label">%s/10</string>
     <string name="home_details_share_movie_content_description">share movie</string>
     <string name="home_details_watch_trailer_button">Watch Trailer</string>
+    <string name="home_details_watchlist_button">My Watchlist</string>
 
     <!-- Search -->
     <string name="search_title">Search…</string>

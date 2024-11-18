@@ -10,10 +10,13 @@ import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.movie.moviedetail.mapper.MovieDetailsUiMapper
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiState
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiToMovieMapper
+import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistState
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.usecase.movie.GetMovieDetailsWithReviewsUseCase
 import com.tzel.movieflix.usecase.movie.GetSimilarMoviesUseCase
 import com.tzel.movieflix.usecase.movie.SetMovieFavoriteUseCase
+import com.tzel.movieflix.usecase.user.AddToWatchlistUseCase
+import com.tzel.movieflix.usecase.user.RateMovieUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +30,8 @@ class MovieDetailsViewModel @Inject constructor(
     private val getMovieDetailsWithReviewsUseCase: GetMovieDetailsWithReviewsUseCase,
     private val setMovieFavoriteUseCase: SetMovieFavoriteUseCase,
     private val movieDetailsUiToMovieMapper: MovieDetailsUiToMovieMapper,
+    private val rateMovieUseCase: RateMovieUseCase,
+    private val addToWatchlistUseCase: AddToWatchlistUseCase,
     getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     moviesUiMapper: MovieToMovieUiMapper,
     savedStateHandle: SavedStateHandle
@@ -60,6 +65,7 @@ class MovieDetailsViewModel @Inject constructor(
                             movieDetails = movieDetailsUiMapper(movieDetails),
                             similarMovies = similarMovies,
                             onFavoriteClick = ::setMovieFavorite,
+                            addToWatchlist = ::updateMovieWatchlistStatus,
                             refresh = { loadMovieDetails(movieId) }
                         )
                     }
@@ -75,6 +81,20 @@ class MovieDetailsViewModel @Inject constructor(
             setMovieFavoriteUseCase(movie)
         }
     }
+
+    private fun updateMovieWatchlistStatus() {
+        launch {
+            val state = uiState.value as? MovieDetailsUiState.Success ?: return@launch
+            if (state.movieDetails.watchlistState.value == WatchlistState.Loading) return@launch
+            val isAdded = state.movieDetails.watchlistState.value == WatchlistState.Added
+
+            state.movieDetails.watchlistState.value = WatchlistState.Loading
+
+            val result = addToWatchlistUseCase(movieId = args.id, status = !isAdded)
+            state.movieDetails.watchlistState.value = if (result) WatchlistState.Added else WatchlistState.Removed
+        }
+    }
+
 
     companion object {
         private const val PAGE_SIZE = 20

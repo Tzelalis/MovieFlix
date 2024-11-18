@@ -71,20 +71,3 @@ object NetworkModule {
             .build()
     }
 }
-
-/*.addInterceptor { chain ->
-                val original = chain.request()
-                val originalUrl = original.url
-
-                val sessionId = runBlocking { db.configurationDao().getConfiguration()?.sessionId } ?: return@addInterceptor chain.proceed(original)
-
-                val urlWithSession = originalUrl.newBuilder()
-                    .addQueryParameter("session_id", sessionId)
-                    .build()
-
-                val requestWithSession = original.newBuilder()
-                    .url(urlWithSession)
-                    .build()
-
-                chain.proceed(requestWithSession)
-            }*/

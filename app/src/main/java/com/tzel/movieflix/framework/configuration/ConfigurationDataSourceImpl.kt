@@ -1,10 +1,10 @@
 package com.tzel.movieflix.framework.configuration
 
 import com.tzel.movieflix.data.configuration.ConfigurationDataSource
+import com.tzel.movieflix.data.configuration.model.LocalAccount
 import com.tzel.movieflix.data.configuration.model.LocalLanguage
-import com.tzel.movieflix.data.configuration.model.LocalTemporaryRequestToken
+import com.tzel.movieflix.data.configuration.model.RemoteAccessToken
 import com.tzel.movieflix.data.configuration.model.RemoteLanguage
-import com.tzel.movieflix.data.configuration.model.RemoteSession
 import com.tzel.movieflix.data.configuration.model.RemoteSessionRequest
 import com.tzel.movieflix.data.configuration.model.RemoteTemporaryRequestToken
 import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
@@ -16,6 +16,10 @@ class ConfigurationDataSourceImpl @Inject constructor(
     private val api: ConfigurationApi,
     private val dao: ConfigurationDao,
 ) : ConfigurationDataSource {
+    override suspend fun initConfiguration() {
+        dao.insertOrIgnoreConfiguration()
+    }
+
     override suspend fun getAvailableLanguages(): List<RemoteLanguage?> {
         return executeOn.background {
             api.getAvailableLanguages().requireNotNull()
@@ -24,7 +28,7 @@ class ConfigurationDataSourceImpl @Inject constructor(
 
     override suspend fun setSaveLanguage(language: LocalLanguage) {
         return executeOn.background {
-            dao.safeSaveLanguage(lang = language)
+            dao.saveLanguage(code = language.code, name = language.name, nameEn = language.englishName)
         }
     }
 
@@ -38,28 +42,17 @@ class ConfigurationDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun createSession(requestToken: String): RemoteSession {
+    override suspend fun createAccessToken(requestToken: String): RemoteAccessToken {
         return executeOn.background {
-            api.createSession(RemoteSessionRequest(requestToken)).requireNotNull()
+            api.createAccessToken(RemoteSessionRequest(requestToken)).requireNotNull()
         }
     }
 
-    override suspend fun saveSessionId(sessionId: String) {
-        dao.saveSessionId(sessionId = sessionId)
+    override suspend fun saveAccessTokenAndAccountId(accessToken: String, accountId: String) {
+        dao.saveAccessTokenAndAccountId(accessToken = accessToken, accoundId = accountId)
     }
 
-    override suspend fun saveTemporaryToken(tempToken: LocalTemporaryRequestToken?) {
-        dao.saveTemporaryToken(
-            tempToken = tempToken?.requestToken,
-            expiresAt = tempToken?.expiresAt
-        )
-    }
-
-    override suspend fun getTemporaryToken(): LocalTemporaryRequestToken? {
-        return dao.getConfiguration()?.temporaryToken
-    }
-
-    override suspend fun getSessionId(): String? {
-        return dao.getConfiguration()?.sessionId
+    override suspend fun getAccount(): LocalAccount? {
+        return dao.getConfiguration()?.user
     }
 }

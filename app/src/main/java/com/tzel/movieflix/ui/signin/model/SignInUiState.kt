@@ -11,7 +11,6 @@ sealed class SignInUiState() {
         val navigate: NavigationDestination? = null,
     ): SignInUiState() {
         val permissionUrl: String?
-            get() = "https://www.themoviedb.org/authenticate/$token".takeUnless { token == null }
+            get() = "https://www.themoviedb.org/auth/access?request_token=$token".takeUnless { token == null }
     }
-
 }
