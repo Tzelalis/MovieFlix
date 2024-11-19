@@ -13,7 +13,7 @@ class WatchProvidersUiMapper @Inject constructor(private val imagePathMapper: Im
     }
 
     operator fun invoke(provider: WatchProvider?): WatchUiProvider? {
-        val items = provider?.items?.mapNotNull { mapProviderItem(it) } ?: return null
+        val items = provider?.items?.mapNotNull { mapProviderItem(it) }?.distinctBy { it.key } ?: return null
 
         return WatchUiProvider(
             link = provider.link,

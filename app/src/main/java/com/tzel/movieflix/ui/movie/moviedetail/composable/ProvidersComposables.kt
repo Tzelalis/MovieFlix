@@ -43,7 +43,7 @@ fun ProvidersLazyRow(
     ) {
         items(
             items = watchProvider.items,
-            key = { it.providerId.toString() },
+            key = { it.key },
         ) { provider ->
             ProviderItem(
                 watchProvider = provider,

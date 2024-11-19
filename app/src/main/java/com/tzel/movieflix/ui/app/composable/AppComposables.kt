@@ -27,12 +27,6 @@ private fun AppContent(uiState: State<AppUiState>) {
     val navigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(navigator)
 
-    LaunchedEffect(navigator.navigatorSheetState.isVisible.not())  {
-        if(navigator.navigatorSheetState.isVisible.not()){
-            navController.navigateUp()
-        }
-    }
-
     LaunchedEffect(uiState.value.navigateDestination) {
         uiState.value.navigateDestination?.let { destination ->
             navController.navigate(destination)
