@@ -58,13 +58,21 @@ class MovieRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMovieDetails(movieId: String, includeImages: Boolean, includeVideos: Boolean): MovieDetails {
+    override suspend fun getMovieDetails(
+        movieId: String,
+        includeCast: Boolean,
+        includeImages: Boolean,
+        includeVideos: Boolean,
+        includeProviders: Boolean,
+    ): MovieDetails {
         val lang = configurationRepository.getSavedLanguage()?.code
         var details = remoteMovieDetailsMapper(
             dataSource.getMovieDetails(
                 movieId = movieId,
+                includeCast = includeCast,
                 includeImages = includeImages,
                 includeVideos = includeVideos,
+                includeProviders = includeProviders,
                 language = lang
             )
         )
@@ -74,8 +82,10 @@ class MovieRepositoryImpl @Inject constructor(
             val englishDetails = remoteMovieDetailsMapper(
                 dataSource.getMovieDetails(
                     movieId = movieId,
+                    includeCast = includeCast,
                     includeImages = includeImages,
                     includeVideos = includeVideos,
+                    includeProviders = includeProviders,
                     language = null
                 )
             )

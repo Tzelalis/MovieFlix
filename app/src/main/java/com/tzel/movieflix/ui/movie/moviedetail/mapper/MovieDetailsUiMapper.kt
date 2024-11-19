@@ -12,9 +12,10 @@ class MovieDetailsUiMapper @Inject constructor(
     private val imagePathMapper: ImagePathMapper,
     private val movieStatsUiMapper: MovieStatsUiMapper,
     private val reviewUiMapper: ReviewUiMapper,
-    private val moviesImagesUiMapper: MoviesImagesUiMapper
+    private val moviesImagesUiMapper: MoviesImagesUiMapper,
+    private val watchProvidersUiMapper: WatchProvidersUiMapper,
 ) {
-    operator fun invoke(details: MovieDetails): MovieDetailsUi {
+    operator fun invoke(details: MovieDetails, region: String = "US"): MovieDetailsUi {
         return MovieDetailsUi(
             id = details.id,
             title = details.title,
@@ -38,6 +39,7 @@ class MovieDetailsUiMapper @Inject constructor(
             posterUrl = imagePathMapper(details.posterPath),
             images = details.images?.let { moviesImagesUiMapper(it) },
             videos = details.videos,
+            watchProviders = watchProvidersUiMapper(providers = details.watchProviders, region = region),
             isFavorite = details.isFavorite,
             watchlistUiState = mutableStateOf(watchlistState(details.inWatchlist))
         )

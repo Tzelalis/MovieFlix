@@ -11,11 +11,16 @@ import javax.inject.Inject
 class GetMovieDetailsWithReviewsUseCase @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getMovieFavoriteStatusUseCase: GetMovieFavoriteStatusUseCase,
-    private val getMovieStatesUseCase: GetMovieStatesUseCase
+    private val getMovieStatesUseCase: GetMovieStatesUseCase,
 ) {
     operator fun invoke(movieId: String): Flow<MovieDetails?> {
         return flow {
-            var movieDetails = getMovieDetailsUseCase(movieId, includeVideos = true)
+            var movieDetails = getMovieDetailsUseCase(
+                movieId = movieId,
+                includeCast = true,
+                includeVideos = true,
+                includeProviders = true
+            )
 
             getMovieStatesUseCase(movieId)?.let { watchlistState ->
                 movieDetails = movieDetails?.copy(inWatchlist = watchlistState.watchlist)

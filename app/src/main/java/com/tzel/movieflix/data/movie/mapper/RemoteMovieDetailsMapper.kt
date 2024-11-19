@@ -9,6 +9,7 @@ class RemoteMovieDetailsMapper @Inject constructor(
     private val mapGenres: RemoteGenresMapper,
     private val remoteMovieImagesMapper: RemoteMovieImagesMapper,
     private val remoteVideoMapper: RemoteVideoMapper,
+    private val remoteWatchProvidersMapper: RemoteWatchProvidersMapper,
 ) {
     operator fun invoke(response: RemoteMovieDetailsResponse): MovieDetails {
         if (response.id == null) throw IllegalArgumentException("Movie id cannot be null")
@@ -34,6 +35,7 @@ class RemoteMovieDetailsMapper @Inject constructor(
                 homepage = homepage,
                 images = remoteMovieImagesMapper(images),
                 videos = remoteVideoMapper(videos),
+                watchProviders = remoteWatchProvidersMapper(watchProviders),
             )
         }
     }

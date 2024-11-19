@@ -20,7 +20,8 @@ data class MovieDetails(
     val homepage: String?,
     val images: MovieImages?,
     val videos: List<VideoItem>,
+    val watchProviders: Map<String, WatchProvider>,
     val reviews: List<Review>? = null,
     val isFavorite: Boolean = false,
-    val inWatchlist: Boolean? = null
+    val inWatchlist: Boolean? = null,
 )

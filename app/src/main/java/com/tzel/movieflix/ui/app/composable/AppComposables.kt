@@ -36,6 +36,7 @@ private fun AppContent(uiState: State<AppUiState>) {
     LaunchedEffect(uiState.value.navigateDestination) {
         uiState.value.navigateDestination?.let { destination ->
             navController.navigate(destination)
+            uiState.value.clearDestination()
         }
     }
 

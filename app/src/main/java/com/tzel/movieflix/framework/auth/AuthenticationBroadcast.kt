@@ -12,10 +12,11 @@ class AuthenticationBroadcast {
 
     fun updateData(e: AuthException) {
         _data.value = e
-        Timber.tag(AuthenticationBroadcast::class.java.simpleName).e("AuthException: $e")
+        Timber.tag(AuthenticationBroadcast::class.java.simpleName).v("AuthException: $e")
     }
 
     fun clearData() {
         _data.value = null
+        Timber.tag(AuthenticationBroadcast::class.java.simpleName).v("clear")
     }
 }

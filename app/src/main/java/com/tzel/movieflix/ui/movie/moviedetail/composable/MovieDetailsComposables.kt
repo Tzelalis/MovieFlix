@@ -75,7 +75,7 @@ import com.tzel.movieflix.utils.ext.sharePlainText
 fun MovieDetailsScreen(
     uiState: State<MovieDetailsUiState>,
     onBackClick: () -> Unit,
-    navigateToMovie: (String) -> Unit
+    navigateToMovie: (String) -> Unit,
 ) {
     MovieDetailsContent(
         uiState = uiState,
@@ -90,7 +90,7 @@ private fun MovieDetailsContent(
     onBackClick: () -> Unit,
     navigateToMovie: (String) -> Unit,
 ) {
-    Box() {
+    Box {
         when (val state = uiState.value) {
             is MovieDetailsUiState.Success -> {
                 MovieDetailsDefault(
@@ -117,7 +117,7 @@ private fun MovieDetailsContent(
 @Composable
 fun BackButton(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Icon(
         modifier = modifier
@@ -137,7 +137,7 @@ fun BackButton(
 @Composable
 private fun MovieDetailsDefault(
     uiState: MovieDetailsUiState.Success,
-    navigateToMovie: (String) -> Unit
+    navigateToMovie: (String) -> Unit,
 ) {
     val state = rememberLazyListState()
     val similarMovies = uiState.similarMovies.collectAsLazyPagingItems()
@@ -205,6 +205,15 @@ private fun MovieDetailsDefault(
             MovieOverview(overview = uiState.movieDetails.overview)
         }
 
+        uiState.movieDetails.watchProviders?.let { watchProviders ->
+            item {
+                ProvidersLazyRow(
+                    watchProvider = watchProviders,
+                    onProviderClick = {}
+                )
+            }
+        }
+
         if (uiState.movieDetails.cast.isNotEmpty()) {
             item { MovieDetailsHeader(header = stringResource(id = R.string.home_details_similar_cast_title)) }
             item { CastLazyRow(cast = uiState.movieDetails.cast) }
@@ -249,7 +258,7 @@ private fun MovieDetailsImage(
     modifier: Modifier = Modifier,
     imageRequester: ImageRequest.Builder = rememberImageRequester(),
     contentDescription: String? = null,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -321,7 +330,7 @@ private fun MovieDetailsTitle(
 @Composable
 private fun MovieOverview(
     overview: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     overview?.let {
         Text(
@@ -387,7 +396,8 @@ private fun MovieDetailsPreview() {
                     images = null,
                     videos = emptyList(),
                     isFavorite = false,
-                    watchlistUiState = mutableStateOf(WatchlistUiState.Added)
+                    watchlistUiState = mutableStateOf(WatchlistUiState.Added),
+                    watchProviders = null
                 ),
                 similarMovies = pager,
                 onFavoriteClick = {},

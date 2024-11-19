@@ -11,7 +11,13 @@ import kotlinx.coroutines.flow.Flow
 interface MovieRepository {
     suspend fun getPopularMovies(page: Int): MovieResult
 
-    suspend fun getMovieDetails(movieId: String, includeImages: Boolean, includeVideos: Boolean): MovieDetails
+    suspend fun getMovieDetails(
+        movieId: String,
+        includeCast: Boolean,
+        includeImages: Boolean,
+        includeVideos: Boolean,
+        includeProviders: Boolean,
+    ): MovieDetails
 
     suspend fun getMovieReviews(movieId: String, page: Int): ReviewsResult
 

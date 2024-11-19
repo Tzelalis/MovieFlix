@@ -26,13 +26,16 @@ class MovieDataSourceImpl @Inject constructor(
 
     override suspend fun getMovieDetails(
         movieId: String,
+        includeCast: Boolean,
         includeImages: Boolean,
         includeVideos: Boolean,
-        language: String?
+        includeProviders: Boolean,
+        language: String?,
     ): RemoteMovieDetailsResponse {
         return executeOn.background {
             val includes = mutableListOf<String>().apply {
-                add("credits")
+                if (includeCast) add("credits")
+                if (includeProviders) add("watch/providers")
                 if (includeImages) add("images")
                 if (includeVideos) add("videos")
             }.joinToString(separator = ",")

@@ -8,14 +8,18 @@ import javax.inject.Inject
 class GetMovieDetailsUseCase @Inject constructor(private val repo: MovieRepository) {
     suspend operator fun invoke(
         movieId: String,
+        includeCast: Boolean = false,
         includeImages: Boolean = false,
-        includeVideos: Boolean = false
+        includeVideos: Boolean = false,
+        includeProviders: Boolean = false,
     ): MovieDetails? {
         return try {
             repo.getMovieDetails(
                 movieId = movieId,
+                includeCast = includeCast,
                 includeImages = includeImages,
-                includeVideos = includeVideos
+                includeVideos = includeVideos,
+                includeProviders  = includeProviders,
             )
         } catch (e: Exception) {
             Timber.tag(GetMovieDetailsUseCase::class.java.simpleName).e(e)

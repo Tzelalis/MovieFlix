@@ -25,4 +25,5 @@ data class RemoteMovieDetailsResponse(
     val homepage: String?,
     val images: RemoteMovieImages?,
     val videos: RemoteVideoResponse?,
+    @Json(name = "watch/providers") val watchProviders: RemoteWatchProvidersResponse?,
 )

@@ -13,8 +13,10 @@ interface MovieDataSource {
 
     suspend fun getMovieDetails(
         movieId: String,
+        includeCast: Boolean,
         includeImages: Boolean,
         includeVideos: Boolean,
+        includeProviders: Boolean,
         language: String?
     ): RemoteMovieDetailsResponse
 
