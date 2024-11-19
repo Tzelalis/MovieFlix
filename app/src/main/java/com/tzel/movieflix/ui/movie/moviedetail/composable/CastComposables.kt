@@ -92,7 +92,7 @@ private fun CastItem(
             minLines = 2,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onBackground,
             lineHeight = 1.em
         )
     }
