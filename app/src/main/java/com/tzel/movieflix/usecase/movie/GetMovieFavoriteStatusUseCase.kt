@@ -2,10 +2,17 @@ package com.tzel.movieflix.usecase.movie
 
 import com.tzel.movieflix.domain.movie.MovieRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetMovieFavoriteStatusUseCase @Inject constructor(private val repo: MovieRepository) {
     operator fun invoke(movieId: String): Flow<Boolean> {
-        return repo.getMovieFavoriteStatus(movieId)
+        return try {
+            repo.getMovieFavoriteStatus(movieId)
+        } catch (e: Exception) {
+            Timber.tag(GetMovieFavoriteStatusUseCase::class.java.simpleName).e(e)
+            flowOf(false)
+        }
     }
 }
