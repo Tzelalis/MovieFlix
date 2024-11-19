@@ -21,6 +21,7 @@ import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
 import com.tzel.movieflix.usecase.movie.trending.GetFirstTrendMovieUseCase
 import com.tzel.movieflix.usecase.movie.trending.GetTrendingMoviesUseCase
 import com.tzel.movieflix.usecase.user.AddToWatchlistUseCase
+import com.tzel.movieflix.usecase.user.GetWatchlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +38,8 @@ class HomeViewModel @Inject constructor(
     private val getFirstTrendMovieUseCase: GetFirstTrendMovieUseCase,
     private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
     private val movieDetailsUiMapper: MovieDetailsUiMapper,
-    private val addToWatchlistUseCase: AddToWatchlistUseCase
+    private val addToWatchlistUseCase: AddToWatchlistUseCase,
+    private val getWatchlistUseCase: GetWatchlistUseCase,
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -61,6 +63,7 @@ class HomeViewModel @Inject constructor(
         loadTrendingOfDay()
         loadPopularMovies()
         loadTrendingMovies()
+        loadWatchlistMovies()
         loadMovieGenres()
     }
 
@@ -106,17 +109,16 @@ class HomeViewModel @Inject constructor(
     private fun loadWatchlistMovies() {
         watchlistMoviesJob?.cancel()
         watchlistMoviesJob = launch {
-            /*val watchlist = MoviesUiCategory(
+            val watchlist = MoviesUiCategory(
                 name = TextBuilder.StringResource(R.string.home_watchlist_title),
                 movies = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
                     MoviesPagingSource(
                         movieToMovieUiMapper = moviesUiMapper,
-                        getMovies = { page -> emptyL })
+                        getMovies = { page -> getWatchlistUseCase(page) })
                 }.flow.cachedIn(viewModelScope)
             )
 
             _uiState.update { it.copy(watchlistCategory = watchlist) }
-        */
         }
     }
 

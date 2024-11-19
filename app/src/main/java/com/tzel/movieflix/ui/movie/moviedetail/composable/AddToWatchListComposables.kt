@@ -24,6 +24,7 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.unit.dp
 import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
 import com.tzel.movieflix.ui.theme.Sizes
+import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +43,7 @@ fun AddToWatchlistComposables(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 contentColor = MaterialTheme.colorScheme.surface
             ),
-            contentPadding = PaddingValues(Spacing_8dp),
+            contentPadding = PaddingValues(vertical = Spacing_8dp, horizontal = Spacing_4dp),
             onClick = onClick
         ) {
 
@@ -76,6 +77,7 @@ fun AddToWatchlistComposables(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = text,
                 style = MaterialTheme.typography.bodyLarge.copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+                maxLines = 1
             )
         }
     }

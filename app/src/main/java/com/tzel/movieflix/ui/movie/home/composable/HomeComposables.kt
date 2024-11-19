@@ -65,6 +65,7 @@ private fun HomeContent(
 
     //collect paging data outside lazy column to avoid multiple requests
     val popularMovies = uiState.value.popularCategory?.movies?.collectAsLazyPagingItems()
+    val watchlistMovies = uiState.value.watchlistCategory?.movies?.collectAsLazyPagingItems()
     val upcomingMovies = uiState.value.trendingCategory?.movies?.collectAsLazyPagingItems()
     val firstSectionGenresMovies = uiState.value.firstSectionGenres.map { genre ->
         genre.movies.collectAsLazyPagingItems()
@@ -109,6 +110,22 @@ private fun HomeContent(
                 }
                 popularMovies?.let { movies ->
                     PopularMovies(
+                        movies = movies,
+                        navigateToMovieDetails = { navigateTo(MovieDetailsDestination(it)) },
+                        imageRequester = imageRequester,
+                    )
+                }
+            }
+
+            item {
+                uiState.value.watchlistCategory?.let { category ->
+                    HomeSectionTitle(title = category.name)
+                }
+                watchlistMovies?.let { movies ->
+                    MoviesPortraitLazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(2.2f),
                         movies = movies,
                         navigateToMovieDetails = { navigateTo(MovieDetailsDestination(it)) },
                         imageRequester = imageRequester,

@@ -9,14 +9,15 @@ data class HomeUiState(
     val trendMovie: MovieDetailsUi? = null,
     val popularCategory: MoviesUiCategory? = null,
     val trendingCategory: MoviesUiCategory? = null,
+    val watchlistCategory: MoviesUiCategory? = null,
     val genreMovies: List<MoviesUiCategory> = emptyList(),
     val addToWatchlist: (MovieDetailsUi) -> Unit,
 ) {
     val firstSectionGenres: List<MoviesUiCategory>
-        get() = genreMovies.take(2)
+        get() = genreMovies.take(1)
 
     val secondSectionGenres: List<MoviesUiCategory>
-        get() = genreMovies.drop(2)
+        get() = genreMovies.drop(1)
 
     val trendBackground: String?
         get() = trendMovie?.images?.posters?.firstOrNull { it.imageUrl != trendMovie.posterUrl }?.imageUrl ?: trendMovie?.posterUrl

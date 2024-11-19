@@ -89,7 +89,7 @@ fun TrendMovieOfTheDay(
             AddToWatchlistComposables(
                 modifier = Modifier.weight(1f),
                 state = movie.watchlistUiState,
-                text = stringResource(id = R.string.home_details_watchlist_button),
+                text = stringResource(id = R.string.home_trend_movie_watchlist_button),
                 onClick = addToWatchList
             )
         }

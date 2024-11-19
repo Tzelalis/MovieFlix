@@ -75,7 +75,7 @@ fun MoviePortraitItem(
     Box(
         modifier = modifier
             .fillMaxHeight()
-            .clip(MaterialTheme.shapes.large)
+            .clip(clip)
             .placeholder(
                 visible = { isLoading.value },
                 highlight = genericPlaceholderHighlight,
