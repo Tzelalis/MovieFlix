@@ -4,7 +4,16 @@ import com.tzel.movieflix.data.core.RemoteStatusResponse
 import javax.inject.Inject
 
 class RemoteStatusMapper @Inject constructor() {
-    operator fun invoke(remote: RemoteStatusResponse?): Boolean {
-        return remote?.success == true
+    operator fun invoke(remote: RemoteStatusResponse?): Boolean? {
+        return when (remote?.status) {
+            ADDED_STATUS_CODE -> true
+            REMOVED_STATUS_CODE -> false
+            else -> null
+        }
+    }
+
+    companion object {
+        private const val ADDED_STATUS_CODE = 1
+        private const val REMOVED_STATUS_CODE = 13
     }
 }

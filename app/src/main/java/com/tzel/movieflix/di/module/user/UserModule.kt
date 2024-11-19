@@ -5,6 +5,7 @@ import com.tzel.movieflix.data.user.UserDataSource
 import com.tzel.movieflix.data.user.UserRepositoryImpl
 import com.tzel.movieflix.di.module.interceptor.AuthInterceptor
 import com.tzel.movieflix.di.module.interceptor.NetworkConnectivityInterceptor
+import com.tzel.movieflix.di.module.interceptor.SessionInterceptor
 import com.tzel.movieflix.di.qualifier.AuthenticatedApiOkHttpClient
 import com.tzel.movieflix.domain.user.UserRepository
 import com.tzel.movieflix.framework.user.UserApi

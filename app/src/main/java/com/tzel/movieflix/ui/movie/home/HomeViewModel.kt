@@ -14,11 +14,13 @@ import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.movie.home.model.MoviesUiCategory
 import com.tzel.movieflix.ui.movie.moviedetail.mapper.MovieDetailsUiMapper
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
+import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
 import com.tzel.movieflix.usecase.movie.GetGenresUseCase
 import com.tzel.movieflix.usecase.movie.GetMoviesByGenreUseCase
 import com.tzel.movieflix.usecase.movie.GetPopularMoviesUseCase
 import com.tzel.movieflix.usecase.movie.trending.GetFirstTrendMovieUseCase
 import com.tzel.movieflix.usecase.movie.trending.GetTrendingMoviesUseCase
+import com.tzel.movieflix.usecase.user.AddToWatchlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +37,7 @@ class HomeViewModel @Inject constructor(
     private val getFirstTrendMovieUseCase: GetFirstTrendMovieUseCase,
     private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
     private val movieDetailsUiMapper: MovieDetailsUiMapper,
+    private val addToWatchlistUseCase: AddToWatchlistUseCase
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -146,7 +149,14 @@ class HomeViewModel @Inject constructor(
 
     private fun addToWatchList(movieDetailsUi: MovieDetailsUi) {
         launch {
+            if (movieDetailsUi.watchlistUiState.value == WatchlistUiState.Loading) return@launch
+            val isAdded = movieDetailsUi.watchlistUiState.value == WatchlistUiState.Added
 
+            movieDetailsUi.watchlistUiState.value = WatchlistUiState.Loading
+
+            val response = addToWatchlistUseCase(movieDetailsUi.id, !isAdded)
+            val watchlistState = if (response) WatchlistUiState.Added else WatchlistUiState.Removed
+            movieDetailsUi.watchlistUiState.value = watchlistState
         }
     }
 

@@ -21,10 +21,14 @@ class UserDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun addToWatchlist(movieId: String, status: Boolean): RemoteStatusResponse {
+    override suspend fun addToWatchlist(
+        userId: String,
+        movieId: String,
+        status: Boolean,
+    ): RemoteStatusResponse {
         return executeOn.background {
             api.addToWatchlist(
-                accountId = "9704290",
+                userId = userId,
                 watchlist = RemoteWatchlistRequest(id = movieId, watchlist = status)
             ).requireNotNull()
         }

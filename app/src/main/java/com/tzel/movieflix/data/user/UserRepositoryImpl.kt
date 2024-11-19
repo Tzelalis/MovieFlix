@@ -9,7 +9,7 @@ class UserRepositoryImpl @Inject constructor(
     private val dataSource: UserDataSource,
     private val remoteStatusMapper: RemoteStatusMapper
 ) : UserRepository {
-    override suspend fun rateMovie(movieId: String, rating: Double): Boolean {
+    override suspend fun rateMovie(movieId: String, rating: Double): Boolean? {
         return remoteStatusMapper(
             dataSource.rateMovie(
                 movieId = movieId,
@@ -18,7 +18,7 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun addToWatchlist(movieId: String, status: Boolean): Boolean {
-        return remoteStatusMapper(dataSource.addToWatchlist(movieId, status))
+    override suspend fun addToWatchlist(userId: String, movieId: String, status: Boolean): Boolean? {
+        return remoteStatusMapper(dataSource.addToWatchlist(userId = userId, movieId = movieId, status = status))
     }
 }

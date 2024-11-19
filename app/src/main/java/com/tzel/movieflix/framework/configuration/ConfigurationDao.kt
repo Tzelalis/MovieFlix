@@ -16,9 +16,6 @@ interface ConfigurationDao {
     @Query("SELECT * FROM configuration LIMIT 1")
     suspend fun getConfiguration(): LocalConfiguration?
 
-    @Query("UPDATE configuration SET account_access_token = :accessToken, account_account_id = :accoundId WHERE id = $CONFIGURATION_ID")
-    suspend fun saveAccessTokenAndAccountId(accessToken: String, accoundId: String)
-
     companion object {
         private const val CONFIGURATION_ID = 1
     }

@@ -13,9 +13,5 @@ interface ConfigurationRepository {
 
     suspend fun getBackupLanguage(): Language
 
-    suspend fun getTemporaryToken(): String?
-
-    suspend fun createAccessToken(requestToken: String): Boolean
-
     suspend fun getSavedAccountId(): String?
 }

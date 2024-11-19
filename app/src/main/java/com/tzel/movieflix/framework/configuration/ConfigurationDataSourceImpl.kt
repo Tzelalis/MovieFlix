@@ -3,10 +3,7 @@ package com.tzel.movieflix.framework.configuration
 import com.tzel.movieflix.data.configuration.ConfigurationDataSource
 import com.tzel.movieflix.data.configuration.model.LocalAccount
 import com.tzel.movieflix.data.configuration.model.LocalLanguage
-import com.tzel.movieflix.data.configuration.model.RemoteAccessToken
 import com.tzel.movieflix.data.configuration.model.RemoteLanguage
-import com.tzel.movieflix.data.configuration.model.RemoteSessionRequest
-import com.tzel.movieflix.data.configuration.model.RemoteTemporaryRequestToken
 import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
 import com.tzel.movieflix.utils.ext.requireNotNull
 import javax.inject.Inject
@@ -36,20 +33,8 @@ class ConfigurationDataSourceImpl @Inject constructor(
         return dao.getConfiguration()?.language
     }
 
-    override suspend fun requestTemporaryRequestToken(): RemoteTemporaryRequestToken {
-        return executeOn.background {
-            api.requestTemporaryRequestToken().requireNotNull()
-        }
-    }
+    override suspend fun saveAccountDetails(account: LocalAccount) {
 
-    override suspend fun createAccessToken(requestToken: String): RemoteAccessToken {
-        return executeOn.background {
-            api.createAccessToken(RemoteSessionRequest(requestToken)).requireNotNull()
-        }
-    }
-
-    override suspend fun saveAccessTokenAndAccountId(accessToken: String, accountId: String) {
-        dao.saveAccessTokenAndAccountId(accessToken = accessToken, accoundId = accountId)
     }
 
     override suspend fun getAccount(): LocalAccount? {

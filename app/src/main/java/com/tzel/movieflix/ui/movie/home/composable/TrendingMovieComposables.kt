@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +25,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.tzel.movieflix.R
 import com.tzel.movieflix.ui.core.composable.MVButton
+import com.tzel.movieflix.ui.movie.moviedetail.composable.AddToWatchlistComposables
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
@@ -85,17 +85,13 @@ fun TrendMovieOfTheDay(
                     leadingIcon = painterResource(id = R.drawable.ic_play_arrow),
                     onClick = { context.openYoutubeVideo(trailerUrl.key) }
                 )
-                MVButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.home_trend_movie_watchlist_button),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.surface
-                    ),
-                    leadingIcon = painterResource(id = R.drawable.ic_add),
-                    onClick = { addToWatchList() }
-                )
             }
+            AddToWatchlistComposables(
+                modifier = Modifier.weight(1f),
+                state = movie.watchlistUiState,
+                text = stringResource(id = R.string.home_details_watchlist_button),
+                onClick = addToWatchList
+            )
         }
     }
 }

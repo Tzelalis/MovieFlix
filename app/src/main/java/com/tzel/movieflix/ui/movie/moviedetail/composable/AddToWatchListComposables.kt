@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.unit.dp
-import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistState
+import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
 import com.tzel.movieflix.ui.theme.Sizes
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 
@@ -30,7 +30,7 @@ import com.tzel.movieflix.ui.theme.Spacing_8dp
 @Composable
 fun AddToWatchlistComposables(
     modifier: Modifier = Modifier,
-    state: State<WatchlistState>,
+    state: State<WatchlistUiState>,
     text: String,
     onClick: () -> Unit
 ) {
@@ -63,7 +63,7 @@ fun AddToWatchlistComposables(
                     )
                 }
 
-                if (state.value is WatchlistState.Loading) {
+                if (state.value is WatchlistUiState.Loading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(Sizes.Icons.small),
                         color = MaterialTheme.colorScheme.surface,

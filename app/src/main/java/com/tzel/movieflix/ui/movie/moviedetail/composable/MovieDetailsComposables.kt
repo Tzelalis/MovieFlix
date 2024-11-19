@@ -183,7 +183,7 @@ private fun MovieDetailsDefault(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = Spacing_16dp, end = Spacing_16dp, bottom = Spacing_16dp),
-                state = uiState.movieDetails.watchlistState,
+                state = uiState.movieDetails.watchlistUiState,
                 text = stringResource(id = R.string.home_details_watchlist_button),
                 onClick = uiState.addToWatchlist
             )

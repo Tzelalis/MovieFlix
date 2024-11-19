@@ -2,13 +2,12 @@ package com.tzel.movieflix.ui.signin
 
 import com.tzel.movieflix.ui.core.BaseViewModel
 import com.tzel.movieflix.ui.signin.model.SignInUiState
-import com.tzel.movieflix.usecase.configuration.CreateSessionUseCase
-import com.tzel.movieflix.usecase.configuration.RequestTemporaryRequestTokenUseCase
+import com.tzel.movieflix.usecase.auth.CreateSessionUseCase
+import com.tzel.movieflix.usecase.auth.RequestTemporaryRequestTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +34,6 @@ class SignInViewModel @Inject constructor(
         launch {
             val tempToken = getTemporaryRequestTokenUseCase() ?: return@launch
             _uiState.update { state.copy(token = tempToken) }
-            Timber.d("tempToken: $tempToken")
         }
     }
 
@@ -46,7 +44,7 @@ class SignInViewModel @Inject constructor(
             state.token?.let { token ->
                 val successfulSignIn = createSessionUseCase(token)
 
-                if(successfulSignIn) {
+                if (successfulSignIn) {
                     _uiState.update { SignInUiState.SuccessSignIn }
                 } else {
                     _uiState.update { SignInUiState.Error }

@@ -1,6 +1,8 @@
-package com.tzel.movieflix.di.module.user
+package com.tzel.movieflix.di.module.interceptor
 
 import com.tzel.movieflix.data.core.AppDatabase
+import com.tzel.movieflix.di.qualifier.SessionIdRequired
+import com.tzel.movieflix.utils.ext.getAnnotation
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -8,16 +10,18 @@ import javax.inject.Inject
 
 class SessionInterceptor @Inject constructor(private val db: AppDatabase) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val original = chain.request()
-        val originalUrl = original.url
+        val request = chain.request()
+        val originalUrl = request.url
 
-        val sessionId = runBlocking { db.configurationDao().getConfiguration()?.user?.accessToken } ?: return chain.proceed(original)
+        request.getAnnotation(SessionIdRequired::class.java) ?: return chain.proceed(request)
+
+        val sessionId = runBlocking { db.configurationDao().getConfiguration()?.user?.sessionId } ?: return chain.proceed(request)
 
         val urlWithSession = originalUrl.newBuilder()
             .addQueryParameter("session_id", sessionId)
             .build()
 
-        val requestWithSession = original.newBuilder()
+        val requestWithSession = request.newBuilder()
             .url(urlWithSession)
             .build()
 

@@ -46,10 +46,6 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAuthInterceptor(): AuthInterceptor = AuthInterceptor()
-
-    @Singleton
-    @Provides
     @BaseApiOkHttpClient
     fun provideBaseApiOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,

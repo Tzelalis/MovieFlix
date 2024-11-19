@@ -18,7 +18,7 @@ interface UserApi {
 
     @POST("/3/account/{account_id}/watchlist")
     suspend fun addToWatchlist(
-        @Path("account_id") accountId: String,
+        @Path("account_id") userId: String,
         @Body watchlist: RemoteWatchlistRequest
     ): Response<RemoteStatusResponse>
 }

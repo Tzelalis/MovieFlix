@@ -10,7 +10,7 @@ import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.movie.moviedetail.mapper.MovieDetailsUiMapper
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiState
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiToMovieMapper
-import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistState
+import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.usecase.movie.GetMovieDetailsWithReviewsUseCase
 import com.tzel.movieflix.usecase.movie.GetSimilarMoviesUseCase
@@ -85,16 +85,15 @@ class MovieDetailsViewModel @Inject constructor(
     private fun updateMovieWatchlistStatus() {
         launch {
             val state = uiState.value as? MovieDetailsUiState.Success ?: return@launch
-            if (state.movieDetails.watchlistState.value == WatchlistState.Loading) return@launch
-            val isAdded = state.movieDetails.watchlistState.value == WatchlistState.Added
+            if (state.movieDetails.watchlistUiState.value == WatchlistUiState.Loading) return@launch
+            val isAdded = state.movieDetails.watchlistUiState.value == WatchlistUiState.Added
 
-            state.movieDetails.watchlistState.value = WatchlistState.Loading
+            state.movieDetails.watchlistUiState.value = WatchlistUiState.Loading
 
-            val result = addToWatchlistUseCase(movieId = args.id, status = !isAdded)
-            state.movieDetails.watchlistState.value = if (result) WatchlistState.Added else WatchlistState.Removed
+            val result = addToWatchlistUseCase(movieId = args.id, targetStatus = !isAdded)
+            state.movieDetails.watchlistUiState.value = if (result) WatchlistUiState.Added else WatchlistUiState.Removed
         }
     }
-
 
     companion object {
         private const val PAGE_SIZE = 20

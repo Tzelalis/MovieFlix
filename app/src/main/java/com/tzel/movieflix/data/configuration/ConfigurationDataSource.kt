@@ -2,9 +2,7 @@ package com.tzel.movieflix.data.configuration
 
 import com.tzel.movieflix.data.configuration.model.LocalAccount
 import com.tzel.movieflix.data.configuration.model.LocalLanguage
-import com.tzel.movieflix.data.configuration.model.RemoteAccessToken
 import com.tzel.movieflix.data.configuration.model.RemoteLanguage
-import com.tzel.movieflix.data.configuration.model.RemoteTemporaryRequestToken
 
 interface ConfigurationDataSource {
     suspend fun initConfiguration()
@@ -15,11 +13,7 @@ interface ConfigurationDataSource {
 
     suspend fun getSavedLanguage(): LocalLanguage?
 
-    suspend fun requestTemporaryRequestToken(): RemoteTemporaryRequestToken?
-
-    suspend fun createAccessToken(requestToken: String): RemoteAccessToken?
-
-    suspend fun saveAccessTokenAndAccountId(accessToken: String, accountId: String)
+    suspend fun saveAccountDetails(account: LocalAccount)
 
     suspend fun getAccount(): LocalAccount?
 }

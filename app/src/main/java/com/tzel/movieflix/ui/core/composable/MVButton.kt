@@ -48,7 +48,6 @@ fun MVButton(
                         .size(Sizes.Icons.small),
                     painter = leadingIcon,
                     contentDescription = "Play Trailer",
-                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
 

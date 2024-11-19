@@ -15,8 +15,9 @@ data class LocalConfiguration(
 data class LocalAccount(
     @ColumnInfo(name = "access_token") val accessToken: String? = null,
     @ColumnInfo(name = "account_id") val accountId: String? = null,
+    @ColumnInfo(name = "session_id") val sessionId: String? = null,
+    @ColumnInfo(name = "user_id") val userId: String? = null,
 )
-
 
 data class LocalLanguage(
     val code: String?,

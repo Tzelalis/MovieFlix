@@ -25,7 +25,6 @@ import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.ui.search.navigation.SearchDestination
-import com.tzel.movieflix.ui.signin.navigation.SignInDestination
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Sizes
 import com.tzel.movieflix.ui.theme.Spacing_32dp
@@ -98,9 +97,8 @@ private fun HomeContent(
                     TrendMovieOfTheDay(
                         movie = it,
                         imageRequest = imageRequester,
-                        onClick = { navigateTo(SignInDestination) },
                         addToWatchList = { uiState.value.addToWatchlist(it) },
-                        //onClick = { navigateTo(MovieDetailsDestination(it.id)) }
+                        onClick = { navigateTo(MovieDetailsDestination(it.id)) }
                     )
                 }
             }

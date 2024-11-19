@@ -34,7 +34,7 @@ data class MovieDetailsUi(
     val images: MovieImagesUi?,
     val videos: List<VideoItem>,
     val isFavorite: Boolean,
-    val watchlistState: MutableState<WatchlistState> = mutableStateOf(WatchlistState.Added)
+    val watchlistUiState: MutableState<WatchlistUiState> = mutableStateOf(WatchlistUiState.Added)
 ) {
     val favoriteColor: Color
         get() = if (isFavorite) RedMedium else GrayLight
