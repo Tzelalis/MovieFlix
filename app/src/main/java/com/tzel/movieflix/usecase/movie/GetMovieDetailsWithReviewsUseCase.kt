@@ -1,6 +1,7 @@
 package com.tzel.movieflix.usecase.movie
 
 import com.tzel.movieflix.domain.movie.entity.MovieDetails
+import com.tzel.movieflix.usecase.user.GetMovieStatesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
@@ -9,23 +10,25 @@ import javax.inject.Inject
 
 class GetMovieDetailsWithReviewsUseCase @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
-    private val getMovieReviewsUseCase: GetMovieReviewsUseCase,
-    private val getMovieFavoriteStatusUseCase: GetMovieFavoriteStatusUseCase
+    private val getMovieFavoriteStatusUseCase: GetMovieFavoriteStatusUseCase,
+    private val getMovieStatesUseCase: GetMovieStatesUseCase
 ) {
-    suspend operator fun invoke(movieId: String, page: Int = 1): Flow<MovieDetails?> {
+    operator fun invoke(movieId: String): Flow<MovieDetails?> {
         return flow {
-            val movieDetails = getMovieDetailsUseCase(movieId, includeVideos = true)
+            var movieDetails = getMovieDetailsUseCase(movieId, includeVideos = true)
+
+            getMovieStatesUseCase(movieId)?.let { watchlistState ->
+                movieDetails = movieDetails?.copy(inWatchlist = watchlistState.watchlist)
+            }
 
             emit(movieDetails)
 
-            if (movieDetails == null) return@flow
-
-            val reviews = getMovieReviewsUseCase(movieId, page)?.reviews
-            emit(movieDetails.copy(reviews = reviews))
-
-            getMovieFavoriteStatusUseCase(movieId).firstOrNull()?.let { isFavorite ->
-                emit(movieDetails.copy(isFavorite = isFavorite))
+            movieDetails?.let { details ->
+                getMovieFavoriteStatusUseCase(movieId).firstOrNull()?.let { isFavorite ->
+                    emit(details.copy(isFavorite = isFavorite))
+                }
             }
+
         }.combine(getMovieFavoriteStatusUseCase(movieId)) { movieDetails, isFavorite ->
             movieDetails?.copy(isFavorite = isFavorite)
         }

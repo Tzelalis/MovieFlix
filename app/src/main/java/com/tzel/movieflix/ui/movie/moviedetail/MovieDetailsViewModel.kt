@@ -16,7 +16,6 @@ import com.tzel.movieflix.usecase.movie.GetMovieDetailsWithReviewsUseCase
 import com.tzel.movieflix.usecase.movie.GetSimilarMoviesUseCase
 import com.tzel.movieflix.usecase.movie.SetMovieFavoriteUseCase
 import com.tzel.movieflix.usecase.user.AddToWatchlistUseCase
-import com.tzel.movieflix.usecase.user.RateMovieUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +29,6 @@ class MovieDetailsViewModel @Inject constructor(
     private val getMovieDetailsWithReviewsUseCase: GetMovieDetailsWithReviewsUseCase,
     private val setMovieFavoriteUseCase: SetMovieFavoriteUseCase,
     private val movieDetailsUiToMovieMapper: MovieDetailsUiToMovieMapper,
-    private val rateMovieUseCase: RateMovieUseCase,
     private val addToWatchlistUseCase: AddToWatchlistUseCase,
     getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     moviesUiMapper: MovieToMovieUiMapper,

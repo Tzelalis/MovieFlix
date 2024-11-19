@@ -1,9 +1,11 @@
 package com.tzel.movieflix.ui.movie.moviedetail.mapper
 
+import androidx.compose.runtime.mutableStateOf
 import com.tzel.movieflix.domain.movie.entity.MovieDetails
 import com.tzel.movieflix.ui.core.mapper.ImagePathMapper
 import com.tzel.movieflix.ui.core.mapper.ImageSize
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
+import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
 import javax.inject.Inject
 
 class MovieDetailsUiMapper @Inject constructor(
@@ -36,7 +38,8 @@ class MovieDetailsUiMapper @Inject constructor(
             posterUrl = imagePathMapper(details.posterPath),
             images = details.images?.let { moviesImagesUiMapper(it) },
             videos = details.videos,
-            isFavorite = details.isFavorite
+            isFavorite = details.isFavorite,
+            watchlistUiState = mutableStateOf(watchlistState(details.inWatchlist))
         )
     }
 
@@ -54,5 +57,13 @@ class MovieDetailsUiMapper @Inject constructor(
         if (tagline.isNullOrBlank()) return null
 
         return tagline
+    }
+
+    private fun watchlistState(watchlist: Boolean?): WatchlistUiState {
+        return when (watchlist) {
+            true -> WatchlistUiState.Added
+            false -> WatchlistUiState.Removed
+            else -> WatchlistUiState.Loading
+        }
     }
 }

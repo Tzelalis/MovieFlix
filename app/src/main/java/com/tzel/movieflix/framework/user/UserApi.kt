@@ -2,6 +2,7 @@ package com.tzel.movieflix.framework.user
 
 import com.tzel.movieflix.data.core.RemoteStatusResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
+import com.tzel.movieflix.data.user.model.RemoteMovieStatesResponse
 import com.tzel.movieflix.data.user.model.RemoteRateMovieRequest
 import com.tzel.movieflix.data.user.model.RemoteWatchlistRequest
 import retrofit2.Response
@@ -30,4 +31,9 @@ interface UserApi {
         @Path("user_id") userId: String,
         @Query("page") page: Int
     ): Response<RemoteMovieResponse>
+
+    @GET("/3/movie/{movie_id}/account_states")
+    suspend fun getMovieStates(
+        @Path("movie_id") movieId: String,
+    ): Response<RemoteMovieStatesResponse>
 }

@@ -58,6 +58,7 @@ import com.tzel.movieflix.ui.movie.core.MoviesPortraitLazyRow
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiState
+import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
 import com.tzel.movieflix.ui.theme.GrayLightWithAlpha
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Sizes
@@ -385,7 +386,8 @@ private fun MovieDetailsPreview() {
                     posterUrl = "",
                     images = null,
                     videos = emptyList(),
-                    isFavorite = false
+                    isFavorite = false,
+                    watchlistUiState = mutableStateOf(WatchlistUiState.Added)
                 ),
                 similarMovies = pager,
                 onFavoriteClick = {},

@@ -22,4 +22,5 @@ data class MovieDetails(
     val videos: List<VideoItem>,
     val reviews: List<Review>? = null,
     val isFavorite: Boolean = false,
+    val inWatchlist: Boolean? = null
 )

@@ -44,7 +44,8 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         HomeUiState(
-            addToWatchlist = ::addToWatchList
+            addToWatchlist = ::addToWatchList,
+            refreshWatchlist = ::loadWatchlistMovies
         )
     )
 
@@ -63,7 +64,6 @@ class HomeViewModel @Inject constructor(
         loadTrendingOfDay()
         loadPopularMovies()
         loadTrendingMovies()
-        loadWatchlistMovies()
         loadMovieGenres()
     }
 

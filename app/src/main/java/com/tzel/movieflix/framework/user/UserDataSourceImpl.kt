@@ -3,6 +3,7 @@ package com.tzel.movieflix.framework.user
 import com.tzel.movieflix.data.core.RemoteStatusResponse
 import com.tzel.movieflix.data.movie.model.RemoteMovieResponse
 import com.tzel.movieflix.data.user.UserDataSource
+import com.tzel.movieflix.data.user.model.RemoteMovieStatesResponse
 import com.tzel.movieflix.data.user.model.RemoteRateMovieRequest
 import com.tzel.movieflix.data.user.model.RemoteWatchlistRequest
 import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
@@ -38,6 +39,12 @@ class UserDataSourceImpl @Inject constructor(
     override suspend fun getWatchlist(userId: String, page: Int): RemoteMovieResponse {
         return executeOn.background {
             api.getWatchlist(userId = userId, page = page).requireNotNull()
+        }
+    }
+
+    override suspend fun getMovieStates(movieId: String): RemoteMovieStatesResponse {
+        return executeOn.background {
+            api.getMovieStates(movieId = movieId).requireNotNull()
         }
     }
 }

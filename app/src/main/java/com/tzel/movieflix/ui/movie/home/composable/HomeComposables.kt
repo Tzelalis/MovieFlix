@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -35,10 +36,19 @@ fun HomeScreen(
     uiState: State<HomeUiState>,
     navigateTo: (NavigationDestination) -> Unit,
 ) {
+    HomeSideEffects(refreshWatchlistMovies = uiState.value.refreshWatchlist)
+
     HomeContent(
         uiState = uiState,
         navigateTo = navigateTo
     )
+}
+
+@Composable
+fun HomeSideEffects(refreshWatchlistMovies: () -> Unit) {
+    LaunchedEffect(Unit) {
+        refreshWatchlistMovies()
+    }
 }
 
 @Composable
@@ -211,6 +221,7 @@ private fun HomePreview() {
                 trendMovie = null,
                 genreMovies = emptyList(),
                 addToWatchlist = {},
+                refreshWatchlist = {},
             )
         )
     }

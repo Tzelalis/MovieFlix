@@ -3,6 +3,7 @@ package com.tzel.movieflix.usecase.user
 import com.tzel.movieflix.domain.movie.entity.MovieResult
 import com.tzel.movieflix.domain.user.UserRepository
 import com.tzel.movieflix.usecase.auth.GetUserIdUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetWatchlistUseCase @Inject constructor(
@@ -10,7 +11,12 @@ class GetWatchlistUseCase @Inject constructor(
     private val getUserIdUseCase: GetUserIdUseCase
 ) {
     suspend operator fun invoke(page: Int = 1): MovieResult? {
-        val userId = getUserIdUseCase() ?: return null
-        return repo.getWatchlist(userId = userId, page = page)
+        return try {
+            val userId = getUserIdUseCase() ?: return null
+            repo.getWatchlist(userId = userId, page = page)
+        } catch (e: Exception) {
+            Timber.tag(GetWatchlistUseCase::class.java.simpleName).e(e)
+            return null
+        }
     }
 }
