@@ -20,10 +20,14 @@ class RemoteWatchProvidersMapper @Inject constructor() {
     operator fun invoke(item: RemoteWatchProvider): WatchProvider {
         val buyProviders = item.buy?.mapNotNull { invoke(it, WatchProvideType.Buy) } ?: emptyList()
         val rentProviders = item.rent?.mapNotNull { invoke(it, WatchProvideType.Rent) } ?: emptyList()
-        val faltrateProviders = item.flatrate?.mapNotNull { invoke(it, WatchProvideType.Flatrate) } ?: emptyList()
+        val faltrateProviders = item.flatrate?.mapNotNull { invoke(it, WatchProvideType.Stream) } ?: emptyList()
+        val adsProviders = item.flatrate?.mapNotNull { invoke(it, WatchProvideType.Ads) } ?: emptyList()
+        val freeProviders = item.flatrate?.mapNotNull { invoke(it, WatchProvideType.Free) } ?: emptyList()
 
-        val providers = buyProviders + rentProviders + faltrateProviders
-        val sortedProviders = providers.sortedWith(compareBy({ it.providerType.priority }, { it.displayPriority }, { it.providerName }))
+        val providers = buyProviders + rentProviders + faltrateProviders + adsProviders + freeProviders
+        val sortedProviders = providers
+            .sortedWith(compareBy({ it.providerType.priority }, { it.displayPriority }, { it.providerName }))
+            .distinctBy { it.providerId }
 
         return WatchProvider(
             link = item.link,

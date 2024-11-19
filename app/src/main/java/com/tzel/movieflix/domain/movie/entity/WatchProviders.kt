@@ -14,7 +14,9 @@ data class WatchProviderItem(
 )
 
 sealed class WatchProvideType(val priority: Int) {
+    data object Stream : WatchProvideType(priority = 0)
+    data object Rent : WatchProvideType(priority = 1)
     data object Buy : WatchProvideType(priority = 2)
-    data object Rent : WatchProvideType(priority = 3)
-    data object Flatrate : WatchProvideType(priority = 1)
+    data object Free : WatchProvideType(priority = 3)
+    data object Ads : WatchProvideType(priority = 4)
 }

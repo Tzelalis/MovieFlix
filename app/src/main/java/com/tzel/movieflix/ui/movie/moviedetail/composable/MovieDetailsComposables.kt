@@ -67,6 +67,7 @@ import com.tzel.movieflix.ui.theme.Spacing_32dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 import com.tzel.movieflix.utils.composable.modifier.noRippleClickable
+import com.tzel.movieflix.utils.ext.openUrlInBrowser
 import com.tzel.movieflix.utils.ext.openYoutubeVideo
 import com.tzel.movieflix.utils.ext.sharePlainText
 
@@ -141,6 +142,7 @@ private fun MovieDetailsDefault(
 ) {
     val state = rememberLazyListState()
     val similarMovies = uiState.similarMovies.collectAsLazyPagingItems()
+    val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -209,7 +211,12 @@ private fun MovieDetailsDefault(
             item {
                 ProvidersLazyRow(
                     watchProvider = watchProviders,
-                    onProviderClick = {}
+                    isClickable = watchProviders.hasLink,
+                    onProviderClick = { provider ->
+                        watchProviders.link?.let { link ->
+                            context.openUrlInBrowser(url = link)
+                        }
+                    }
                 )
             }
         }

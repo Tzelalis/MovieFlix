@@ -35,6 +35,11 @@
     <string name="home_details_share_movie_content_description">share movie</string>
     <string name="home_details_watch_trailer_button">Watch Trailer</string>
     <string name="home_details_watchlist_button">My Watchlist</string>
+    <string name="home_detail_watch_provider_buy_name">Buy</string>
+    <string name="home_detail_watch_provider_rent_name">Rent</string>
+    <string name="home_detail_watch_provider_flatrate_name">Stream</string>
+    <string name="home_detail_watch_provider_free_name">Free</string>
+    <string name="home_detail_watch_provider_ads_name">With ads</string>
 
     <!-- Search -->
     <string name="search_title">Search…</string>

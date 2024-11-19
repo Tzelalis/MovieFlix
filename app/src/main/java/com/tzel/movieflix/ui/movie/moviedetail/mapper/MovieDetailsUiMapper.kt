@@ -6,6 +6,7 @@ import com.tzel.movieflix.ui.core.mapper.ImagePathMapper
 import com.tzel.movieflix.ui.core.mapper.ImageSize
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
+import java.util.Locale
 import javax.inject.Inject
 
 class MovieDetailsUiMapper @Inject constructor(
@@ -15,7 +16,7 @@ class MovieDetailsUiMapper @Inject constructor(
     private val moviesImagesUiMapper: MoviesImagesUiMapper,
     private val watchProvidersUiMapper: WatchProvidersUiMapper,
 ) {
-    operator fun invoke(details: MovieDetails, region: String = "US"): MovieDetailsUi {
+    operator fun invoke(details: MovieDetails, region: String = Locale.getDefault().country): MovieDetailsUi {
         return MovieDetailsUi(
             id = details.id,
             title = details.title,
@@ -67,5 +68,9 @@ class MovieDetailsUiMapper @Inject constructor(
             false -> WatchlistUiState.Removed
             else -> WatchlistUiState.Loading
         }
+    }
+
+    companion object {
+        private val DEFAULT_REGION_CODE = "US"
     }
 }

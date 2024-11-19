@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import coil3.compose.AsyncImage
 import com.tzel.movieflix.ui.movie.moviedetail.model.WatchProviderUiItem
 import com.tzel.movieflix.ui.movie.moviedetail.model.WatchUiProvider
@@ -33,6 +34,7 @@ import com.tzel.movieflix.utils.composable.image.rememberImageRequester
 fun ProvidersLazyRow(
     watchProvider: WatchUiProvider,
     modifier: Modifier = Modifier,
+    isClickable: Boolean = true,
     onProviderClick: (WatchProviderUiItem) -> Unit,
 ) {
     LazyRow(
@@ -47,6 +49,7 @@ fun ProvidersLazyRow(
         ) { provider ->
             ProviderItem(
                 watchProvider = provider,
+                isClickable = isClickable,
                 modifier = modifier,
                 onProviderClick = { onProviderClick(provider) }
             )
@@ -58,6 +61,7 @@ fun ProvidersLazyRow(
 private fun ProviderItem(
     watchProvider: WatchProviderUiItem,
     modifier: Modifier = Modifier,
+    isClickable: Boolean = true,
     onProviderClick: () -> Unit,
 ) {
     Row(
@@ -65,7 +69,7 @@ private fun ProviderItem(
             .height(IntrinsicSize.Min)
             .padding(Spacing_4dp)
             .clip(MaterialTheme.shapes.medium)
-            .clickable { onProviderClick() }
+            .clickable(enabled = isClickable) { onProviderClick() }
             .background(MaterialTheme.colorScheme.tertiaryContainer)
             .padding(Spacing_4dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -87,11 +91,10 @@ private fun ProviderItem(
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = watchProvider.providerType.toString(),
+                text = stringResource(watchProvider.providerType.nameRes),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onTertiary
             )
         }
-
     }
 }

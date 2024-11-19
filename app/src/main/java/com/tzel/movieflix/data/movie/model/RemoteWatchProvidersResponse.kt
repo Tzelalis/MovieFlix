@@ -14,7 +14,9 @@ data class RemoteWatchProvider(
     val link: String?,
     val buy: List<RemoteWatchProviderItem?>?,
     val flatrate: List<RemoteWatchProviderItem?>?,
-    val rent: List<RemoteWatchProviderItem?>?
+    val rent: List<RemoteWatchProviderItem?>?,
+    val ads: List<RemoteWatchProviderItem?>?,
+    val free: List<RemoteWatchProviderItem?>?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -22,5 +24,5 @@ data class RemoteWatchProviderItem(
     @Json(name = "logo_path") val logoPath: String?,
     @Json(name = "display_priority") val displayPriority: Int?,
     @Json(name = "provider_id") val providerId: Int?,
-    @Json(name = "provider_name") val providerName: String?
+    @Json(name = "provider_name") val providerName: String?,
 )
