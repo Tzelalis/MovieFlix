@@ -6,21 +6,15 @@ import com.tzel.movieflix.data.user.UserDataSource
 import com.tzel.movieflix.data.user.model.RemoteMovieStatesResponse
 import com.tzel.movieflix.data.user.model.RemoteRateMovieRequest
 import com.tzel.movieflix.data.user.model.RemoteWatchlistRequest
-import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
 import com.tzel.movieflix.utils.ext.requireNotNull
 import javax.inject.Inject
 
-class UserDataSourceImpl @Inject constructor(
-    private val executeOn: ExecuteOn,
-    private val api: UserApi
-) : UserDataSource {
+class UserDataSourceImpl @Inject constructor(private val api: UserApi) : UserDataSource {
     override suspend fun rateMovie(movieId: String, rating: RemoteRateMovieRequest): RemoteStatusResponse {
-        return executeOn.background {
-            api.rateMovie(
-                movieId = movieId,
-                rate = rating
-            ).requireNotNull()
-        }
+        return api.rateMovie(
+            movieId = movieId,
+            rate = rating
+        ).requireNotNull()
     }
 
     override suspend fun addToWatchlist(
@@ -28,23 +22,17 @@ class UserDataSourceImpl @Inject constructor(
         movieId: String,
         status: Boolean,
     ): RemoteStatusResponse {
-        return executeOn.background {
-            api.addToWatchlist(
-                userId = userId,
-                watchlist = RemoteWatchlistRequest(id = movieId, watchlist = status)
-            ).requireNotNull()
-        }
+        return api.addToWatchlist(
+            userId = userId,
+            watchlist = RemoteWatchlistRequest(id = movieId, watchlist = status)
+        ).requireNotNull()
     }
 
     override suspend fun getWatchlist(userId: String, page: Int): RemoteMovieResponse {
-        return executeOn.background {
-            api.getWatchlist(userId = userId, page = page).requireNotNull()
-        }
+        return api.getWatchlist(userId = userId, page = page).requireNotNull()
     }
 
     override suspend fun getMovieStates(movieId: String): RemoteMovieStatesResponse {
-        return executeOn.background {
-            api.getMovieStates(movieId = movieId).requireNotNull()
-        }
+        return api.getMovieStates(movieId = movieId).requireNotNull()
     }
 }

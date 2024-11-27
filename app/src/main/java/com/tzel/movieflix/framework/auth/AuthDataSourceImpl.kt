@@ -12,38 +12,32 @@ import com.tzel.movieflix.domain.auth.InvalidRequestToken
 import com.tzel.movieflix.domain.auth.InvalidWebToken
 import com.tzel.movieflix.domain.auth.NoSessionIdFound
 import com.tzel.movieflix.domain.auth.SessionIdIsNotValid
-import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
 import com.tzel.movieflix.utils.ext.requireNotNull
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class AuthDataSourceImpl @Inject constructor(
-    private val executeOn: ExecuteOn,
     private val api: AuthApi,
     private val dao: AuthDao,
-    private val broadcast: AuthenticationBroadcast
+    private val broadcast: AuthenticationBroadcast,
 ) : AuthDataSource {
     override suspend fun requestTemporaryRequestToken(): RemoteTemporaryRequestTokenResponse {
-        return executeOn.background {
-            val response = api.requestTemporaryRequestToken()
+        val response = api.requestTemporaryRequestToken()
 
-            if (response.body()?.statusCode?.toInt() == INVALID_REQUEST_TOKEN) {
-                broadcast.updateData(InvalidRequestToken())
-            }
-
-            response.requireNotNull()
+        if (response.body()?.statusCode?.toInt() == INVALID_REQUEST_TOKEN) {
+            broadcast.updateData(InvalidRequestToken())
         }
+
+        return response.requireNotNull()
     }
 
     override suspend fun createAccessToken(requestToken: String): RemoteAccessTokenResponse {
-        return executeOn.background {
-            val response = api.createAccessToken(RemoteAccessTokenRequest(requestToken))
+        val response = api.createAccessToken(RemoteAccessTokenRequest(requestToken))
 
-            if (response.body()?.statusCode == INVALID_REQUEST_TOKEN) {
-                broadcast.updateData(InvalidWebToken())
-            }
-            response.requireNotNull()
+        if (response.body()?.statusCode == INVALID_REQUEST_TOKEN) {
+            broadcast.updateData(InvalidWebToken())
         }
+        return response.requireNotNull()
     }
 
     override suspend fun saveAccessTokenAndAccountId(accessToken: String, accountId: String) {
@@ -51,15 +45,13 @@ class AuthDataSourceImpl @Inject constructor(
     }
 
     override suspend fun createSessionId(accessToken: String): RemoteSessionResponse {
-        return executeOn.background {
-            val response = api.createSessionId(RemoteSessionRequest(accessToken))
+        val response = api.createSessionId(RemoteSessionRequest(accessToken))
 
-            if (response.body()?.statusCode == INVALID_ACCESS_TOKEN) {
-                broadcast.updateData(InvalidAccessToken())
-            }
-
-            response.requireNotNull()
+        if (response.body()?.statusCode == INVALID_ACCESS_TOKEN) {
+            broadcast.updateData(InvalidAccessToken())
         }
+
+        return response.requireNotNull()
     }
 
     override suspend fun saveSessionId(sessionId: String) {

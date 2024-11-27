@@ -4,12 +4,10 @@ import com.tzel.movieflix.data.configuration.ConfigurationDataSource
 import com.tzel.movieflix.data.configuration.model.LocalAccount
 import com.tzel.movieflix.data.configuration.model.LocalLanguage
 import com.tzel.movieflix.data.configuration.model.RemoteLanguage
-import com.tzel.movieflix.domain.core.dispatcher.entity.ExecuteOn
 import com.tzel.movieflix.utils.ext.requireNotNull
 import javax.inject.Inject
 
 class ConfigurationDataSourceImpl @Inject constructor(
-    private val executeOn: ExecuteOn,
     private val api: ConfigurationApi,
     private val dao: ConfigurationDao,
 ) : ConfigurationDataSource {
@@ -18,15 +16,11 @@ class ConfigurationDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getAvailableLanguages(): List<RemoteLanguage?> {
-        return executeOn.background {
-            api.getAvailableLanguages().requireNotNull()
-        }
+        return api.getAvailableLanguages().requireNotNull()
     }
 
     override suspend fun setSaveLanguage(language: LocalLanguage) {
-        return executeOn.background {
-            dao.saveLanguage(code = language.code, name = language.name, nameEn = language.englishName)
-        }
+        return dao.saveLanguage(code = language.code, name = language.name, nameEn = language.englishName)
     }
 
     override suspend fun getSavedLanguage(): LocalLanguage? {
