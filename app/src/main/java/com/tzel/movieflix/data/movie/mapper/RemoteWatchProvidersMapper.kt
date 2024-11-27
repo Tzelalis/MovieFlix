@@ -3,12 +3,13 @@ package com.tzel.movieflix.data.movie.mapper
 import com.tzel.movieflix.data.movie.model.RemoteWatchProvider
 import com.tzel.movieflix.data.movie.model.RemoteWatchProviderItem
 import com.tzel.movieflix.data.movie.model.RemoteWatchProvidersResponse
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.WatchProvideType
 import com.tzel.movieflix.domain.movie.entity.WatchProvider
 import com.tzel.movieflix.domain.movie.entity.WatchProviderItem
 import javax.inject.Inject
 
-class RemoteWatchProvidersMapper @Inject constructor() {
+class RemoteWatchProvidersMapper @Inject constructor() : Mapper {
     operator fun invoke(response: RemoteWatchProvidersResponse?): Map<String, WatchProvider> {
         return response?.results
             ?.filterNot { pair -> pair.key == null || pair.value == null }

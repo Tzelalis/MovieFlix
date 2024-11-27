@@ -1,11 +1,12 @@
 package com.tzel.movieflix.data.movie.mapper
 
 import com.tzel.movieflix.data.movie.model.RemoteCast
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.Cast
 import com.tzel.movieflix.ui.core.mapper.ImagePathMapper
 import javax.inject.Inject
 
-class RemoteCastMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) {
+class RemoteCastMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) : Mapper {
     operator fun invoke(remoteCast: List<RemoteCast?>?): List<Cast> {
         return remoteCast?.mapNotNull { mapCast(it) } ?: emptyList()
     }

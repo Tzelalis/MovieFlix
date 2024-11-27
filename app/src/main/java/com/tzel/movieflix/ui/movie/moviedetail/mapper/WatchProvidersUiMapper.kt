@@ -1,5 +1,6 @@
 package com.tzel.movieflix.ui.movie.moviedetail.mapper
 
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.WatchProvideType
 import com.tzel.movieflix.domain.movie.entity.WatchProvider
 import com.tzel.movieflix.domain.movie.entity.WatchProviderItem
@@ -9,7 +10,7 @@ import com.tzel.movieflix.ui.movie.moviedetail.model.WatchProviderUiType
 import com.tzel.movieflix.ui.movie.moviedetail.model.WatchUiProvider
 import javax.inject.Inject
 
-class WatchProvidersUiMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) {
+class WatchProvidersUiMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) : Mapper {
     operator fun invoke(providers: Map<String, WatchProvider>, region: String): WatchUiProvider? {
         return invoke(providers[region])?.takeUnless { it.items.isEmpty() }
     }

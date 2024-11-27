@@ -2,9 +2,10 @@ package com.tzel.movieflix.data.configuration.mapper
 
 import com.tzel.movieflix.data.configuration.model.RemoteLanguage
 import com.tzel.movieflix.domain.configuration.entity.Language
+import com.tzel.movieflix.domain.core.Mapper
 import javax.inject.Inject
 
-class RemoteAvailableLanguagesMapper @Inject constructor() {
+class RemoteAvailableLanguagesMapper @Inject constructor() : Mapper {
     operator fun invoke(response: List<RemoteLanguage?>?): List<Language> {
         return response?.mapNotNull { invoke(it) } ?: emptyList()
     }

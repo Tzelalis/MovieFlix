@@ -1,6 +1,7 @@
 package com.tzel.movieflix.ui.movie.moviedetail.mapper
 
 import androidx.compose.runtime.mutableStateOf
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.MovieDetails
 import com.tzel.movieflix.ui.core.mapper.ImagePathMapper
 import com.tzel.movieflix.ui.core.mapper.ImageSize
@@ -15,7 +16,7 @@ class MovieDetailsUiMapper @Inject constructor(
     private val reviewUiMapper: ReviewUiMapper,
     private val moviesImagesUiMapper: MoviesImagesUiMapper,
     private val watchProvidersUiMapper: WatchProvidersUiMapper,
-) {
+) : Mapper {
     operator fun invoke(details: MovieDetails, region: String = Locale.getDefault().country): MovieDetailsUi {
         return MovieDetailsUi(
             id = details.id,

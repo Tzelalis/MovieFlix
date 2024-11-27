@@ -2,13 +2,14 @@ package com.tzel.movieflix.usecase.user
 
 import com.tzel.movieflix.domain.user.UserRepository
 import com.tzel.movieflix.usecase.auth.GetUserIdUseCase
+import com.tzel.movieflix.usecase.core.UseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 class AddToWatchlistUseCase @Inject constructor(
     private val repo: UserRepository,
     private val getUserId: GetUserIdUseCase,
-) {
+) : UseCase {
     suspend operator fun invoke(movieId: String, targetStatus: Boolean): Boolean {
         return try {
             val userId = getUserId() ?: throw Exception("User not found")

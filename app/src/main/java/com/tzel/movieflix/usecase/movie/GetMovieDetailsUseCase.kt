@@ -2,10 +2,11 @@ package com.tzel.movieflix.usecase.movie
 
 import com.tzel.movieflix.domain.movie.MovieRepository
 import com.tzel.movieflix.domain.movie.entity.MovieDetails
+import com.tzel.movieflix.usecase.core.UseCase
 import timber.log.Timber
 import javax.inject.Inject
 
-class GetMovieDetailsUseCase @Inject constructor(private val repo: MovieRepository) {
+class GetMovieDetailsUseCase @Inject constructor(private val repo: MovieRepository) : UseCase {
     suspend operator fun invoke(
         movieId: String,
         includeCast: Boolean = false,

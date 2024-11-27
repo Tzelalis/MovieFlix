@@ -2,11 +2,12 @@ package com.tzel.movieflix.data.movie.mapper
 
 import com.tzel.movieflix.data.movie.model.RemoteMovieImageItem
 import com.tzel.movieflix.data.movie.model.RemoteMovieImages
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.MovieImageItem
 import com.tzel.movieflix.domain.movie.entity.MovieImages
 import javax.inject.Inject
 
-class RemoteMovieImagesMapper @Inject constructor() {
+class RemoteMovieImagesMapper @Inject constructor() : Mapper {
     operator fun invoke(remoteImages: RemoteMovieImages?): MovieImages? {
         if (remoteImages == null) return null
 

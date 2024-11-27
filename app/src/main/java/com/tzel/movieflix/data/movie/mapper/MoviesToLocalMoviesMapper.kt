@@ -1,10 +1,11 @@
 package com.tzel.movieflix.data.movie.mapper
 
 import com.tzel.movieflix.data.movie.model.LocalMovie
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.Movie
 import javax.inject.Inject
 
-class MoviesToLocalMoviesMapper @Inject constructor() {
+class MoviesToLocalMoviesMapper @Inject constructor() : Mapper {
     operator fun invoke(movies: List<Movie>, isPopular: Boolean): List<LocalMovie> {
         return movies.mapNotNull { movie -> mapMovie(movie, isPopular) }
     }
