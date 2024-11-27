@@ -13,7 +13,7 @@ navigation = "2.8.4"
 hilt = "2.52"
 composeHilt = "1.2.0"
 timber = "5.0.1"
-moshi = "1.15.0"
+moshi = "1.15.1"
 okHttp = "4.12.0"
 retrofit = "2.11.0"
 coil = "3.0.2"
@@ -23,6 +23,7 @@ paging = "3.3.4"
 browser = "1.8.0"
 serializationJson = "1.6.3"
 material = "1.8.0-alpha06"
+testCoroutines = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -95,6 +96,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "testCoroutines" }
 
 
 [plugins]
