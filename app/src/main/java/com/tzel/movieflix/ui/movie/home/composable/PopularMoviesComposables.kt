@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -97,7 +98,8 @@ private fun PopularMovieItem(
         Box(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            contentAlignment = Alignment.BottomStart
         ) {
             AsyncImage(
                 modifier = Modifier.fillMaxSize(),
@@ -113,7 +115,6 @@ private fun PopularMovieItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.4f)
-                    .align(Alignment.BottomCenter)
                     .background(
                         brush = Brush.verticalGradient(
                             0f to Color.Transparent,
@@ -121,16 +122,17 @@ private fun PopularMovieItem(
                             1f to Color.Black
                         )
                     ),
-                contentAlignment = Alignment.BottomStart
-            ) {
-                movie.title?.let { title ->
-                    Text(
-                        modifier = Modifier.padding(horizontal = Spacing_16dp),
-                        text = title,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
-                    )
-                }
+            )
+
+            movie.title?.let { title ->
+                Text(
+                    modifier = Modifier.padding(horizontal = Spacing_16dp),
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
 
