@@ -12,22 +12,20 @@ import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiState
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUiToMovieMapper
 import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
 import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
-import com.tzel.movieflix.usecase.movie.GetMovieDetailsWithReviewsUseCase
+import com.tzel.movieflix.usecase.movie.GetMovieDetailsUseCase
 import com.tzel.movieflix.usecase.movie.GetSimilarMoviesUseCase
 import com.tzel.movieflix.usecase.movie.SetMovieFavoriteUseCase
 import com.tzel.movieflix.usecase.user.AddToWatchlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
     private val movieDetailsUiMapper: MovieDetailsUiMapper,
-    private val getMovieDetailsWithReviewsUseCase: GetMovieDetailsWithReviewsUseCase,
+    private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val setMovieFavoriteUseCase: SetMovieFavoriteUseCase,
     private val movieDetailsUiToMovieMapper: MovieDetailsUiToMovieMapper,
     private val addToWatchlistUseCase: AddToWatchlistUseCase,
@@ -56,18 +54,24 @@ class MovieDetailsViewModel @Inject constructor(
         launch {
             _uiState.update { MovieDetailsUiState.Loading(refresh = { loadMovieDetails(movieId) }) }
 
-            getMovieDetailsWithReviewsUseCase(movieId).collectLatest { movieDetails ->
-                _uiState.update {
-                    when (movieDetails) {
-                        null -> MovieDetailsUiState.Error(refresh = { loadMovieDetails(movieId) })
-                        else -> MovieDetailsUiState.Success(
-                            movieDetails = movieDetailsUiMapper(movieDetails), // todo add region from user settings
-                            similarMovies = similarMovies,
-                            onFavoriteClick = ::setMovieFavorite,
-                            addToWatchlist = ::updateMovieWatchlistStatus,
-                            refresh = { loadMovieDetails(movieId) }
-                        )
-                    }
+            val movieDetails = getMovieDetailsUseCase(
+                movieId = movieId,
+                includeCast = true,
+                includeVideos = true,
+                includeProviders = true,
+                includeWatchlistState = true
+            )
+
+            _uiState.update {
+                when (movieDetails) {
+                    null -> MovieDetailsUiState.Error(refresh = { loadMovieDetails(movieId) })
+                    else -> MovieDetailsUiState.Success(
+                        movieDetails = movieDetailsUiMapper(movieDetails), // todo add region from user settings
+                        similarMovies = similarMovies,
+                        onFavoriteClick = ::setMovieFavorite,
+                        addToWatchlist = ::updateMovieWatchlistStatus,
+                        refresh = { loadMovieDetails(movieId) }
+                    )
                 }
             }
         }
