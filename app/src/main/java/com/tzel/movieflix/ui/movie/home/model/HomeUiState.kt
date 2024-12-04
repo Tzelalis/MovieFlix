@@ -11,8 +11,11 @@ data class HomeUiState(
     val trendingCategory: MoviesUiCategory? = null,
     val watchlistCategory: MoviesUiCategory? = null,
     val genreMovies: List<MoviesUiCategory> = emptyList(),
+    val filters: List<FilterUiItem> = emptyList(),
     val addToWatchlist: (MovieDetailsUi) -> Unit,
-    val refreshWatchlist: () -> Unit
+    val refreshWatchlist: () -> Unit,
+    val onFilterClick: (FilterUiItem) -> Unit,
+    val onClearFiltersClick: () -> Unit,
 ) {
     val firstSectionGenres: List<MoviesUiCategory>
         get() = genreMovies.take(1)

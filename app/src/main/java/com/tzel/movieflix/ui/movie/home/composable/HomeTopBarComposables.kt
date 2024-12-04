@@ -19,7 +19,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.tzel.movieflix.R
+import com.tzel.movieflix.ui.movie.home.model.FilterUiItem
 import com.tzel.movieflix.ui.theme.Sizes
+import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_2dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.modifier.clickableWithLifecycle
@@ -27,8 +29,11 @@ import com.tzel.movieflix.utils.composable.modifier.clickableWithLifecycle
 @Composable
 fun HomeTopBar(
     modifier: Modifier = Modifier,
+    filters: List<FilterUiItem>,
     alpha: () -> Float = { 1f },
     onSearchClick: () -> Unit,
+    onFilterClick: (FilterUiItem) -> Unit,
+    onClearFiltersClick: () -> Unit,
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
 
@@ -40,9 +45,16 @@ fun HomeTopBar(
             }
             .statusBarsPadding()
             .height(Sizes.NavigationBars.small),
-        horizontalArrangement = Arrangement.End,
+        horizontalArrangement = Arrangement.spacedBy(Spacing_16dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        FilterLazyRow(
+            modifier = Modifier.weight(1f),
+            filters = filters,
+            onFilterClick = onFilterClick,
+            onClearClick = onClearFiltersClick
+        )
+
         Icon(
             modifier = Modifier
                 .fillMaxHeight()

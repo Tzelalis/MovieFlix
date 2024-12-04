@@ -21,6 +21,8 @@
     <string name="home_clear_content_description">clear</string>
     <string name="home_trend_movie_watch_trailer_button">Trailer</string>
     <string name="home_trend_movie_watchlist_button">Watchlist</string>
+    <string name="home_filter_category_title">Category</string>
+    <string name="home_filter_clear_content_description">clear</string>
 
     <!-- Movie Details -->
     <string name="home_details_similar_movies_title">Similar Movies</string>

@@ -9,6 +9,8 @@ import com.tzel.movieflix.domain.movie.entity.TimeWindow
 import com.tzel.movieflix.ui.core.BaseViewModel
 import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.movie.home.mapper.MovieToMovieUiMapper
+import com.tzel.movieflix.ui.movie.home.model.FilterCategoryItem
+import com.tzel.movieflix.ui.movie.home.model.FilterUiItem
 import com.tzel.movieflix.ui.movie.home.model.HomeUiState
 import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.movie.home.model.MoviesUiCategory
@@ -44,8 +46,11 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         HomeUiState(
+            filters = listOf(FilterUiItem.Category(items = listOf())),
             addToWatchlist = ::addToWatchList,
-            refreshWatchlist = ::loadWatchlistMovies
+            refreshWatchlist = ::loadWatchlistMovies,
+            onFilterClick = ::onFilterClick,
+            onClearFiltersClick = ::clearFilters,
         )
     )
 
@@ -61,6 +66,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun refreshContent() {
+        loadCategories()
         loadTrendingOfDay()
         loadPopularMovies()
         loadTrendingMovies()
@@ -145,7 +151,23 @@ class HomeViewModel @Inject constructor(
                 movieGenrePagingSources.add(category)
             }
 
-            _uiState.update { it.copy(genreMovies = movieGenrePagingSources) }
+            _uiState.update {
+                it.copy(
+                    genreMovies = movieGenrePagingSources,
+
+                    )
+            }
+        }
+    }
+
+    private fun loadCategories() {
+        launch {
+            val categories = getGenresUseCase().map { FilterCategoryItem(it.id.toInt(), TextBuilder.Text(it.name)) }
+            _uiState.update {
+                it.copy(
+                    filters = listOf(FilterUiItem.Category(items = categories))
+                )
+            }
         }
     }
 
@@ -159,6 +181,18 @@ class HomeViewModel @Inject constructor(
             val response = addToWatchlistUseCase(movieDetailsUi.id, !isAdded)
             val watchlistState = if (response) WatchlistUiState.Added else WatchlistUiState.Removed
             movieDetailsUi.watchlistUiState.value = watchlistState
+        }
+    }
+
+    private fun clearFilters() {
+        uiState.value.filters.forEach { it.clearSelection() }
+    }
+
+    private fun onFilterClick(filter: FilterUiItem) {
+        when (filter) {
+            is FilterUiItem.Category -> {
+                filter.selectedItem.value = filter.items.firstOrNull()
+            }
         }
     }
 

@@ -204,7 +204,10 @@ private fun HomeContent(
 
         HomeTopBar(
             alpha = { 1 - fraction.value },
-            onSearchClick = { navigateTo(SearchDestination) }
+            filters = uiState.value.filters,
+            onSearchClick = { navigateTo(SearchDestination) },
+            onFilterClick = uiState.value.onFilterClick,
+            onClearFiltersClick = uiState.value.onClearFiltersClick
         )
     }
 }
@@ -221,6 +224,8 @@ private fun HomePreview() {
                 genreMovies = emptyList(),
                 addToWatchlist = {},
                 refreshWatchlist = {},
+                onFilterClick = {},
+                onClearFiltersClick = {}
             )
         )
     }
