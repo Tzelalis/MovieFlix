@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,7 +61,7 @@ class MovieDetailsViewModel @Inject constructor(
                     when (movieDetails) {
                         null -> MovieDetailsUiState.Error(refresh = { loadMovieDetails(movieId) })
                         else -> MovieDetailsUiState.Success(
-                            movieDetails = movieDetailsUiMapper(movieDetails),
+                            movieDetails = movieDetailsUiMapper(movieDetails), // todo add region from user settings
                             similarMovies = similarMovies,
                             onFavoriteClick = ::setMovieFavorite,
                             addToWatchlist = ::updateMovieWatchlistStatus,

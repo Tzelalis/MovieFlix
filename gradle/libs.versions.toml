@@ -23,6 +23,7 @@ paging = "3.3.4"
 browser = "1.8.0"
 serializationJson = "1.6.3"
 material = "1.8.0-alpha06"
+testCoroutines = "1.7.3"
 palette = "1.0.0"
 
 
@@ -99,6 +100,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "testCoroutines" }
 
 
 [plugins]

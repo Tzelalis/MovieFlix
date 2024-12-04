@@ -1,12 +1,13 @@
 package com.tzel.movieflix.ui.movie.home.mapper
 
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.Movie
 import com.tzel.movieflix.ui.core.mapper.ImagePathMapper
 import com.tzel.movieflix.ui.core.mapper.ImageSize
 import com.tzel.movieflix.ui.movie.home.model.MovieUiItem
 import javax.inject.Inject
 
-class MovieToMovieUiMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) {
+class MovieToMovieUiMapper @Inject constructor(private val imagePathMapper: ImagePathMapper) : Mapper {
     operator fun invoke(movies: List<Movie>, page: Int): List<MovieUiItem> {
         return movies.mapNotNull { movie -> invoke(movie, page) }.distinctBy { it.id }
     }

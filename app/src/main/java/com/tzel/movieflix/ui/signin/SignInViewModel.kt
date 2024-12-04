@@ -17,10 +17,7 @@ class SignInViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow<SignInUiState>(
-        SignInUiState.Idle(
-            navigate = null,
-            createSession = ::createSession,
-        )
+        SignInUiState.Loading
     )
     val uiState = _uiState.asStateFlow()
 
@@ -29,11 +26,15 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun requestTemporaryToken() {
-        val state = uiState.value as? SignInUiState.Idle ?: return
-
         launch {
             val tempToken = getTemporaryRequestTokenUseCase() ?: return@launch
-            _uiState.update { state.copy(token = tempToken) }
+            _uiState.update {
+                SignInUiState.Idle(
+                    token = tempToken,
+                    navigate = null,
+                    createSession = ::createSession,
+                )
+            }
         }
     }
 

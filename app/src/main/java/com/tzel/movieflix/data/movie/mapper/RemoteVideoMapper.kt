@@ -2,12 +2,13 @@ package com.tzel.movieflix.data.movie.mapper
 
 import com.tzel.movieflix.data.movie.model.RemoteVideoItem
 import com.tzel.movieflix.data.movie.model.RemoteVideoResponse
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.VideoItem
 import com.tzel.movieflix.domain.movie.entity.VideoSite
 import com.tzel.movieflix.domain.movie.entity.VideoType
 import javax.inject.Inject
 
-class RemoteVideoMapper @Inject constructor() {
+class RemoteVideoMapper @Inject constructor() : Mapper {
     operator fun invoke(response: RemoteVideoResponse?): List<VideoItem> {
         return response?.results?.mapNotNull { invoke(it) } ?: emptyList()
     }

@@ -1,20 +1,23 @@
 package com.tzel.movieflix.ui.movie.moviedetail.mapper
 
 import androidx.compose.runtime.mutableStateOf
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.MovieDetails
 import com.tzel.movieflix.ui.core.mapper.ImagePathMapper
 import com.tzel.movieflix.ui.core.mapper.ImageSize
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieDetailsUi
 import com.tzel.movieflix.ui.movie.moviedetail.model.WatchlistUiState
+import java.util.Locale
 import javax.inject.Inject
 
 class MovieDetailsUiMapper @Inject constructor(
     private val imagePathMapper: ImagePathMapper,
     private val movieStatsUiMapper: MovieStatsUiMapper,
     private val reviewUiMapper: ReviewUiMapper,
-    private val moviesImagesUiMapper: MoviesImagesUiMapper
-) {
-    operator fun invoke(details: MovieDetails): MovieDetailsUi {
+    private val moviesImagesUiMapper: MoviesImagesUiMapper,
+    private val watchProvidersUiMapper: WatchProvidersUiMapper,
+) : Mapper {
+    operator fun invoke(details: MovieDetails, region: String = Locale.getDefault().country): MovieDetailsUi {
         return MovieDetailsUi(
             id = details.id,
             title = details.title,
@@ -38,6 +41,7 @@ class MovieDetailsUiMapper @Inject constructor(
             posterUrl = imagePathMapper(details.posterPath),
             images = details.images?.let { moviesImagesUiMapper(it) },
             videos = details.videos,
+            watchProviders = watchProvidersUiMapper(providers = details.watchProviders, region = region),
             isFavorite = details.isFavorite,
             watchlistUiState = mutableStateOf(watchlistState(details.inWatchlist))
         )
@@ -65,5 +69,9 @@ class MovieDetailsUiMapper @Inject constructor(
             false -> WatchlistUiState.Removed
             else -> WatchlistUiState.Loading
         }
+    }
+
+    companion object {
+        private val DEFAULT_REGION_CODE = "US"
     }
 }

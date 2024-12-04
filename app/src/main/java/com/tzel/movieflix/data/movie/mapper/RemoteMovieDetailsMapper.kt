@@ -1,6 +1,7 @@
 package com.tzel.movieflix.data.movie.mapper
 
 import com.tzel.movieflix.data.movie.model.RemoteMovieDetailsResponse
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.MovieDetails
 import javax.inject.Inject
 
@@ -9,7 +10,8 @@ class RemoteMovieDetailsMapper @Inject constructor(
     private val mapGenres: RemoteGenresMapper,
     private val remoteMovieImagesMapper: RemoteMovieImagesMapper,
     private val remoteVideoMapper: RemoteVideoMapper,
-) {
+    private val remoteWatchProvidersMapper: RemoteWatchProvidersMapper,
+) : Mapper {
     operator fun invoke(response: RemoteMovieDetailsResponse): MovieDetails {
         if (response.id == null) throw IllegalArgumentException("Movie id cannot be null")
 
@@ -34,6 +36,7 @@ class RemoteMovieDetailsMapper @Inject constructor(
                 homepage = homepage,
                 images = remoteMovieImagesMapper(images),
                 videos = remoteVideoMapper(videos),
+                watchProviders = remoteWatchProvidersMapper(watchProviders),
             )
         }
     }

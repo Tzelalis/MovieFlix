@@ -5,9 +5,7 @@ import com.tzel.movieflix.domain.auth.AuthRepository
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(
-    private val dataSource: AuthDataSource,
-) : AuthRepository {
+class AuthRepositoryImpl @Inject constructor(private val dataSource: AuthDataSource) : AuthRepository {
     override suspend fun getTemporaryToken(): String? {
         val remoteToken = dataSource.requestTemporaryRequestToken() ?: return null
         if (remoteToken.token == null) return null

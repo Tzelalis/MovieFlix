@@ -1,13 +1,14 @@
 package com.tzel.movieflix.ui.movie.moviedetail.mapper
 
 import com.tzel.movieflix.R
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.movie.moviedetail.model.MovieUiStats
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
 
-class MovieStatsUiMapper @Inject constructor() {
+class MovieStatsUiMapper @Inject constructor() : Mapper {
     operator fun invoke(releaseDate: String?, runtime: Int?, voteAverage: Double?): List<MovieUiStats> {
         val stats = mutableListOf<MovieUiStats>()
 

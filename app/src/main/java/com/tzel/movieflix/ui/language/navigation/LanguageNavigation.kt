@@ -14,10 +14,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LanguageDestination(
     val hasBack: Boolean,
-    private val dropBackStack: Boolean
+    private val dropBackStack: Boolean,
 ) : NavigationDestination() {
     override val builder: NavOptionsBuilder.() -> Unit
-        get() = { if (dropBackStack) popUpTo(0) }
+        get() = {
+            launchSingleTop = true
+            if (dropBackStack) popUpTo(0)
+        }
 }
 
 fun NavGraphBuilder.languageScreen(

@@ -1,9 +1,10 @@
 package com.tzel.movieflix.data.core.mapper
 
 import com.tzel.movieflix.data.core.RemoteStatusResponse
+import com.tzel.movieflix.domain.core.Mapper
 import javax.inject.Inject
 
-class RemoteStatusMapper @Inject constructor() {
+class RemoteStatusMapper @Inject constructor() : Mapper {
     operator fun invoke(remote: RemoteStatusResponse?): Boolean? {
         return when (remote?.status) {
             ADDED_STATUS_CODE -> true

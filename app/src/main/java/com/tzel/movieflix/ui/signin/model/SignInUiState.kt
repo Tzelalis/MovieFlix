@@ -3,6 +3,7 @@ package com.tzel.movieflix.ui.signin.model
 import com.tzel.movieflix.ui.core.navigation.NavigationDestination
 
 sealed class SignInUiState() {
+    data object Loading : SignInUiState()
     data object Error : SignInUiState()
     data object SuccessSignIn : SignInUiState()
     data class Idle(

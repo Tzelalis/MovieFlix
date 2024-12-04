@@ -2,11 +2,12 @@ package com.tzel.movieflix.data.movie.mapper
 
 import com.tzel.movieflix.data.movie.model.RemoteReview
 import com.tzel.movieflix.data.movie.model.RemoteReviewsResponse
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.Review
 import com.tzel.movieflix.domain.movie.entity.ReviewsResult
 import javax.inject.Inject
 
-class RemoteReviewsMapper @Inject constructor() {
+class RemoteReviewsMapper @Inject constructor() : Mapper {
     operator fun invoke(response: RemoteReviewsResponse): ReviewsResult {
         if (response.page == null || response.totalPages == null) throw IllegalArgumentException("Invalid response")
 

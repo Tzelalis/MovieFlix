@@ -1,10 +1,11 @@
 package com.tzel.movieflix.data.movie.mapper
 
 import com.tzel.movieflix.data.movie.model.LocalMovie
+import com.tzel.movieflix.domain.core.Mapper
 import com.tzel.movieflix.domain.movie.entity.Movie
 import javax.inject.Inject
 
-class LocalMoviesToMoviesMapper @Inject constructor() {
+class LocalMoviesToMoviesMapper @Inject constructor() : Mapper {
     operator fun invoke(localMovies: List<LocalMovie>): List<Movie> {
         return localMovies.map { localMovie -> mapMovie(localMovie) }
     }

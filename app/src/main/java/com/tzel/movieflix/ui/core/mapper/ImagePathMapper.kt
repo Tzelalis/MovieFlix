@@ -1,8 +1,9 @@
 package com.tzel.movieflix.ui.core.mapper
 
+import com.tzel.movieflix.domain.core.Mapper
 import javax.inject.Inject
 
-class ImagePathMapper @Inject constructor() {
+class ImagePathMapper @Inject constructor() : Mapper {
     operator fun invoke(imagePath: String?, imageSize: ImageSize = ImageSize.Original): String? {
         return imagePath?.let { "$IMAGE_BASE_URL${imageSize.value}$imagePath" }
     }

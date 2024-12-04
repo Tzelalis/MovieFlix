@@ -32,9 +32,11 @@ data class MovieDetailsUi(
     val reviews: List<ReviewUi>,
     val images: MovieImagesUi?,
     val videos: List<VideoItem>,
+    val watchProviders: WatchUiProvider?,
     val isFavorite: Boolean,
     val watchlistUiState: MutableState<WatchlistUiState>
 ) {
+
     val favoriteColor: Color
         get() = if (isFavorite) RedMedium else GrayLight
 

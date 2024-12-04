@@ -18,7 +18,11 @@ class AppViewModel @Inject constructor(
     private val getAuthExceptionsUseCase: GetAuthExceptionsUseCase,
     private val clearAuthExceptionsUseCase: ClearAuthExceptionsUseCase,
 ) : BaseViewModel() {
-    private val _uiState = MutableStateFlow(AppUiState())
+    private val _uiState = MutableStateFlow(
+        AppUiState(
+            clearDestination = ::clearAuthExceptions
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -40,6 +44,13 @@ class AppViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun clearAuthExceptions() {
+        launch {
+            clearAuthExceptionsUseCase()
+            _uiState.update { it.copy(navigateDestination = null) }
         }
     }
 }
