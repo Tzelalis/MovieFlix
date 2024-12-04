@@ -23,7 +23,6 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -41,7 +40,6 @@ import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_4dp
 import com.tzel.movieflix.ui.theme.Spacing_8dp
 import com.tzel.movieflix.utils.composable.image.rememberImageRequester
-import com.tzel.movieflix.utils.composable.modifier.blendMode
 import com.tzel.movieflix.utils.composable.modifier.clickableWithLifecycle
 import com.tzel.movieflix.utils.ext.openYoutubeVideo
 
@@ -89,6 +87,36 @@ fun TrendMovieOfTheDay(
                 .padding(horizontal = Spacing_16dp, vertical = Spacing_8dp),
             verticalArrangement = Arrangement.spacedBy(Spacing_8dp)
         ) {
+            FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.spacedBy(Spacing_4dp)
+            ) {
+                movie.genres.forEachIndexed { index, genre ->
+                    key(index) {
+                        Text(
+                            modifier = Modifier,
+                            text = genre.name,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Normal
+                        )
+
+                        if (index != movie.genres.lastIndex) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(horizontal = Spacing_4dp)
+                                    .size(Spacing_4dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White)
+                            )
+                        }
+                    }
+                }
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(Spacing_8dp)
@@ -107,37 +135,6 @@ fun TrendMovieOfTheDay(
                     text = stringResource(id = R.string.home_trend_movie_watchlist_button),
                     onClick = addToWatchList
                 )
-            }
-
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalArrangement = Arrangement.spacedBy(Spacing_4dp)
-            ) {
-                movie.genres.forEachIndexed { index, genre ->
-                    key(index) {
-                        Text(
-                            modifier = Modifier.blendMode(BlendMode.Difference),
-                            text = genre.name,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Normal
-                        )
-
-                        if (index != movie.genres.lastIndex) {
-                            Box(
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(horizontal = Spacing_4dp)
-                                    .size(Spacing_4dp)
-                                    .clip(CircleShape)
-                                    .blendMode(BlendMode.Difference)
-                                    .background(Color.White)
-                            )
-                        }
-                    }
-                }
             }
         }
     }
