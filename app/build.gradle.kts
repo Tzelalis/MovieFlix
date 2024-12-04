@@ -159,6 +159,8 @@ dependencies {
 
     implementation(libs.serialization.json)
 
+    implementation(libs.androidx.palette)
+
     // Testing and debug
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

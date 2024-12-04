@@ -86,11 +86,10 @@ private fun HomeContent(
 
     Box {
         TrendingBackground(
+            modifier = Modifier.fillMaxSize(),
             imageUrl = uiState.value.trendBackground,
             isVisible = { state.firstVisibleItemIndex == 0 },
             alpha = { fraction.value },
-            modifier = Modifier.fillMaxSize(),
-            imageRequester = imageRequester
         )
 
         LazyColumn(
