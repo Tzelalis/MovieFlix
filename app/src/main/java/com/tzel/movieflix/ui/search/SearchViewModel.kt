@@ -4,8 +4,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.tzel.movieflix.ui.core.BaseViewModel
-import com.tzel.movieflix.ui.movie.home.mapper.MovieToMovieUiMapper
-import com.tzel.movieflix.ui.movie.home.model.MoviesPagingSource
+import com.tzel.movieflix.ui.dashboard.movie.home.mapper.MovieToMovieUiMapper
+import com.tzel.movieflix.ui.dashboard.movie.home.model.MoviesPagingSource
 import com.tzel.movieflix.ui.search.model.SearchUiState
 import com.tzel.movieflix.usecase.movie.SearchMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

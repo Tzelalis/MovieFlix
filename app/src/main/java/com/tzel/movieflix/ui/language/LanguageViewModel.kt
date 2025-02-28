@@ -6,8 +6,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.text.intl.Locale
 import com.tzel.movieflix.domain.configuration.entity.Language
 import com.tzel.movieflix.ui.core.BaseViewModel
+import com.tzel.movieflix.ui.dashboard.current.navigation.DashboardDestination
 import com.tzel.movieflix.ui.language.model.LanguageUiState
-import com.tzel.movieflix.ui.movie.home.navigation.HomeDestination
 import com.tzel.movieflix.usecase.configuration.GetAvailableLanguagesUseCase
 import com.tzel.movieflix.usecase.configuration.GetSavedLanguageUseCase
 import com.tzel.movieflix.usecase.configuration.SaveLanguageUseCase
@@ -92,7 +92,7 @@ class LanguageViewModel @Inject constructor(
             val state = (uiState.value as? LanguageUiState.Success) ?: return@launch
             saveLanguageUseCase(state.selectedLanguage.value)
 
-            _uiState.update { state.copy(navigateDestination = HomeDestination) }
+            _uiState.update { state.copy(navigateDestination = DashboardDestination) }
         }
     }
 }

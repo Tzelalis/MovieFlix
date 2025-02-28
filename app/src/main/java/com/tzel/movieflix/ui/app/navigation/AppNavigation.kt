@@ -9,10 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.tzel.movieflix.ui.dashboard.current.navigation.dashboardScreen
 import com.tzel.movieflix.ui.language.navigation.languageScreen
-import com.tzel.movieflix.ui.movie.home.navigation.homeScreen
-import com.tzel.movieflix.ui.movie.moviedetail.navigation.MovieDetailsDestination
-import com.tzel.movieflix.ui.movie.moviedetail.navigation.movieDetailsScreen
+import com.tzel.movieflix.ui.moviedetail.navigation.MovieDetailsDestination
+import com.tzel.movieflix.ui.moviedetail.navigation.movieDetailsScreen
 import com.tzel.movieflix.ui.search.navigation.searchScreen
 import com.tzel.movieflix.ui.signin.navigation.signInScreen
 import com.tzel.movieflix.ui.splash.navigation.SplashDestination
@@ -43,7 +43,10 @@ internal fun AppNavHost(
 
         signInScreen(navigateBack = { navController.navigateUp() })
 
-        homeScreen(navigateTo = { destination -> navController.safeNavigate(destination) })
+        dashboardScreen(
+            navigateTo = { destination -> navController.safeNavigate(destination) },
+            navigateBack = { navController.navigateUp() },
+        )
 
         movieDetailsScreen(
             navigateToMovieDetails = { id -> navController.safeNavigate(MovieDetailsDestination(id)) },

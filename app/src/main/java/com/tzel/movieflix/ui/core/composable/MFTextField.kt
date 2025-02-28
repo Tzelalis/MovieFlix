@@ -107,7 +107,7 @@ private fun SearchClearIcon(
                 .clickable { onClick() },
             painter = painterResource(R.drawable.ic_round_close),
             tint = MaterialTheme.colorScheme.onTertiary,
-            contentDescription = stringResource(R.string.home_clear_content_description),
+            contentDescription = stringResource(R.string.movies_clear_content_description),
         )
     }
 }

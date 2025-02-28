@@ -11,16 +11,21 @@
     <!-- Splash -->
     <string name="splash_powered_by">Powered by Tzel</string>
 
-    <!-- Home -->
-    <string name="home_trending_label">Daily Trend</string>
-    <string name="home_popular_title">Popular</string>
-    <string name="home_trending_title">Trending movies of the week</string>
-    <string name="home_watchlist_title">My Watchlist\n</string>
-    <string name="home_favorite_content_description">favorite movie</string>
-    <string name="home_search_content_description">search</string>
-    <string name="home_clear_content_description">clear</string>
-    <string name="home_trend_movie_watch_trailer_button">Trailer</string>
-    <string name="home_trend_movie_watchlist_button">Watchlist</string>
+    <!-- Dashboard -->
+    <string name="navigation_bar_movies">Movies</string>
+    <string name="navigation_bar_series">Series</string>
+    <string name="navigation_bar_more">More</string>
+
+    <!-- Movies -->
+    <string name="movies_trending_label">Daily Trend</string>
+    <string name="movies_popular_title">Popular</string>
+    <string name="movies_trending_title">Trending movies of the week</string>
+    <string name="movies_watchlist_title">My Watchlist\n</string>
+    <string name="movies_favorite_content_description">favorite movie</string>
+    <string name="movies_search_content_description">search</string>
+    <string name="movies_clear_content_description">clear</string>
+    <string name="movies_trend_movie_watch_trailer_button">Trailer</string>
+    <string name="movies_trend_movie_watchlist_button">Watchlist</string>
 
     <!-- Movie Details -->
     <string name="home_details_similar_movies_title">Similar Movies</string>

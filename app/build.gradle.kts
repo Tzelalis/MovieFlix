@@ -162,12 +162,13 @@ dependencies {
     implementation(libs.androidx.palette)
 
     // Testing and debug
-    testImplementation(libs.junit)
-    testImplementation(libs.kotlin.coroutines.test)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.test.junit)
+    testImplementation(libs.test.mockk)
+    testImplementation(libs.test.coroutines)
+    androidTestImplementation(libs.test.junit.android)
+    androidTestImplementation(libs.test.espresso)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.test.junit.compose)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

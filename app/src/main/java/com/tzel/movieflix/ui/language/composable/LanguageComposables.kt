@@ -36,8 +36,8 @@ import com.tzel.movieflix.ui.core.composable.MFTextField
 import com.tzel.movieflix.ui.core.composable.MVButton
 import com.tzel.movieflix.ui.core.composable.TextBuilder
 import com.tzel.movieflix.ui.core.navigation.NavigationDestination
+import com.tzel.movieflix.ui.dashboard.movie.core.Headline
 import com.tzel.movieflix.ui.language.model.LanguageUiState
-import com.tzel.movieflix.ui.movie.core.Headline
 import com.tzel.movieflix.ui.theme.MovieFlixTheme
 import com.tzel.movieflix.ui.theme.Spacing_16dp
 import com.tzel.movieflix.ui.theme.Spacing_32dp

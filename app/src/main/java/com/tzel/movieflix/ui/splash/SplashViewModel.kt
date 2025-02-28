@@ -1,8 +1,8 @@
 package com.tzel.movieflix.ui.splash
 
 import com.tzel.movieflix.ui.core.BaseViewModel
+import com.tzel.movieflix.ui.dashboard.current.navigation.DashboardDestination
 import com.tzel.movieflix.ui.language.navigation.LanguageDestination
-import com.tzel.movieflix.ui.movie.home.navigation.HomeDestination
 import com.tzel.movieflix.ui.splash.model.SplashUiState
 import com.tzel.movieflix.usecase.configuration.GetSavedLanguageUseCase
 import com.tzel.movieflix.usecase.configuration.InitConfigurationUseCase
@@ -26,7 +26,11 @@ class SplashViewModel @Inject constructor(
         launch {
             delay(600) //dummy delay to show splash screen (request should replace it)
             initConfigurationUseCase()
-            val destination = if (getSavedLanguageUseCase() == null) LanguageDestination(hasBack = false, dropBackStack = true) else HomeDestination
+            val destination = if (getSavedLanguageUseCase() == null)
+                LanguageDestination(hasBack = false, dropBackStack = true)
+            else
+                DashboardDestination
+
             _uiState.update { it.copy(navigate = destination) }
         }
     }
