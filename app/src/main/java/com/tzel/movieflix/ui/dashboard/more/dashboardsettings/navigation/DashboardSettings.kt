@@ -1,4 +1,4 @@
-package com.tzel.movieflix.ui.dashboard.more.navigation
+package com.tzel.movieflix.ui.dashboard.more.dashboardsettings.navigation
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -6,24 +6,23 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.tzel.movieflix.ui.core.navigation.NavigationDestination
-import com.tzel.movieflix.ui.dashboard.more.MoreViewModel
-import com.tzel.movieflix.ui.dashboard.more.composable.MoreScreen
+import com.tzel.movieflix.ui.dashboard.more.dashboardsettings.DashboardSettingsViewModel
+import com.tzel.movieflix.ui.dashboard.more.dashboardsettings.composable.DashboardSettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object MoreDestination : NavigationDestination() {
+data object DashboardSettingsDestination : NavigationDestination() {
     override val builder: NavOptionsBuilder.() -> Unit
         get() = { launchSingleTop = false }
 }
 
-fun NavGraphBuilder.moreScreen(navigateTo: (NavigationDestination) -> Unit) {
-    composable<MoreDestination> {
-        val viewModel: MoreViewModel = hiltViewModel()
+fun NavGraphBuilder.dashboardSettingsScreen() {
+    composable<DashboardSettingsDestination> {
+        val viewModel: DashboardSettingsViewModel = hiltViewModel()
         val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-        MoreScreen(
-            uiState = uiState,
-            navigateTo = navigateTo,
+        DashboardSettingsScreen(
+            uiState = uiState
         )
     }
 }

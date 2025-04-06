@@ -62,4 +62,9 @@
     <string name="sign_in_success_subtitle">Congratulations! You have successfully signed in.</string>
     <string name="sign_in_error_button">Cancel</string>
     <string name="sign_in_success_button">Done</string>
+
+    <!-- More -->
+    <string name="more_language">Language</string>
+    <string name="more_dashboard_settings">Dashboard Settings</string>
+    <string name="more_logout">Logout</string>
 </resources>

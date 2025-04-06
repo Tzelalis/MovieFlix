@@ -17,7 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tzel.movieflix.ui.core.navigation.NavigationDestination
 import com.tzel.movieflix.ui.dashboard.current.model.DashboardUiEvent
 import com.tzel.movieflix.ui.dashboard.current.model.DashboardUiState
-import com.tzel.movieflix.ui.dashboard.more.navigation.moreScreen
+import com.tzel.movieflix.ui.dashboard.more.current.navigation.moreScreen
 import com.tzel.movieflix.ui.dashboard.movie.home.navigation.MoviesDestination
 import com.tzel.movieflix.ui.dashboard.movie.home.navigation.moviesScreen
 import com.tzel.movieflix.ui.dashboard.series.navigation.seriesScreen

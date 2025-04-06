@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.tzel.movieflix.ui.dashboard.current.navigation.dashboardScreen
+import com.tzel.movieflix.ui.dashboard.more.dashboardsettings.navigation.dashboardSettingsScreen
 import com.tzel.movieflix.ui.language.navigation.languageScreen
 import com.tzel.movieflix.ui.moviedetail.navigation.MovieDetailsDestination
 import com.tzel.movieflix.ui.moviedetail.navigation.movieDetailsScreen
@@ -57,5 +58,7 @@ internal fun AppNavHost(
             navigateTo = { destination -> navController.safeNavigate(destination) },
             onBackClick = { navController.navigateUp() }
         )
+
+        dashboardSettingsScreen()
     }
 }
